@@ -205,20 +205,8 @@ void V03System::init_subsystems() {
   i2c1_.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
                    GPIO::AlternativeFunction::AF4);
 
-  // The following pins are used to talk to the stepper drivers on the SPI daisy chain:
-  //   PA5 - SCLK
-  //   PA6 - MISO
-  //   PA7 - MOSI
-  //   PB6 - CS
-  //
-  // Some additional pins I don't really care about, but are connected to the stepper
-  // developer's board For the most part I can just ignore these:
-  //   PA9  - Reset input.
-  //   PA10 - flag open drain output
-  //   PB4  - busy open drain output
-  //   PC10 - STCK input
-  //
-  // The stepper motors support 5Mbits/s communication, which means a clock of 80MHz / 16
+  // The following pins are used to talk to the stepper drivers on an SPI daisy chain,
+  // The stepper drivers support 5Mbits/s communication, which means a clock of 80MHz / 16
   // This assumes CPUFrequency is kept at 80MHz.
   spi1_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
                    /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,

@@ -13,53 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "mock_stepper.h"
+#include "fake_stepper.h"
 
 #include <cfloat>  // for FLT_EPSILON
 #include <cmath>   // for fmod and fabsf
 
 namespace StepMotor {
 
-// Keep in sync with stepper.cpp in hal library
-static constexpr size_t param_len[32] = {
-    0,  // 0x00 - No valid parameter with ID 0
-    3,  // 0x01 - Absolute position (22 bits)
-    2,  // 0x02 - Electrical position (9 bits)
-    3,  // 0x03 - Mark position (22 bits)
-    3,  // 0x04 - Current speed (20 bits)
-    2,  // 0x05 - Acceleration (12 bits)
-    2,  // 0x06 - Deceleration (12 bits)
-    2,  // 0x07 - Maximum speed (10 bits)
-    2,  // 0x08 - Minimum speed (12 bits)
-    1,  // 0x09 - KValueHold Holding K VAL (8 bits)
-    1,  // 0x0A - KValueRun Constant speed K VAL (8 bits)
-    1,  // 0x0B - KVAL_ACC Acceleration starting K VAL (8 bits)
-    1,  // 0x0C - KVAL_DEC Deceleration starting K VAL (8 bits)
-    2,  // 0x0D - IntersectSpeed Intersect speed (14 bits)
-    1,  // 0x0E - ST_SLP Start slope (8 bits)
-    1,  // 0x0F - FN_SLP_ACC Acceleration final slope (8 bits)
-    1,  // 0x10 - FN_SLP_DEC Deceleration final slope (8 bits)
-    1,  // 0x11 - K_THERM Thermal compensation factor (4 bits)
-    1,  // 0x12 - ADC output (5 bits)
-    1,  // 0x13 - OCD threshold (5 bits)
-    1,  // 0x14 - STALL_TH STALL threshold (5 bits)
-    2,  // 0x15 - Full-step speed (11 bits)
-    1,  // 0x16 - Step mode (8 bits)
-    1,  // 0x17 - Alarm enables (8 bits)
-    2,  // 0x18 - Gate driver configuration (11 bits)
-    1,  // 0x19 - Gate driver configuration (8 bits)
-    2,  // 0x1A - IC configuration (16 bits)
-    2,  // 0x1B - Status (16 bits)
-    0,  // 0x1C - No such parameter
-    0,  // 0x1D - No such parameter
-    0,  // 0x1E - No such parameter
-    0,  // 0x1F - No such parameter
-};
-
 enum class ParamAccess { ReadOnly, WriteWhenDisabled, WriteWhenStopped, WriteWhenever };
 
-// Access based on POWERSTEP01 datasheet.
-static constexpr ParamAccess params_access[32] = {
+// Access based on POWERSTEP01 datasheet table 12 (p50).
+static constexpr ParamAccess ParamsAccess[32] = {
     ParamAccess::ReadOnly,           // No such param
     ParamAccess::WriteWhenStopped,   // Position
     ParamAccess::WriteWhenDisabled,  // Elecrical Position
@@ -100,7 +64,9 @@ TestStepper::TestStepper(float low_stop, float high_stop, bool power_step)
 
 void TestStepper::ResetDevice() {
   status_.word = 0x7C03;
-  // init values based on respective datasheet
+  // init values based on respective datasheet:
+  // - table 12 (p50) for powerSTEP01
+  // - table 9 (p40) for L6470
   size_t i = 0;
   while (i < 5) params_[i++] = 0;                 // 0 through 4
   while (i < 7) params_[i++] = 0x8A;              // 5 and 6
@@ -132,9 +98,9 @@ void TestStepper::ReceiveByte(uint8_t byte) {
     command_length_ = 1;
 
     // Op Code for set param is 3-bits code "000" followed by the 5-bits param address.
-    // Meaning that if the first 3 bits are 000, we expect param_len[address] more bytes.
+    // Meaning that if the first 3 bits are 000, we expect ParamLength[address] more bytes.
     if ((byte & 0xE0) == 0) {
-      command_length_ = 1 + param_len[byte & 0x1F];
+      command_length_ = 1 + ParamLength[byte & 0x1F];
     }
     // Op Code for get param is 3-bits code "001" followed by the 5-bits param address.
     // Requires a response, but we should not receive more (non-Nop) bytes
@@ -188,12 +154,12 @@ void TestStepper::ExecuteCommand() {
       op_code == static_cast<uint8_t>(OpCode::GoToNegative) ||
       op_code ==
           static_cast<uint8_t>(Param::AbsolutePosition) ||  // OpCode to set the Absolute position
-      op_code == static_cast<uint8_t>(Param::MarkPosition)  // OPCode to set the Mark position
+      op_code == static_cast<uint8_t>(Param::MarkPosition)  // OpCode to set the Mark position
   ) {
-    // those commands use two's complement, check the sign bit
+    // Those commands use two's complement, check the sign bit
     if (received_command_[1] & 0x80) {
-      // make sure the bits that were not provided are completed with FF to keep the argument
-      // negative
+      // Make sure the high bits are completed with FF to keep the argument negative
+      // when put into an int32_t
       argument = 0xFFFFFFFF;
     }
   }
@@ -203,20 +169,20 @@ void TestStepper::ExecuteCommand() {
   switch (op_code) {
     case static_cast<uint8_t>(OpCode::MoveNegative):
       MoveToPosition(static_cast<int32_t>(position_ * MicroStepsPerDeg()) - argument,
-                     MoveDir::Negative);
+                     MoveDirection::Negative);
       break;
     case static_cast<uint8_t>(OpCode::MovePositive):
       MoveToPosition(static_cast<int32_t>(position_ * MicroStepsPerDeg()) + argument,
-                     MoveDir::Positive);
+                     MoveDirection::Positive);
       break;
     case static_cast<uint8_t>(OpCode::GoTo):
-      MoveToPosition(argument, MoveDir::Shortest);
+      MoveToPosition(argument, MoveDirection::Shortest);
       break;
     case static_cast<uint8_t>(OpCode::GoToNegative):
-      MoveToPosition(argument, MoveDir::Negative);
+      MoveToPosition(argument, MoveDirection::Negative);
       break;
     case static_cast<uint8_t>(OpCode::GoToPositive):
-      MoveToPosition(argument, MoveDir::Positive);
+      MoveToPosition(argument, MoveDirection::Positive);
       break;
     case static_cast<uint8_t>(OpCode::ResetPosition):
       high_stop_ -= position_;
@@ -224,7 +190,7 @@ void TestStepper::ExecuteCommand() {
       position_ = 0;
       break;
     case static_cast<uint8_t>(OpCode::Home):
-      MoveToPosition(0, MoveDir::Shortest);
+      MoveToPosition(0, MoveDirection::Shortest);
       break;
     case static_cast<uint8_t>(OpCode::ResetDevice):
       ResetDevice();
@@ -274,9 +240,9 @@ void TestStepper::SetParamIfAccessible(size_t address, uint32_t value) {
     return;
   }
   if ((!power_step_ && address >= 25) ||  // fields only settable on PowerSTEP01
-      (params_access[address] == ParamAccess::ReadOnly) ||
-      (params_access[address] == ParamAccess::WriteWhenStopped && !status_.bitfield.stopped) ||
-      (params_access[address] == ParamAccess::WriteWhenDisabled && !status_.bitfield.disabled)) {
+      (ParamsAccess[address] == ParamAccess::ReadOnly) ||
+      (ParamsAccess[address] == ParamAccess::WriteWhenStopped && !status_.bitfield.stopped) ||
+      (ParamsAccess[address] == ParamAccess::WriteWhenDisabled && !status_.bitfield.disabled)) {
     // reject the command
     status_.bitfield.rejected_command = 1;
     return;
@@ -290,7 +256,7 @@ void TestStepper::GetParam(size_t address) {
     status_.bitfield.invalid_command = 1;
     return;
   }
-  response_count_ = param_len[address];
+  response_count_ = ParamLength[address];
   uint32_t value = params_[address];
 
   // Treat status separately, as the status is not stored in params_
@@ -315,14 +281,14 @@ void TestStepper::GetParam(size_t address) {
   }
 }
 
-void TestStepper::MoveToPosition(int32_t microsteps, MoveDir dir) {
+void TestStepper::MoveToPosition(int32_t microsteps, MoveDirection dir) {
   float new_position = static_cast<float>(microsteps) / MicroStepsPerDeg();
-  if (dir == MoveDir::Shortest) {
+  if (dir == MoveDirection::Shortest) {
     // Determine the smallest angle between position_ and new_position
     float diff = std::fmod(new_position - position_ + 180.0f, 360.0f) - 180.0f;
     // Move by that amount, in the desired direction.
     MoveToPosition(static_cast<int32_t>((position_ + diff) * MicroStepsPerDeg()),
-                   diff > 0 ? MoveDir::Positive : MoveDir::Negative);
+                   diff > 0 ? MoveDirection::Positive : MoveDirection::Negative);
     return;
   }
 
@@ -337,7 +303,7 @@ void TestStepper::MoveToPosition(int32_t microsteps, MoveDir dir) {
     status_.bitfield.stopped = 0;
   }
   switch (dir) {
-    case MoveDir::Positive:
+    case MoveDirection::Positive:
       status_.bitfield.motion_direction = 0;
       if (new_position >= high_stop_ || new_position < position_) {
         position_ = high_stop_;
@@ -345,7 +311,7 @@ void TestStepper::MoveToPosition(int32_t microsteps, MoveDir dir) {
         position_ = new_position;
       }
       break;
-    case MoveDir::Negative:
+    case MoveDirection::Negative:
       status_.bitfield.motion_direction = 1;
       if (new_position <= low_stop_ || new_position > position_) {
         position_ = low_stop_;

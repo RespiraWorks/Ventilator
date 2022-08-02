@@ -21,7 +21,7 @@ using namespace SPI;
 
 // This class encapsulates the whole setup for daisy chain tests to make initialization simpler
 // and emulates the behavior of a physical daisy chain when sending next bytes.
-template <size_t MaxSlaves, size_t QueuesLength>
+template <size_t MaxSlaves, size_t QueueLength>
 class TestEnvironment {
  public:
   TestEnvironment(size_t num_slaves, uint8_t null_command) {
@@ -44,7 +44,7 @@ class TestEnvironment {
   MockChannel spi_;
   // Setting min cs high time to 5 microseconds to allow testing of EnsureMisCSHighTime
   static constexpr Duration MinCSHighTime{microseconds(5)};
-  DaisyChain<MaxSlaves, QueuesLength> chain_{"test", "for tests", &spi_, MinCSHighTime};
+  DaisyChain<MaxSlaves, QueueLength> chain_{"test", "for tests", &spi_, MinCSHighTime};
 
   bool SendRequest(Request &request, size_t slave) { return chain_.SendRequest(request, slave); }
 

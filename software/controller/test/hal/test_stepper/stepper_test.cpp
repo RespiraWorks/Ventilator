@@ -15,8 +15,8 @@ limitations under the License.
 
 #include "stepper.h"
 
+#include "fake_stepper.h"
 #include "gtest_main.h"
-#include "mock_stepper.h"
 
 using namespace StepMotor;
 

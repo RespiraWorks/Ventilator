@@ -22,48 +22,18 @@ limitations under the License.
 #include "interrupts.h"
 #include "system_timer.h"
 
+// See header file for details on the implementation philosophy.
+// This module supports L6470 and powerSTEP01 stepper drivers from ST Microelectronics.
+// Datasheets for these chips are:
+//   L6470
+//     https://www.st.com/content/st_com/en/products/motor-drivers/stepper-motor-drivers/l6470.html
+//   powerSTEP01
+//     https://www.st.com/content/st_com/en/products/motor-drivers/stepper-motor-drivers/powerstep01.html
+
 namespace StepMotor {
 
-// This array holds the length of each parameter in units of
-// bytes, rounded up to the nearest byte.  This info is based
-// on table 12 in the powerSTEP chip data sheet
-static constexpr size_t param_len[32] = {
-    0,  // 0x00 - No valid parameter with ID 0
-    3,  // 0x01 - Absolute position (22 bits)
-    2,  // 0x02 - Electrical position (9 bits)
-    3,  // 0x03 - Mark position (22 bits)
-    3,  // 0x04 - Current speed (20 bits)
-    2,  // 0x05 - Acceleration (12 bits)
-    2,  // 0x06 - Deceleration (12 bits)
-    2,  // 0x07 - Maximum speed (10 bits)
-    2,  // 0x08 - Minimum speed (12 bits)
-    1,  // 0x09 - KValueHold Holding K VAL (8 bits)
-    1,  // 0x0A - KValueRun Constant speed K VAL (8 bits)
-    1,  // 0x0B - KVAL_ACC Acceleration starting K VAL (8 bits)
-    1,  // 0x0C - KVAL_DEC Deceleration starting K VAL (8 bits)
-    2,  // 0x0D - IntersectSpeed Intersect speed (14 bits)
-    1,  // 0x0E - ST_SLP Start slope (8 bits)
-    1,  // 0x0F - FN_SLP_ACC Acceleration final slope (8 bits)
-    1,  // 0x10 - FN_SLP_DEC Deceleration final slope (8 bits)
-    1,  // 0x11 - K_THERM Thermal compensation factor (4 bits)
-    1,  // 0x12 - ADC output (5 bits)
-    1,  // 0x13 - OCD threshold (5 bits)
-    1,  // 0x14 - STALL_TH STALL threshold (5 bits)
-    2,  // 0x15 - Full-step speed (11 bits)
-    1,  // 0x16 - Step mode (8 bits)
-    1,  // 0x17 - Alarm enables (8 bits)
-    2,  // 0x18 - Gate driver configuration (11 bits)
-    1,  // 0x19 - Gate driver configuration (8 bits)
-    2,  // 0x1A - IC configuration (16 bits)
-    2,  // 0x1B - Status (16 bits)
-    0,  // 0x1C - No such parameter
-    0,  // 0x1D - No such parameter
-    0,  // 0x1E - No such parameter
-    0,  // 0x1F - No such parameter
-};
-
-// These constants are used to convert speeds in steps/sec
-// to the weird values used by the stepper driver chip.
+// These constants are used to convert speeds in steps/sec to the weird values
+// used by the stepper driver chip.
 // Note that different registers use different conversion factors.
 // See the chip data sheet for details.
 static constexpr float TickTime = 250e-9f;
@@ -79,11 +49,11 @@ static constexpr uint32_t MicrostepPerStep = 128;
 
 ErrorCode Handler::SetParam(Param param, uint32_t value) {
   uint8_t p = static_cast<uint8_t>(param);
-  if (p > sizeof(param_len)) {
+  if (p > sizeof(ParamLength)) {
     return ErrorCode::BadParam;
   }
 
-  size_t length = param_len[p];
+  size_t length = ParamLength[p];
   if (!length || (length > 3)) {
     return ErrorCode::BadParam;
   }
@@ -103,16 +73,16 @@ ErrorCode Handler::SetParam(Param param, uint32_t value) {
 
 ErrorCode Handler::GetParam(Param param, uint32_t *value) {
   uint8_t p = static_cast<uint8_t>(param);
-  if (p > sizeof(param_len)) {
+  if (p > sizeof(ParamLength)) {
     return ErrorCode::BadParam;
   }
 
-  size_t length = param_len[p];
+  size_t length = ParamLength[p];
   if (!length || (length > 3)) {
     return ErrorCode::BadParam;
   }
 
-  // It's not legal to call this from the control loop because it has to block.
+  // It's not legal to call this from the high priority task because it has to block.
   // Return an error if we're in an interrupt handler
   if (Interrupts::singleton().InInterruptHandler()) {
     return ErrorCode::WouldBlock;
@@ -127,9 +97,9 @@ ErrorCode Handler::GetParam(Param param, uint32_t *value) {
   command_buffer[2] = 0;
   command_buffer[3] = 0;
 
-  ErrorCode err = SendCmd(command_buffer, length + 1, response);
-  if (err != ErrorCode::Ok) {
-    return err;
+  ErrorCode error = SendCmd(command_buffer, length + 1, response);
+  if (error != ErrorCode::Ok) {
+    return error;
   }
 
   // Returned data is stored MSB first.
@@ -139,7 +109,7 @@ ErrorCode Handler::GetParam(Param param, uint32_t *value) {
     *value |= response[i];
   }
 
-  return err;
+  return error;
 }
 
 void Handler::Initialize() {
@@ -182,26 +152,27 @@ void Handler::Initialize() {
 
 // Convert a velocity from Deg/sec units to the value to program
 // into one of the stepper controller registers
-float Handler::DpsToVelReg(float vel, float cnv) const {
+float Handler::DegreesPerSecondToRegisterValue(float speed, float conversion_factor) const {
   // Convert to steps / sec
-  float step_per_sec = vel * static_cast<float>(steps_per_rev_) / 360.0f;
+  float step_per_sec = speed * static_cast<float>(steps_per_rev_) / 360.0f;
 
   // Multiply that by the register specific conversion factor
-  return cnv * step_per_sec;
+  return conversion_factor * step_per_sec;
 }
 
 // Convert a velocity from a register value to deg/sec
-float Handler::RegVelToDps(int32_t val, float cnv) const {
-  return static_cast<float>(val) * 360.0f / (cnv * static_cast<float>(steps_per_rev_));
+float Handler::RegisterValueToDegreesPerSecond(int32_t value, float conversion_factor) const {
+  return static_cast<float>(value) * 360.0f /
+         (conversion_factor * static_cast<float>(steps_per_rev_));
 }
 
 // Read the current absolute motor velocity and return it in deg/sec units
 // Note that this value is always positive
-ErrorCode Handler::GetCurrentSpeed(float *ret) {
-  uint32_t val;
-  ErrorCode err = GetParam(Param::Speed, &val);
-  *ret = RegVelToDps(val, VelCurrentSpeedReg);
-  return err;
+ErrorCode Handler::GetCurrentSpeed(float *return_value) {
+  uint32_t register_value;
+  ErrorCode error = GetParam(Param::Speed, &register_value);
+  *return_value = RegisterValueToDegreesPerSecond(register_value, VelCurrentSpeedReg);
+  return error;
 }
 
 // Set the motor's max speed setting in deg/sec
@@ -212,7 +183,7 @@ ErrorCode Handler::SetMaxSpeed(float dps) {
     return ErrorCode::BadValue;
   }
 
-  uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMaxSpeedReg));
+  uint32_t speed = static_cast<uint32_t>(DegreesPerSecondToRegisterValue(dps, VelMaxSpeedReg));
   if (speed > 0x3ff) {
     speed = 0x3ff;
   }
@@ -221,11 +192,11 @@ ErrorCode Handler::SetMaxSpeed(float dps) {
 }
 
 // Get the motor's max speed setting in deg/sec
-ErrorCode Handler::GetMaxSpeed(float *ret) {
-  uint32_t val;
-  ErrorCode err = GetParam(Param::MaxSpeed, &val);
-  *ret = RegVelToDps(val, VelMaxSpeedReg);
-  return err;
+ErrorCode Handler::GetMaxSpeed(float *return_value) {
+  uint32_t register_value;
+  ErrorCode error = GetParam(Param::MaxSpeed, &register_value);
+  *return_value = RegisterValueToDegreesPerSecond(register_value, VelMaxSpeedReg);
+  return error;
 }
 
 // Set the motor's min speed setting in deg/sec
@@ -243,7 +214,7 @@ ErrorCode Handler::SetMinSpeed(float dps) {
     return ErrorCode::BadValue;
   }
 
-  uint32_t speed = static_cast<uint32_t>(DpsToVelReg(dps, VelMinSpeedReg));
+  uint32_t speed = static_cast<uint32_t>(DegreesPerSecondToRegisterValue(dps, VelMinSpeedReg));
   if (speed > 0xfff) {
     speed = 0xfff;
   }
@@ -252,11 +223,11 @@ ErrorCode Handler::SetMinSpeed(float dps) {
 }
 
 // Get the motor's min speed setting in deg/sec
-ErrorCode Handler::GetMinSpeed(float *ret) {
-  uint32_t val;
-  ErrorCode err = GetParam(Param::MinSpeed, &val);
-  *ret = RegVelToDps(val, VelMinSpeedReg);
-  return err;
+ErrorCode Handler::GetMinSpeed(float *return_value) {
+  uint32_t register_value;
+  ErrorCode error = GetParam(Param::MinSpeed, &register_value);
+  *return_value = RegisterValueToDegreesPerSecond(register_value, VelMinSpeedReg);
+  return error;
 }
 
 // Set the motors accel and decel rate in deg/sec/sec units
@@ -277,9 +248,9 @@ ErrorCode Handler::SetAccel(float acc) {
     val = 0xfff;
   }
 
-  ErrorCode err = SetParam(Param::Acceleration, val);
-  if (err != ErrorCode::Ok) {
-    return err;
+  ErrorCode error = SetParam(Param::Acceleration, val);
+  if (error != ErrorCode::Ok) {
+    return error;
   }
 
   return SetParam(Param::Deceleration, val);
@@ -327,19 +298,19 @@ ErrorCode Handler::SetAmpAccel(float amp) { return SetKval(Param::KValueAccelera
 ErrorCode Handler::SetAmpDecel(float amp) { return SetKval(Param::KValueDecelerate, amp); }
 
 ErrorCode Handler::SetAmpAll(float amp) {
-  ErrorCode err = SetAmpHold(amp);
-  if (err != ErrorCode::Ok) {
-    return err;
+  ErrorCode error = SetAmpHold(amp);
+  if (error != ErrorCode::Ok) {
+    return error;
   }
 
-  err = SetAmpRun(amp);
-  if (err != ErrorCode::Ok) {
-    return err;
+  error = SetAmpRun(amp);
+  if (error != ErrorCode::Ok) {
+    return error;
   }
 
-  err = SetAmpAccel(amp);
-  if (err != ErrorCode::Ok) {
-    return err;
+  error = SetAmpAccel(amp);
+  if (error != ErrorCode::Ok) {
+    return error;
   }
 
   return SetAmpDecel(amp);
@@ -348,8 +319,9 @@ ErrorCode Handler::SetAmpAll(float amp) {
 // Start running at a constant velocity.
 // The velocity is specified in deg/sec units
 ErrorCode Handler::RunAtVelocity(float vel) {
-  // Convert the speed from deg/sec to the weird units used by the stepper chip
-  float speed = DpsToVelReg(fabsf(vel), VelCurrentSpeedReg);
+  // Stepper uses two separate commands for RunPositive and RunNegative, both of which take an
+  // unsigned speed argument: absolute value of the desired velocity, changed to register value.
+  float speed = DegreesPerSecondToRegisterValue(fabsf(vel), VelCurrentSpeedReg);
 
   // The speed value is a 20 bit unsigned integer passed as part of the command.
   uint32_t s = static_cast<uint32_t>(speed);
@@ -419,18 +391,18 @@ ErrorCode Handler::GetStatus(Status *stat) {
                        static_cast<uint8_t>(OpCode::Nop)};
   uint8_t response[sizeof(command) - 1] = {0};
 
-  ErrorCode err = SendCmd(command, sizeof(command), response);
-  if (err != ErrorCode::Ok) {
-    return err;
+  ErrorCode error = SendCmd(command, sizeof(command), response);
+  if (error != ErrorCode::Ok) {
+    return error;
   }
 
   // received MSB first
   stat->word = static_cast<uint16_t>((response[0] << 8) + response[1]);
 
-  return err;
+  return error;
 }
 
-int32_t Handler::DegToUstep(float deg) const {
+int32_t Handler::DegreesToMicrosteps(float deg) const {
   uint32_t ustep_per_rev = MicrostepPerStep * steps_per_rev_;
 
   float steps = static_cast<float>(ustep_per_rev) * deg / 360.0f;
@@ -440,7 +412,7 @@ int32_t Handler::DegToUstep(float deg) const {
 // Goto to the position (in deg) via the shortest path
 // This returns once the move has started, it doesn't wait for the move to finish
 ErrorCode Handler::GotoPos(float deg) {
-  int32_t ustep = DegToUstep(deg);
+  int32_t ustep = DegreesToMicrosteps(deg);
 
   uint8_t command[4];
   command[0] = static_cast<uint8_t>(OpCode::GoTo);
@@ -452,7 +424,7 @@ ErrorCode Handler::GotoPos(float deg) {
 
 // Start a relative move of the passed number of deg.
 ErrorCode Handler::MoveRel(float deg) {
-  int32_t dist = DegToUstep(deg);
+  int32_t dist = DegreesToMicrosteps(deg);
 
   uint8_t command[4];
 

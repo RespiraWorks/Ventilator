@@ -82,7 +82,7 @@ class RequestQueue {
   void AdvanceToNextRequest();
 };
 
-template <size_t MaxSlaves, size_t QueuesLength>
+template <size_t MaxSlaves, size_t QueueLength>
 class DaisyChain : public RxListener {
  public:
   DaisyChain(const char *name, const char *help_supplement, Channel *spi,
@@ -145,7 +145,7 @@ class DaisyChain : public RxListener {
   size_t command_buffer_count_{0};
 
   // We need to handle as many requests queues as we have slaves.
-  RequestQueue<QueuesLength> request_queue_[MaxSlaves];
+  RequestQueue<QueueLength> request_queue_[MaxSlaves];
 
   // Buffers used to transmit/receive data from the SPI peripheral
   uint8_t send_buffer_[MaxSlaves] = {0};

@@ -20,9 +20,11 @@ limitations under the License.
 
 namespace StepMotor {
 
-enum class MoveDir { Shortest, Negative, Positive };
+enum class MoveDirection { Shortest, Negative, Positive };
 
-// Class that allows us to (very approximately) emulate a stepper motor
+// Class that allows us to (very approximately) emulate a stepper motor.
+// This class interfaces with the stepper Handler (through a mock spi bus), interpret its commands
+// to allow us to test the stepper Handler as a whole with no change whatsoever.
 class TestStepper {
  public:
   TestStepper(float low_stop, float high_stop, bool power_step);
@@ -35,7 +37,7 @@ class TestStepper {
 
   void ResetDevice();
 
-  void MoveToPosition(int32_t microsteps, MoveDir dir);
+  void MoveToPosition(int32_t microsteps, MoveDirection dir);
 
   void ExecuteCommand();
 

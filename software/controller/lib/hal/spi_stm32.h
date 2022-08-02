@@ -50,7 +50,7 @@ class STM32Channel : public Channel {
   STM32Channel(Base spi, DMA::Base dma);
 
   // Note: if you need DMA interrupts to be enabled, set some listeners (using
-  // Channel::SetListeners()) prior to calling Initialize() in order for us to know which
+  // Channel::Set[R|T]xListener()) prior to calling Initialize() in order for us to know which
   // interrupts to enable.
   void Initialize(GPIO::Port clock_port, uint8_t clock_pin, GPIO::Port miso_port, uint8_t miso_pin,
                   GPIO::Port mosi_port, uint8_t mosi_pin, GPIO::Port chip_select_port,

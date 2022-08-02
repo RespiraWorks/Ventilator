@@ -22,8 +22,7 @@ limitations under the License.
 // The stepper driver chips are setup in a daisy chain configuration (see
 // https://en.wikipedia.org/wiki/Serial_Peripheral_Interface#Daisy_chain_configuration)
 //
-// The driver chips supported are made by ST.  The following chips are
-// supported:
+// The driver chips supported are made by ST.  The following chips are supported:
 //   L6470
 //     https://www.st.com/content/st_com/en/products/motor-drivers/stepper-motor-drivers/l6470.html
 //   powerSTEP01
@@ -51,9 +50,8 @@ limitations under the License.
 
 namespace StepMotor {
 
-// These are the simple opcodes for the stepper driver.
-// Not included here are set/get parameter which include
-// the parameter ID value as part of the code.
+// These are the simple op codes for the stepper driver.
+// Not included here are set/get parameter which include the parameter ID as part of the code.
 enum class OpCode : uint8_t {
   Nop = 0,                   // Used when there's no other command to send
   RunNegative = 0x50,        // Run negative at constant speed.
@@ -105,6 +103,44 @@ enum class Param : uint8_t {
   Status = 0x1B,                    //
 };
 
+// This array holds the length of each parameter in units of bytes, rounded up to the nearest byte.
+// This info is based on table 12 in the powerSTEP chip data sheet.
+// The Handler class normally abstracts these away, unless you want to use [Get|Set]Param directly.
+static constexpr size_t ParamLength[32] = {
+    0,  // 0x00 - No valid parameter with ID 0
+    3,  // 0x01 - Absolute position (22 bits)
+    2,  // 0x02 - Electrical position (9 bits)
+    3,  // 0x03 - Mark position (22 bits)
+    3,  // 0x04 - Current speed (20 bits)
+    2,  // 0x05 - Acceleration (12 bits)
+    2,  // 0x06 - Deceleration (12 bits)
+    2,  // 0x07 - Maximum speed (10 bits)
+    2,  // 0x08 - Minimum speed (12 bits)
+    1,  // 0x09 - KValueHold Holding K VAL (8 bits)
+    1,  // 0x0A - KValueRun Constant speed K VAL (8 bits)
+    1,  // 0x0B - KVAL_ACC Acceleration starting K VAL (8 bits)
+    1,  // 0x0C - KVAL_DEC Deceleration starting K VAL (8 bits)
+    2,  // 0x0D - IntersectSpeed Intersect speed (14 bits)
+    1,  // 0x0E - ST_SLP Start slope (8 bits)
+    1,  // 0x0F - FN_SLP_ACC Acceleration final slope (8 bits)
+    1,  // 0x10 - FN_SLP_DEC Deceleration final slope (8 bits)
+    1,  // 0x11 - K_THERM Thermal compensation factor (4 bits)
+    1,  // 0x12 - ADC output (5 bits)
+    1,  // 0x13 - OCD threshold (5 bits)
+    1,  // 0x14 - STALL_TH STALL threshold (5 bits)
+    2,  // 0x15 - Full-step speed (11 bits)
+    1,  // 0x16 - Step mode (8 bits)
+    1,  // 0x17 - Alarm enables (8 bits)
+    2,  // 0x18 - Gate driver configuration (11 bits)
+    1,  // 0x19 - Gate driver configuration (8 bits)
+    2,  // 0x1A - IC configuration (16 bits)
+    2,  // 0x1B - Status (16 bits)
+    0,  // 0x1C - No such parameter
+    0,  // 0x1D - No such parameter
+    0,  // 0x1E - No such parameter
+    0,  // 0x1F - No such parameter
+};
+
 // Error codes returned by my functions
 enum class ErrorCode {
   Ok,
@@ -113,13 +149,6 @@ enum class ErrorCode {
   WouldBlock,    // Call would block, can't be called from within ISR
   QueueFull,     // Can't add command to queue, not enough space
   InvalidState,  // Invalid state for command.
-};
-
-enum class MoveStatus {
-  Stopped = 0,
-  Accelerating = 1,
-  Decelerating = 2,
-  ConstantSpeed = 3,
 };
 
 // Detailed status about the stepper driver chip.
@@ -146,7 +175,15 @@ union Status {
   uint16_t word;
 };
 
-using Chain = SPI::DaisyChain</*MaxSlaves=*/4, /*QueuesLength*/ 10>;
+// Possible values for Status::bitfield.motion_status
+enum class MoveStatus : uint16_t {
+  Stopped = 0,
+  Accelerating = 1,
+  Decelerating = 2,
+  ConstantSpeed = 3,
+};
+
+using Chain = SPI::DaisyChain</*MaxSlaves=*/4, /*QueueLength*/ 10>;
 
 // Represents one of the stepper motors in the system
 class Handler {
@@ -156,19 +193,15 @@ class Handler {
 
   void Initialize();
 
-  // Sets the number of full steps / rev for the motor.
-  // For most stepper motors this is 200.  That's the
-  // default if this function isn't called.
-  // If your stepper is a '1.8 deg' motor, then it has
-  // 200 steps / rev (360 deg / 200 steps = 1.8 deg).
-  // This value is used internally to convert between
-  // degrees and steps.
+  // Sets the number of full steps / rev for the motor.  For most stepper motors this is 200.
+  // That's the default if this function isn't called.
+  // If your stepper is a '1.8 deg' motor, then it has 200 steps/rev (360 deg / 200 steps = 1.8
+  // deg). This value is used internally to convert between degrees and steps.
   void SetStepsPerRev(uint32_t spr) { steps_per_rev_ = spr; }
 
   uint32_t GetStepsPerRev() const { return steps_per_rev_; }
 
-  // Read the current absolute motor velocity and return it
-  // in deg/sec units
+  // Read the current absolute motor velocity and return it in deg/sec units
   // Note that this value is always positive
   ErrorCode GetCurrentSpeed(float *ret);
 
@@ -178,11 +211,10 @@ class Handler {
 
   // Get and set the motor's minimum speed setting in deg/sec
   //
-  // NOTE - Setting a non-zero minimum speed doesn't mean
-  // the motor can't stop, this is the minimum speed for
-  // a move.  When you start a move, rather then increase
-  // linearly from 0, the stepper will jump to this speed
-  // immediately, then ramp up from there.
+  // NOTE - Setting a non-zero minimum speed doesn't mean the motor can't stop, this is the minimum
+  // speed when it is actually moving.
+  // When you start a move, rather then increase linearly from 0, the stepper will jump to this
+  // speed immediately, then ramp up from there.
   // This can help with vibration.
   //
   // NOTE - The motor must be disabled to set this
@@ -195,33 +227,29 @@ class Handler {
   ErrorCode SetAccel(float acc);
 
   // Set the amplitude of the voltage output used to drive the motor.
-  // The values set here allow the amplitude of output that pushes power
-  // to the motor to be adjusted.  Higher values will push more current
-  // into the motor, lower values will push less.  The motor will be
-  // more powerful with higher values, but will get hotter, consume more
-  // power, and could potentially be damaged if these are set too high,
-  // so be careful.
+  // The values set here adjust the amplitude of output that pushes power to the motor.
+  // Higher values will push more current into the motor, lower values will push less.
+  // The motor will be more powerful with higher values, but will get hotter, consume more
+  // power, and could potentially be damaged if these are set too high, so be careful.
   //
   // There are four different values that can be set which control the
   // output to the motor in different phases of its motion:
-  //   hold - Value used when the motor is holding position (not moving)
+  //   hold - Value used when the motor is holding position (not moving).
   //   run  - Value used when running at constant velocity.
-  //   accel - Value used when accelerating
-  //   decel - Value used when decelerating
+  //   accel - Value used when accelerating.
+  //   decel - Value used when decelerating.
   //
-  // In all cases the values are set in a range of 0 to 1
-  // for 0 to 100%
+  // In all cases the values are set in a range of 0 to 1, for 0 to 100%.
   ErrorCode SetAmpHold(float amp);
   ErrorCode SetAmpRun(float amp);
   ErrorCode SetAmpAccel(float amp);
   ErrorCode SetAmpDecel(float amp);
 
-  // Sets all four amplitude values to the same value
+  // Sets all four amplitude values to the same value.
   ErrorCode SetAmpAll(float amp);
 
-  // Goto to the position (in deg) via the shortest path
-  // This returns once the move has started, it doesn't
-  // wait for the move to finish
+  // Goto to the position (in deg) via the shortest path.
+  // This returns once the move has started, it doesn't wait for the move to finish
   ErrorCode GotoPos(float deg);
 
   // Start a relative move of the passed number of deg.
@@ -231,41 +259,36 @@ class Handler {
   // The velocity is specified in deg/sec units
   ErrorCode RunAtVelocity(float vel);
 
-  // Decelerate to zero velocity and hold position
-  // This can also be used to enable the motor without
-  // causing any motion
+  // Decelerate to zero velocity and hold position.
+  // This can also be used to enable the motor without causing any motion
   ErrorCode SoftStop();
 
-  // Stop abruptly and hold position
-  // This can also be used to enable the motor without
-  // causing any motion
+  // Stop abruptly and hold position.
+  // This can also be used to enable the motor without causing any motion.
   ErrorCode HardStop();
 
-  // Decelerate to zero velocity and disable
+  // Decelerate to zero velocity and disable.
   ErrorCode SoftDisable();
 
-  // Immediately disable the motor
+  // Immediately disable the motor.
   ErrorCode HardDisable();
 
-  // Reset the motor position to zero
+  // Reset the motor position to zero.
   ErrorCode ClearPosition();
 
   // Reset the stepper chip
   ErrorCode Reset();
 
   // Read the status of the stepper chip.
-  // Like all reads, this can only be done in the
-  // background loop
+  // Like all reads, this can only be done in the background loop.
   ErrorCode GetStatus(Status *stat);
 
-  // Set and get parameters.
-  // These are mostly for internal use.
-  // The higher level methods should generally
-  // be used instead.
+  // Set and get parameters.  These are mostly for internal use.
+  // The higher level methods should generally be used instead.
   ErrorCode SetParam(Param param, uint32_t value);
   ErrorCode GetParam(Param param, uint32_t *value);
 
-  // for testing purposes
+  // For testing purposes
   bool power_step() const { return power_step_; }
 
  private:
@@ -275,9 +298,9 @@ class Handler {
   // Defaults to the standard value for most steppers
   uint32_t steps_per_rev_{200};
 
-  float DpsToVelReg(float vel, float cnv) const;
-  float RegVelToDps(int32_t val, float cnv) const;
-  int32_t DegToUstep(float deg) const;
+  float DegreesPerSecondToRegisterValue(float speed, float conversion_factor) const;
+  float RegisterValueToDegreesPerSecond(int32_t value, float conversion_factor) const;
+  int32_t DegreesToMicrosteps(float deg) const;
   ErrorCode SetKval(Param param, float amp);
 
   // Send a command and wait for the response (if any)

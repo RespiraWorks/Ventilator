@@ -277,10 +277,10 @@ class ControllerDebugInterface:
         for var, val in pairs.items():
             self.variable_set(var, val, verbose=True)
 
-    def variables_get(self, names, raw=False):
+    def variables_get(self, names, raw=False, fmt=None):
         ret = {}
         for name in names:
-            ret[name] = self.variable_get(name, raw=raw)
+            ret[name] = self.variable_get(name, raw=raw, fmt=fmt)
         return ret
 
     def variable_get(self, name, raw=False, fmt=None):

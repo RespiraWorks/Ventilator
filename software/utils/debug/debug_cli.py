@@ -530,52 +530,17 @@ named {self.scripts_directory} will be searched for the python script.
 
         if var_name == "all":
             found = self.interface.variables_find()
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=True)
-            return
         elif var_name == "set":
             found = self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=False)
-            return
         elif var_name == "read":
             found = self.interface.variables_find(access_filter=VAR_ACCESS_READ_ONLY)
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=False)
-            return
         elif "*" in var_name or "?" in var_name:
             found = self.interface.variables_find(pattern=var_name)
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=False)
-            return
         else:
-            variable_md = self.interface.variable_metadata[var_name]
-            val = self.interface.variable_get(var_name, raw=raw, fmt=fmt)
-            print(variable_md.print_value(val))
-            # TODO: should analyze only be done when an addition flag is passed?
-            self.analyze_var(variable_md, val)
+            found = [var_name]
 
-    def analyze_var(self, variable_md, val):
-        data_analysis_checks = dict()
-        # TODO: usefeul checks for non-float array types
-        if variable_md.type == VAR_FLOAT_ARRAY:
-            float_array = np.array(val[1:-1].split()).astype(float)
-
-            # TODO: other data analysis checks
-            data_analysis_checks.update(
-                {
-                    "linear": False,
-                }
-            )
-
-            # Check for linearity
-            lin_tolerance = 0.0001  # floats are rounded to three decimal places
-            diff = np.diff(float_array)
-            data_analysis_checks["linear"] = np.all(diff - diff[0] < lin_tolerance)
-
-            print("properties:")
-            for k, v in data_analysis_checks.items():
-                print(f"    {k} : {v}")
+        all_vars = self.interface.variables_get(found, raw=raw, fmt=fmt)
+        self.print_variable_values(all_vars, show_access=(var_name == "all"))
 
     def print_variable_values(self, names_values, show_access):
         for count, name in enumerate(sorted(names_values.keys())):

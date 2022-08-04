@@ -34,7 +34,7 @@ from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
 from debug_funcs import SUPPORTED_FUNCTIONS, DebugFunctions
-from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
+from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_TYPE_REPRESENTATION
 import numpy as np
 import matplotlib.pyplot as plt
 import test_data
@@ -539,13 +539,35 @@ named {self.scripts_directory} will be searched for the python script.
         else:
             found = [var_name]
 
-        all_vars = self.interface.variables_get(found, raw=raw, fmt=fmt)
-        self.print_variable_values(all_vars, show_access=(var_name == "all"))
+        all_vars = self.interface.variables_get(found, raw=True, fmt=fmt)
+        self.print_variable_values(all_vars, show_access=(var_name == "all"), raw=raw)
 
-    def print_variable_values(self, names_values, show_access):
+    def print_variable_values(self, names_values, show_access, raw=False):
         for count, name in enumerate(sorted(names_values.keys())):
             variable_md = self.interface.variable_metadata[name]
-            text = variable_md.print_value(names_values[name], show_access=show_access)
+            raw_value = names_values[name]
+
+            properties = []
+
+            # Linear: array values have constant rate of change
+            if VAR_TYPE_REPRESENTATION[variable_md.type] == "A":
+                expected = DebugFunctions.lin(raw_value[0], raw_value[-1])
+                tolerance = np.finfo(np.float32).resolution  # precision of 32-bit float
+                linear = True
+                for i in range(len(raw_value)):
+                    val = raw_value[i]
+                    exp = expected[i]
+                    if exp == 0:
+                        linear = linear and (raw == 0)
+                    else:
+                        linear = linear and abs((exp - val) / exp) <= tolerance
+                if linear:
+                    properties.append("linear")
+
+            formatted_value = variable_md.format_value(raw_value, raw=raw)
+            text = variable_md.print_value(
+                formatted_value, show_access=show_access
+            ) + ",".join(properties)
             if (count % 2) == 0:
                 print(white(text))
             else:

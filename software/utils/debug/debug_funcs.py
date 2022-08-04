@@ -28,10 +28,13 @@ SUPPORTED_FUNCTIONS = {
 }
 
 
-class DebugFunctions:
-    def lin(low: float, high: float):
-        # TODO: should these values be rounded or set to a specific precision?
-        return np.linspace(low, high, 11)
+def lin(low: float, high: float):
+    return np.linspace(low, high, 11)
 
-    def eigen():
-        return DebugFunctions.lin(0, 1)
+
+def eigen():
+    return lin(0, 1)
+
+
+def scoped_eval(string_to_eval):
+    return eval(string_to_eval)

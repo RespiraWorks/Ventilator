@@ -33,12 +33,12 @@ from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
-from debug_funcs import SUPPORTED_FUNCTIONS, DebugFunctions
 from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_TYPE_REPRESENTATION
 import numpy as np
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
+import debug_funcs
 
 
 class ArgparseShowHelpError(Exception):
@@ -551,7 +551,7 @@ named {self.scripts_directory} will be searched for the python script.
 
             # Linear: array values have constant rate of change
             if VAR_TYPE_REPRESENTATION[variable_md.type] == "A":
-                expected = DebugFunctions.lin(raw_value[0], raw_value[-1])
+                expected = debug_funcs.lin(raw_value[0], raw_value[-1])
                 tolerance = np.finfo(np.float32).resolution  # precision of 32-bit float
                 linear = True
                 for i in range(len(raw_value)):
@@ -606,20 +606,21 @@ named {self.scripts_directory} will be searched for the python script.
             self.interface.variables_force_open()
             return
 
-        debug_func_dict = {k: getattr(DebugFunctions, k) for k in dir(DebugFunctions)}
+        string_to_eval = "".join(args.data)
+
         try:
-            data = eval("".join(args.data), globals(), debug_func_dict)
+            data = debug_funcs.scoped_eval(string_to_eval)
+
+            if isinstance(data, np.ndarray):
+                data = data.tolist()
+
+            self.interface.variable_set(args.var, data)
         except:
             print(
                 "You may incorrectly used a supported function or called an unsupported function."
             )
             print("Run 'help set' to see available functions and usage.")
-            raise
-
-        if isinstance(data, np.ndarray):
-            data = data.tolist()
-
-        self.interface.variable_set(args.var, data)
+            return
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(
@@ -644,7 +645,7 @@ named {self.scripts_directory} will be searched for the python script.
         )
         print("  automatically          - populate the array values using a function")
         print("Available shortcut functions:")
-        for key, value in SUPPORTED_FUNCTIONS.items():
+        for key, value in debug_funcs.SUPPORTED_FUNCTIONS.items():
             print("  {0:20} - {1}".format(key, value))
         print(
             "All native Python functionality and numpy can be used for function composition as well"

@@ -615,9 +615,10 @@ named {self.scripts_directory} will be searched for the python script.
                 data = data.tolist()
 
             self.interface.variable_set(args.var, data)
-        except:
+        except Exception as e:
+            print(e)
             print(
-                "You may incorrectly used a supported function or called an unsupported function."
+                "You may have incorrectly used a supported function or called an unsupported function."
             )
             print("Run 'help set' to see available functions and usage.")
             return

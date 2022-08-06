@@ -103,7 +103,7 @@ jobs:
       image: ubuntu-2004:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
-    resource_class: small
+    resource_class: medium
     steps:
       - checkout
       - run:

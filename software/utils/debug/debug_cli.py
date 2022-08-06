@@ -513,7 +513,7 @@ named {self.scripts_directory} will be searched for the python script.
         self.interface.poke(address, data, poke_type)
 
     def do_get(self, line):
-        # TODO: plotting (-p/--plot)?
+        # TODO: plotting (-p/--plot) floatarrays to visualize linearity and other properties present in the values
         cl = line.split()
         if len(cl) < 1:
             print("Please give the variable name to read")
@@ -546,32 +546,41 @@ named {self.scripts_directory} will be searched for the python script.
         for count, name in enumerate(sorted(names_values.keys())):
             variable_md = self.interface.variable_metadata[name]
             raw_value = names_values[name]
+            properties = ""
 
-            properties = []
-
-            # Linear: array values have constant rate of change
             if variable_md.type == VAR_FLOAT_ARRAY:
-                expected = debug_funcs.lin(raw_value[0], raw_value[-1])
-                tolerance = np.finfo(np.float32).resolution  # precision of 32-bit float
-                linear = True
-                for i in range(len(raw_value)):
-                    val = raw_value[i]
-                    exp = expected[i]
-                    if exp == 0:
-                        linear = linear and (raw == 0)
-                    else:
-                        linear = linear and abs((exp - val) / exp) <= tolerance
-                if linear:
-                    properties.append("linear")
+                properties = self.float_array_analysis(raw_value)
 
             formatted_value = variable_md.format_value(raw_value, raw=raw)
-            text = variable_md.print_value(
+            print_value = variable_md.print_value(
                 formatted_value, show_access=show_access
-            ) + ",".join(properties)
+            )
+            text = print_value + properties
+
             if (count % 2) == 0:
                 print(white(text))
             else:
                 print(dark_orange(text))
+
+    def float_array_analysis(self, floatarray):
+        properties = []
+
+        # Linear: array values have constant rate of change
+        expected = debug_funcs.lin(floatarray[0], floatarray[-1])
+        tolerance = np.finfo(np.float32).resolution  # precision of 32-bit float
+        linear = True
+        for i in range(len(floatarray)):
+            val = floatarray[i]
+            exp = expected[i]
+            if exp == 0:
+                linear = linear and abs(val) <= tolerance
+            else:
+                linear = linear and abs((exp - val) / exp) <= tolerance
+        if linear:
+            properties.append("linear")
+
+        # comma-delimited list of properties
+        return ",".join(properties)
 
     def complete_get(self, text, line, begidx, endidx):
         return self.interface.variables_find(pattern=(text + "*")) + [
@@ -611,6 +620,7 @@ named {self.scripts_directory} will be searched for the python script.
         try:
             data = debug_funcs.scoped_eval(string_to_eval)
 
+            # low-level interface expects native Python list while user-generated data may be numpy arrays
             if isinstance(data, np.ndarray):
                 data = data.tolist()
 

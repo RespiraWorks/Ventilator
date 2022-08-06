@@ -625,13 +625,20 @@ named {self.scripts_directory} will be searched for the python script.
                 data = data.tolist()
 
             self.interface.variable_set(args.var, data)
-        except Exception as e:
+        except TypeError as e:
             print(red(str(e)))
-            print(
-                "You may have incorrectly used a supported function or called an unsupported function."
-            )
+            print("You may have either")
+            print("    - incorrectly used a supported function")
+            print("    - set a variable to data of unexpected type")
             print("Run 'help set' to see available functions and usage.")
             return
+        except NameError as e:
+            print(red(str(e)))
+            print("You may have tried to use an unsupported function.")
+            print("Run 'help set' to see available functions and usage.")
+            return
+        except Exception as e:
+            print(red(str(e)))
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(

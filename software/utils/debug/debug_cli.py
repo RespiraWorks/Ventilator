@@ -33,7 +33,7 @@ from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
-from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_TYPE_REPRESENTATION
+from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
 import numpy as np
 import matplotlib.pyplot as plt
 import test_data
@@ -550,7 +550,7 @@ named {self.scripts_directory} will be searched for the python script.
             properties = []
 
             # Linear: array values have constant rate of change
-            if VAR_TYPE_REPRESENTATION[variable_md.type] == "A":
+            if variable_md.type == VAR_FLOAT_ARRAY:
                 expected = debug_funcs.lin(raw_value[0], raw_value[-1])
                 tolerance = np.finfo(np.float32).resolution  # precision of 32-bit float
                 linear = True
@@ -616,7 +616,7 @@ named {self.scripts_directory} will be searched for the python script.
 
             self.interface.variable_set(args.var, data)
         except Exception as e:
-            print(e)
+            print(red(str(e)))
             print(
                 "You may have incorrectly used a supported function or called an unsupported function."
             )

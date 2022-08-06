@@ -539,10 +539,12 @@ named {self.scripts_directory} will be searched for the python script.
         else:
             found = [var_name]
 
-        all_vars = self.interface.variables_get(found, raw=True, fmt=fmt)
-        self.print_variable_values(all_vars, show_access=(var_name == "all"), raw=raw)
+        all_vars = self.interface.variables_get(found, raw=True)
+        self.print_variable_values(
+            all_vars, show_access=(var_name == "all"), raw=raw, fmt=fmt
+        )
 
-    def print_variable_values(self, names_values, show_access, raw=False):
+    def print_variable_values(self, names_values, show_access, raw=False, fmt=None):
         for count, name in enumerate(sorted(names_values.keys())):
             variable_md = self.interface.variable_metadata[name]
             raw_value = names_values[name]
@@ -551,7 +553,7 @@ named {self.scripts_directory} will be searched for the python script.
             if variable_md.type == VAR_FLOAT_ARRAY:
                 properties = self.float_array_analysis(raw_value)
 
-            formatted_value = variable_md.format_value(raw_value, raw=raw)
+            formatted_value = variable_md.format_value(raw_value, raw=raw, fmt=fmt)
             print_value = variable_md.print_value(
                 formatted_value, show_access=show_access
             )

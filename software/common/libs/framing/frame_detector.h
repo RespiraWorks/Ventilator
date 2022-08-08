@@ -112,6 +112,17 @@ class FrameDetector : public RxListener {
 
   void on_char_match_with_data();
   void on_char_match_with_markers_only();
+
+ public:
+  // Introduce counters on some conditions to allow checking that everything is going according
+  // to plan.
+  // I need to make these uint32_t and public so I can easily access them from debug variables
+  // in the controller code
+  uint32_t received_frames{0};
+  uint32_t lost_frames{0};
+  uint32_t empty_frames{0};
+  uint32_t overflowed_buffer{0};
+  uint32_t unknown_errors{0};
 };
 
 /// Includes function implementations so they don't have to live in header

@@ -85,6 +85,9 @@ class Int32 : public Primitive32 {
   void set(int32_t v) { value_ = v; }
   int32_t get() const { return value_; }
 
+  void operator+=(int32_t v) { value_ += v; }
+  void operator-=(int32_t v) { value_ -= v; }
+
  private:
   int32_t value_;
 };
@@ -98,6 +101,9 @@ class UInt32 : public Primitive32 {
   void set(uint32_t v) { value_ = v; }
   uint32_t get() const { return value_; }
 
+  void operator+=(uint32_t v) { value_ += v; }
+  void operator-=(uint32_t v) { value_ -= v; }
+
  private:
   uint32_t value_;
 };
@@ -110,6 +116,9 @@ class Float : public Primitive32 {
 
   void set(float v) { value_ = v; }
   float get() const { return value_; }
+
+  void operator+=(float v) { value_ += v; }
+  void operator-=(float v) { value_ -= v; }
 
  private:
   float value_;

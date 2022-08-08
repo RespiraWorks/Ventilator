@@ -163,8 +163,8 @@ void V03Actuators::beep(float volume) {
 
 /// \TODO move constants to system_constants.h, so they can be reused in integration tests
 V03System::V03System()
-    : rpi_uart_(UART::Base::UART3, DMA::Base::DMA1, FramingMark),
-      debug_uart_(UART::Base::UART2),
+    : rpi_uart_(UART::Base::UART3, DMA::Base::DMA1, "rpi", "for the GUI", FramingMark),
+      debug_uart_(UART::Base::UART2, "debug", "for the debug interface"),
       i2c1_(I2C::Base::I2C1, DMA::Base::DMA2),
       eeprom_(0x50, 64, 32768, &i2c1_),
       spi1_(SPI::Base::SPI1, DMA::Base::DMA2),

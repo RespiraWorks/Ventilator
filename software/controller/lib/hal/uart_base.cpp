@@ -314,12 +314,14 @@ void Channel::UARTInterruptHandler() {
   // they're set to avoid further interrupts from them.
   if (uart->status.bitfield.overrun_error) {
     uart->interrupt_clear.bitfield.overrun_clear = 1;
+    overrun_errors_ += 1;
     if (rx_listener_) {
       rx_listener_->on_rx_error(RxError::Overrun);
     }
   }
   if (uart->status.bitfield.framing_error) {
     uart->interrupt_clear.bitfield.framing_error_clear = 1;
+    framing_errors_ += 1;
     if (rx_listener_) {
       rx_listener_->on_rx_error(RxError::SerialFraming);
     }

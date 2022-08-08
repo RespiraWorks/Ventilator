@@ -154,11 +154,8 @@ class DaisyChain : public RxListener {
   void ProcessReceivedData();
   void SendDataWithBusyWait(uint8_t *command_buffer, uint8_t *response_buffer, size_t length);
 
-  uint32_t queueing_errors_{0};
-
-  Debug::Variable::Primitive32 dbg_queueing_errors_{
-      "queuing_errors", Debug::Variable::Access::ReadOnly, &queueing_errors_, "",
-      "Queueing error counter"};
+  Debug::Variable::UInt32 dbg_queueing_errors_{"queuing_errors", Debug::Variable::Access::ReadOnly,
+                                               0, "", "Queueing error counter"};
 };
 
 }  // namespace SPI

@@ -27,6 +27,7 @@ limitations under the License.
 #include "proto_traits.h"
 #include "serial_listeners.h"
 #include "units.h"
+#include "vars.h"
 
 namespace UART {
 
@@ -34,7 +35,13 @@ enum class Base { UART1, UART2, UART3, UART4 };
 
 class Channel {
  public:
-  explicit Channel(Base base, uint8_t match_char = 0) : uart_(base), match_char_(match_char){};
+  Channel(Base base, const char *name, const char *help_supplement, uint8_t match_char = 0)
+      : uart_(base), match_char_(match_char) {
+    overrun_errors_.prepend_name(name);
+    overrun_errors_.append_help(help_supplement);
+    framing_errors_.prepend_name(name);
+    framing_errors_.append_help(help_supplement);
+  };
 
   // Setup all registers to manage the uart channel, with hardware flow control pins as an option
   virtual void Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin,
@@ -126,6 +133,13 @@ class Channel {
 
   void OnTxComplete();
   void OnCharacterMatch();
+
+ private:
+  Debug::Variable::UInt32 overrun_errors_{"uart_overrun_errors", Debug::Variable::Access::ReadOnly,
+                                          0, "",
+                                          "Counter of bytes we could not read on the UART line."};
+  Debug::Variable::UInt32 framing_errors_{"uart_framing_errors", Debug::Variable::Access::ReadOnly,
+                                          0, "", "Counter of framing error on the UART line."};
 };
 
 }  // namespace UART

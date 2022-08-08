@@ -71,7 +71,7 @@ static constexpr uint16_t Length{TEST_PARAM_3};
 
 /// \TODO initialize based on system constants, and instantiate inside function
 I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2);
-UART::SoftChannel debug_uart(UART::Base::UART2);
+UART::SoftChannel debug_uart(UART::Base::UART2, "debug", "for the debug interface");
 
 // declaration of EEPROM
 static I2Ceeprom eeprom = I2Ceeprom(0x50, 64, 32768, &i2c1);

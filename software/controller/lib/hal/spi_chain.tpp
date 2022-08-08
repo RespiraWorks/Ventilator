@@ -211,13 +211,13 @@ bool DaisyChain<MaxSlaves, QueueLength>::SendRequest(const Request &request, siz
   // Check that the slave is valid, and there is room in the command buffer
   if(slave >= num_slaves_ || request.length > CommandBufferSize - command_buffer_count_){
     /// \TODO log an error (along with its nature?)
-    queueing_errors_++;
+    dbg_queueing_errors_ += 1;
     return false;
   }
 
   // Copy request to the request queue for that slave
   if(!request_queue_[slave].AddRequest(request, &command_buffer_[command_buffer_count_])){
-    queueing_errors_++;
+    dbg_queueing_errors_ += 1;
     return false;
   }
   // Copy data to the command buffer

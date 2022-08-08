@@ -43,10 +43,12 @@ void FrameDetector<S>::on_char_match_with_data()
     case State::WaitForStartMarker:
       // Received some junk while waiting for start marker but should have been just silence.
       state_ = State::Lost;
+      lost_frames++;
       restart_rx();
       return;
     case State::ReceivingFrame:
       // Yes, we got data, thus we got the frame we can pass further.
+      received_frames++;
       process_received_data();
       state_ = State::WaitForStartMarker;
       restart_rx();
@@ -74,6 +76,7 @@ void FrameDetector<S>::on_char_match_with_markers_only()
     case State::ReceivingFrame:
       // Received repeated marker char.
       // We have received a 0-length frame. Ignore it and continue receiving frame bytes.
+      empty_frames++;
       restart_rx();
       return;
   }
@@ -94,6 +97,7 @@ void FrameDetector<S>::on_character_match()
     // Should never end up here
     // DMA is not working?
     // TODO alert, safe reset
+    unknown_errors++;
     restart_rx();
   }
 }
@@ -120,6 +124,7 @@ void FrameDetector<S>::on_rx_complete()
 // We should never reach the full read of rx buffer.
 // If we get here, this means there are no marker chars in the stream, so we are lost.
   state_ = State::Lost;
+  overflowed_buffer++;
   restart_rx();
 }
 

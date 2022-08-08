@@ -19,7 +19,9 @@ namespace UART {
 
 class SoftChannel : public Channel {
  public:
-  explicit SoftChannel(Base base, uint8_t match_char = 0) : Channel(base, match_char){};
+  explicit SoftChannel(Base base, const char *name, const char *help_supplement,
+                       uint8_t match_char = 0)
+      : Channel(base, name, help_supplement, match_char){};
 
   // Note the use of default argument value in override functions, which is only OK because
   // overriden virtual functions use the same default value.

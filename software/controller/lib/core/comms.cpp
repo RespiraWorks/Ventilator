@@ -43,9 +43,21 @@ void Comms::ProcessRx(GuiStatus *gui_status) {
     size_t length = frame_detector_.frame_length();
     GuiStatus new_gui_status = GuiStatus_init_zero;
     auto result = DecodeFrame<GuiStatus>(buffer, length, &new_gui_status);
-    if (DecodeResult::Success == result) {
-      *gui_status = new_gui_status;
-      last_rx_ = SystemTimer::singleton().now();
+    switch (result) {
+      case DecodeResult::Success:
+        *gui_status = new_gui_status;
+        last_rx_ = SystemTimer::singleton().now();
+        break;
+      case DecodeResult::ErrorCRC:
+        crc_errors_ += 1;
+        break;
+      case DecodeResult::ErrorFraming:
+        framing_errors_ += 1;
+        break;
+      case DecodeResult::ErrorSerialization:
+        serialization_errors_ += 1;
+        break;
+        __builtin_unreachable();
     }
   }
   // TODO: alarm if we haven't received a status for too long

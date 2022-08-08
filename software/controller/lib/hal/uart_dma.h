@@ -25,7 +25,8 @@ namespace UART {
 class DMAChannel : public Channel {
  public:
   // Create a channel with DMA enabled
-  DMAChannel(Base base, DMA::Base dma, uint8_t match_char = 0);
+  DMAChannel(Base base, DMA::Base dma, const char *name, const char *help_supplement,
+             uint8_t match_char = 0);
 
   void Initialize(GPIO::Port port, uint8_t tx_pin, uint8_t rx_pin, std::optional<uint8_t> rts_pin,
                   std::optional<uint8_t> cts_pin, GPIO::AlternativeFunction alt_function,
@@ -62,6 +63,9 @@ class DMAChannel : public Channel {
   size_t rx_length_{0};
 
   bool rx_in_progress_{false};
+
+  Debug::Variable::UInt32 dma_errors_{"uart_dma_errors", Debug::Variable::Access::ReadOnly, 0, "",
+                                      "Counter of DMA error on the UART line."};
 };
 
 }  // namespace UART

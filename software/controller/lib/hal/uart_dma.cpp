@@ -19,7 +19,12 @@ limitations under the License.
 
 namespace UART {
 
-DMAChannel::DMAChannel(Base base, DMA::Base dma, uint8_t match_char) : Channel(base, match_char) {
+DMAChannel::DMAChannel(Base base, DMA::Base dma, const char *name, const char *help_supplement,
+                       uint8_t match_char)
+    : Channel(base, name, help_supplement, match_char) {
+  dma_errors_.prepend_name(name);
+  dma_errors_.append_help(help_supplement);
+
   // DMA mapping for UART (see [RM] p299)
   static struct {
     DMA::Base dma_base;
@@ -139,6 +144,7 @@ void DMAChannel::TxDMAInterruptHandler() {
   StopTx();
   if (tx_dma_->InterruptStatus(DMA::Interrupt::TransferError)) {
     tx_dma_->ClearInterrupt(DMA::Interrupt::TransferError);
+
     if (tx_listener_) {
       tx_listener_->on_tx_error();
     }

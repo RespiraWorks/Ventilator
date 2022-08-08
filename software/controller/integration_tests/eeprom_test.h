@@ -91,6 +91,8 @@ static Debug::Interface debug(&debug_uart);
 
 void RunTest() {
   hal.Init(CPUFrequency);
+  SystemTimer::singleton().initialize(PeripheralID::Timer6, InterruptVector::Timer6, CPUFrequency);
+  Interrupts::singleton().EnableInterrupts();
 
   // Just to shut it up, may not need this beyond v0.3
   PwmActuator blower{BlowerChannel, BlowerFreq, CPUFrequency, "blower_", " of the blower"};
@@ -107,7 +109,7 @@ void RunTest() {
   i2c1.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
                   GPIO::AlternativeFunction::AF4);
 
-  hal.bind_channels(&i2c1, nullptr, &debug_uart);
+  hal.bind_channels(&i2c1, nullptr, &debug_uart, nullptr);
   Interrupts::singleton().EnableInterrupts();
 
   /// \TODO are all the handlers really necessary for this integration test?

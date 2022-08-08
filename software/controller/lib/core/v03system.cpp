@@ -86,9 +86,11 @@ SensorReadings V03Sensors::get_readings() const {
   };
 }
 
-void V03Actuators::init(NVParams::Handler *nv_params) {
-  blower_pinch_.emplace("blower_valve_", " of the blower pinch valve", BlowerValveMotorIndex);
-  exhale_pinch_.emplace("exhale_valve_", " of the exhale pinch valve", ExhaleValveMotorIndex);
+void V03Actuators::init(NVParams::Handler *nv_params, StepMotor::Chain *stepper_chain) {
+  blower_pinch_.emplace("blower_valve_", " of the blower pinch valve", BlowerValveMotorIndex,
+                        stepper_chain);
+  exhale_pinch_.emplace("exhale_valve_", " of the exhale pinch valve", ExhaleValveMotorIndex,
+                        stepper_chain);
 
   // For now, the blower uses default calibration values, linearly spaced between 0 and 1
   blower_.emplace(BlowerChannel, BlowerFreq, CPUFrequency, "blower_", " of the blower");
@@ -98,6 +100,9 @@ void V03Actuators::init(NVParams::Handler *nv_params) {
 
   buzzer_.emplace(BuzzerChannel, BuzzerFreq, CPUFrequency, "buzzer_", "of the buzzer", "volume",
                   BuzzerOff, MaxBuzzerVolume);
+
+  blower_pinch_->Initialize();
+  exhale_pinch_->Initialize();
 
   // In case init was called with nullptr, these fail silently
   blower_pinch_->LinkCalibration(nv_params, offsetof(NVParams::Structure, blower_pinch_cal));
@@ -161,7 +166,10 @@ V03System::V03System()
     : rpi_uart_(UART::Base::UART3, DMA::Base::DMA1, FramingMark),
       debug_uart_(UART::Base::UART2),
       i2c1_(I2C::Base::I2C1, DMA::Base::DMA2),
-      eeprom_(0x50, 64, 32768, &i2c1_) {}
+      eeprom_(0x50, 64, 32768, &i2c1_),
+      spi1_(SPI::Base::SPI1, DMA::Base::DMA2),
+      stepper_daisy_chain_("stepper", "for stepper drivers daisy chain", &spi1_,
+                           /*min_cs_high_time=*/microseconds(1)) {}
 
 void V03System::init_hal() {
   hal.Init(CPUFrequency);
@@ -197,17 +205,27 @@ void V03System::init_subsystems() {
   i2c1_.Initialize(I2C::Speed::Fast, GPIO::Port::B, /*scl_pin=*/8, /*sda_pin=*/9,
                    GPIO::AlternativeFunction::AF4);
 
+  // The following pins are used to talk to the stepper drivers on an SPI daisy chain,
+  // The stepper drivers support 5Mbits/s communication, which means a clock of 80MHz / 16
+  // This assumes CPUFrequency is kept at 80MHz.
+  spi1_.Initialize(/*clock_port=*/GPIO::Port::A, 5, /*miso_port=*/GPIO::Port::A, 6,
+                   /*mosi_port=*/GPIO::Port::A, 7, /*chip_select_port=*/GPIO::Port::B, 6,
+                   /*reset_port=*/GPIO::Port::A, 9, /*word_size=*/8,
+                   SPI::Bitrate::CpuFreqBySixteen);
+
+  stepper_daisy_chain_.ProbeSlaves(static_cast<uint8_t>(StepMotor::OpCode::Nop),
+                                   static_cast<uint8_t>(StepMotor::OpCode::ResetDevice));
+
 #if defined(BARE_STM32)
-  hal.bind_channels(&i2c1_, &rpi_uart_, &debug_uart_);
+  hal.bind_channels(&i2c1_, &rpi_uart_, &debug_uart_, &spi1_);
 #endif
 
   Interrupts::singleton().EnableInterrupts();
-  StepMotor::OneTimeInit();
 
   // Locate our non-volatile parameter block in flash
   nv_params_.Init(&eeprom_);
   // Init the pwm pins for actuators and link calibration tables
-  actuators_.init(&nv_params_);
+  actuators_.init(&nv_params_, &stepper_daisy_chain_);
 
   sensors_.init(adc_);
 

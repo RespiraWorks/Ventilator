@@ -22,6 +22,9 @@ static constexpr float InitialStep{TEST_PARAM_3};
 
 void RunTest() {
   hal.Init(CPUFrequency);
+  SystemTimer::singleton().initialize(PeripheralID::Timer6, InterruptVector::Timer6, CPUFrequency);
+  Interrupts::singleton().EnableInterrupts();
+
   PwmActuator psol{PSolChannel, PSolFreq,   CPUFrequency, "psol_", " of the proportional solenoid",
                    "position",  PSolClosed, PSolOpen};
 

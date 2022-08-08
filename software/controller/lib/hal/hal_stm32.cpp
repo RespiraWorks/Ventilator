@@ -81,10 +81,12 @@ void HalApi::Init(Frequency cpu_frequency) {
   cpu_frequency_ = cpu_frequency;
 }
 
-void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug) {
+void HalApi::bind_channels(I2C::Channel *i2c, UART::DMAChannel *rpi, UART::Channel *debug,
+                           SPI::Channel *spi) {
   i2c_ = i2c;
   rpi_uart_ = rpi;
   debug_uart_ = debug;
+  stepper_spi_ = spi;
 }
 
 // Reset the processor
@@ -129,8 +131,6 @@ void HalApi::Timer15ISR() {
   }
 }
 #pragma GCC diagnostic pop
-
-void StepperISR() { StepMotor::DmaISR(); }
 
 /// \TODO these could optionally call Fault() but not in production, log error to EEPROM
 /// \todo these should use a callback
@@ -186,6 +186,12 @@ void HalApi::Uart3ISR() {
 void HalApi::Uart2ISR() {
   if (hal.debug_uart_) {
     hal.debug_uart_->UARTInterruptHandler();
+  }
+}
+
+void HalApi::DMA2Channel4ISR() {
+  if (hal.stepper_spi_) {
+    hal.stepper_spi_->RxDMAInterruptHandler();
   }
 }
 
@@ -283,7 +289,7 @@ __attribute__((used)) __attribute__((section(".isr_vector"))) void (*const Vecto
     BadISR,                   //  71 - 0x11C
     BadISR,                   //  72 - 0x120
     BadISR,                   //  73 - 0x124
-    StepperISR,               //  74 - 0x128
+    HalApi::DMA2Channel4ISR,  //  74 - 0x128
     BadISR,                   //  75 - 0x12C
     BadISR,                   //  76 - 0x130
     BadISR,                   //  77 - 0x134

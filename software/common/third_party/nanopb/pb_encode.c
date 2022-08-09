@@ -51,12 +51,10 @@ static bool checkreturn pb_enc_fixed_length_bytes(pb_ostream_t *stream, const pb
 
 static bool checkreturn buf_write(pb_ostream_t *stream, const pb_byte_t *buf, size_t count)
 {
-    size_t i;
     pb_byte_t *dest = (pb_byte_t*)stream->state;
     stream->state = dest + count;
     
-    for (i = 0; i < count; i++)
-        dest[i] = buf[i];
+    memcpy(dest, buf, count * sizeof(pb_byte_t));
     
     return true;
 }
@@ -65,7 +63,11 @@ pb_ostream_t pb_ostream_from_buffer(pb_byte_t *buf, size_t bufsize)
 {
     pb_ostream_t stream;
 #ifdef PB_BUFFER_ONLY
-    stream.callback = (void*)1; /* Just a marker value */
+    /* In PB_BUFFER_ONLY configuration the callback pointer is just int*.
+     * NULL pointer marks a sizing field, so put a non-NULL value to mark a buffer stream.
+     */
+    static const int marker = 0;
+    stream.callback = &marker;
 #else
     stream.callback = &buf_write;
 #endif
@@ -82,8 +84,11 @@ bool checkreturn pb_write(pb_ostream_t *stream, const pb_byte_t *buf, size_t cou
 {
     if (count > 0 && stream->callback != NULL)
     {
-        if (stream->bytes_written + count > stream->max_size)
+        if (stream->bytes_written + count < stream->bytes_written ||
+            stream->bytes_written + count > stream->max_size)
+        {
             PB_RETURN_ERROR(stream, "stream full");
+        }
 
 #ifdef PB_BUFFER_ONLY
         if (!buf_write(stream, buf, count))
@@ -262,9 +267,33 @@ static bool checkreturn pb_check_proto3_default_value(const pb_field_iter_t *fie
              * submessage fields. */
             return safe_read_bool(field->pSize) == false;
         }
+        else if (field->descriptor->default_value)
+        {
+            /* Proto3 messages do not have default values, but proto2 messages
+             * can contain optional fields without has_fields (generator option 'proto3').
+             * In this case they must always be encoded, to make sure that the
+             * non-zero default value is overwritten.
+             */
+            return false;
+        }
 
         /* Rest is proto3 singular fields */
-        if (PB_LTYPE(type) == PB_LTYPE_BYTES)
+        if (PB_LTYPE(type) <= PB_LTYPE_LAST_PACKABLE)
+        {
+            /* Simple integer / float fields */
+            pb_size_t i;
+            const char *p = (const char*)field->pData;
+            for (i = 0; i < field->data_size; i++)
+            {
+                if (p[i] != 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else if (PB_LTYPE(type) == PB_LTYPE_BYTES)
         {
             const pb_bytes_array_t *bytes = (const pb_bytes_array_t*)field->pData;
             return bytes->size == 0;
@@ -302,27 +331,29 @@ static bool checkreturn pb_check_proto3_default_value(const pb_field_iter_t *fie
             return true;
         }
     }
-    
+    else if (PB_ATYPE(type) == PB_ATYPE_POINTER)
     {
-        /* Catch-all branch that does byte-per-byte comparison for zero value.
-         *
-         * This is for all pointer fields, and for static PB_LTYPE_VARINT,
-         * UVARINT, SVARINT, FIXED32, FIXED64, EXTENSION fields, and also
-         * callback fields. These all have integer or pointer value which
-         * can be compared with 0.
-         */
-        pb_size_t i;
-        const char *p = (const char*)field->pData;
-        for (i = 0; i < field->data_size; i++)
-        {
-            if (p[i] != 0)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return field->pData == NULL;
     }
+    else if (PB_ATYPE(type) == PB_ATYPE_CALLBACK)
+    {
+        if (PB_LTYPE(type) == PB_LTYPE_EXTENSION)
+        {
+            const pb_extension_t *extension = *(const pb_extension_t* const *)field->pData;
+            return extension == NULL;
+        }
+        else if (field->descriptor->field_callback == pb_default_field_callback)
+        {
+            pb_callback_t *pCallback = (pb_callback_t*)field->pData;
+            return pCallback->funcs.encode == NULL;
+        }
+        else
+        {
+            return field->descriptor->field_callback == NULL;
+        }
+    }
+
+    return false; /* Not typically reached, safe default for weird special cases. */
 }
 
 /* Encode a field with static or pointer allocation, i.e. one whose data
@@ -593,8 +624,9 @@ bool checkreturn pb_encode_varint(pb_ostream_t *stream, pb_uint64_t value)
 bool checkreturn pb_encode_svarint(pb_ostream_t *stream, pb_int64_t value)
 {
     pb_uint64_t zigzagged;
+    pb_uint64_t mask = ((pb_uint64_t)-1) >> 1; /* Satisfy clang -fsanitize=integer */
     if (value < 0)
-        zigzagged = ~((pb_uint64_t)value << 1);
+        zigzagged = ~(((pb_uint64_t)value & mask) << 1);
     else
         zigzagged = (pb_uint64_t)value << 1;
     
@@ -603,6 +635,10 @@ bool checkreturn pb_encode_svarint(pb_ostream_t *stream, pb_int64_t value)
 
 bool checkreturn pb_encode_fixed32(pb_ostream_t *stream, const void *value)
 {
+#if defined(PB_LITTLE_ENDIAN_8BIT) && PB_LITTLE_ENDIAN_8BIT == 1
+    /* Fast path if we know that we're on little endian */
+    return pb_write(stream, (const pb_byte_t*)value, 4);
+#else
     uint32_t val = *(const uint32_t*)value;
     pb_byte_t bytes[4];
     bytes[0] = (pb_byte_t)(val & 0xFF);
@@ -610,11 +646,16 @@ bool checkreturn pb_encode_fixed32(pb_ostream_t *stream, const void *value)
     bytes[2] = (pb_byte_t)((val >> 16) & 0xFF);
     bytes[3] = (pb_byte_t)((val >> 24) & 0xFF);
     return pb_write(stream, bytes, 4);
+#endif
 }
 
 #ifndef PB_WITHOUT_64BIT
 bool checkreturn pb_encode_fixed64(pb_ostream_t *stream, const void *value)
 {
+#if defined(PB_LITTLE_ENDIAN_8BIT) && PB_LITTLE_ENDIAN_8BIT == 1
+    /* Fast path if we know that we're on little endian */
+    return pb_write(stream, (const pb_byte_t*)value, 8);
+#else
     uint64_t val = *(const uint64_t*)value;
     pb_byte_t bytes[8];
     bytes[0] = (pb_byte_t)(val & 0xFF);
@@ -626,6 +667,7 @@ bool checkreturn pb_encode_fixed64(pb_ostream_t *stream, const void *value)
     bytes[6] = (pb_byte_t)((val >> 48) & 0xFF);
     bytes[7] = (pb_byte_t)((val >> 56) & 0xFF);
     return pb_write(stream, bytes, 8);
+#endif
 }
 #endif
 
@@ -823,7 +865,7 @@ static bool checkreturn pb_enc_bytes(pb_ostream_t *stream, const pb_field_iter_t
     }
     
     if (PB_ATYPE(field->type) == PB_ATYPE_STATIC &&
-        PB_BYTES_ARRAY_T_ALLOCSIZE(bytes->size) > field->data_size)
+        bytes->size > field->data_size - offsetof(pb_bytes_array_t, bytes))
     {
         PB_RETURN_ERROR(stream, "bytes size exceeded");
     }

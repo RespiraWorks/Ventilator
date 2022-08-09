@@ -13,7 +13,7 @@
 
 import serial
 import struct
-import network_protocol_pb2
+from debug.lib.protocols import network_protocol_pb2
 import time
 import argparse
 import math

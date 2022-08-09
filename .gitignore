@@ -1,3 +1,10 @@
+#network protocol output files
+software/common/generated_libs/protocols/*.c
+software/common/generated_libs/protocols/*.h
+software/utils/debug/lib/protocols/*
+software/gui/src/protocols/*.cc
+software/gui/src/protocols/*.h
+
 build/
 build_autotests/
 .pio/

@@ -1,6 +1,6 @@
 # Debug variable info abstraction for ventilator debug interface
 
-__copyright__ = "Copyright 2021 RespiraWorks"
+__copyright__ = "Copyright 2020-2022 RespiraWorks"
 
 __license__ = """
 
@@ -96,6 +96,7 @@ class VarInfo:
         self.units = "".join([chr(x) for x in data[n : n + units_length]])
 
     def verbose(self, show_access=True, show_format=True):
+        # \todo show possible enum values
         type_str = "?"
         if self.type < len(VAR_TYPE_REPRESENTATION):
             type_str = VAR_TYPE_REPRESENTATION[self.type]
@@ -117,6 +118,11 @@ class VarInfo:
         if fmt is None:
             fmt = self.format
 
+        if self.name == "forced_mode":
+            if value < len(VAR_VENT_MODE):
+                return VAR_VENT_MODE[value]
+            else:
+                raise Error(f"Do not know how to interpret forced_mode={value}")
         if self.type == VAR_FLOAT_ARRAY:
             return "[" + " ".join(fmt % k for k in value) + "]"
         elif self.type == VAR_STRING:
@@ -143,13 +149,7 @@ class VarInfo:
         return data
 
     def from_bytes(self, data):
-        if self.name == "forced_mode":
-            value = debug_types.bytes_to_int32s(data)[0]
-            if value < len(VAR_VENT_MODE):
-                return VAR_VENT_MODE[value]
-            else:
-                raise Error(f"Do not know how to interpret forced_mode={value}")
-        elif self.type == VAR_INT32:
+        if self.type == VAR_INT32:
             return debug_types.bytes_to_int32s(data, signed=True)[0]
         elif self.type == VAR_UINT32:
             return debug_types.bytes_to_int32s(data)[0]
@@ -164,7 +164,8 @@ class VarInfo:
 
     def to_bytes(self, value):
         val_type = type(value).__name__
-        if self.name == "forced_mode":
+        if (self.name == "forced_mode") and isinstance(value, str):
+            # \todo: move this enum conversion to some higher layer
             if value not in VAR_VENT_MODE:
                 raise Error(f"Do not know how to encode forced_mode={value}")
             idx = VAR_VENT_MODE.index(value)

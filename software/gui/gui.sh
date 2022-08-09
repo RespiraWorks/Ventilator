@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2020-2021, RespiraWorks
+# Copyright 2020-2022, RespiraWorks
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -96,11 +96,7 @@ create_clean_directory() {
 
 install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
-  sudo apt-get update
   sudo apt-get install -y \
-          git \
-          build-essential \
-          curl \
           cmake \
           qtbase5-dev \
           qtbase5-dev-tools \
@@ -119,12 +115,7 @@ install_linux() {
           qml-module-qtquick-controls2 \
           qml-module-qtmultimedia \
           pulseaudio \
-          python3-pip \
-          xvfb \
-          cppcheck \
-          gcovr \
-          lcov \
-          clang-tidy
+          xvfb
 }
 
 configure_conan() {
@@ -138,10 +129,10 @@ configure_conan() {
 run_cppcheck() {
   create_clean_directory  build/cppcheck
   cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
-           -I ../common/generated_libs/network_protocol \
+           -I ../common/generated_libs/protocols \
            -I ../common/third_party/nanopb \
            -I ../common/libs/units \
-           -ibuild -icmake-build-stm32 -isrc/third_party \
+           -ibuild -icmake-build-stm32 -isrc/third_party -isrc/protocols \
            .
 
 #           --project=build/compile_commands.json \
@@ -186,6 +177,9 @@ generate_coverage_reports() {
   lcov ${QUIET} --remove "$COVERAGE_OUTPUT_DIR/coverage.info" \
        --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
+       "*/ventilator_gui_backend_autogen/*" \
+       "*/third_party/*" \
+       "*/protocols/*" \
        "*/tests/*" \
        "*spdlog*" \
        "*fmt*" \
@@ -228,6 +222,7 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
+  ../common/common.sh install
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
     configure_conan
@@ -264,6 +259,9 @@ elif [ "$1" == "build" ]; then
     echo "Please do not run build with root privileges!"
     exit $EXIT_FAILURE
   fi
+
+  # generate comms protocols
+  ../common/common.sh generate
 
   config_type="Release"
   if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
@@ -325,6 +323,9 @@ elif [ "$1" == "test" ]; then
     exit $EXIT_FAILURE
   fi
 
+  # generate comms protocols
+  ../common/common.sh generate
+
   j_opt=""
   if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ] || [ "$5" == "-j" ]; then
     # build with 1 less than total number of CPUS, minimum 1
@@ -374,6 +375,9 @@ elif [ "$1" == "run" ]; then
     echo "Please do not run the app with root privileges!"
     exit $EXIT_FAILURE
   fi
+
+  # generate comms protocols
+  ../common/common.sh generate
 
   pushd build
   if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then

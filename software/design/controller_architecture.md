@@ -123,7 +123,7 @@ that the communication protocol is simply that the controller
 periodically sends all its state to the GUI, and the GUI periodically
 sends all of its state to the controller, overwriting any previous
 state. The protocol is defined
-[here](../common/generated_libs/network_protocol/network_protocol.proto).
+[here](../common/generated_libs/protocols/network_protocol.proto).
 
 On each iteration of the main loop, the controller component forwards
 the parameters from the GUI (e.g. PEEP 5, PIP 20, …) to the breath

@@ -277,10 +277,10 @@ class ControllerDebugInterface:
         for var, val in pairs.items():
             self.variable_set(var, val, verbose=True)
 
-    def variables_get(self, names, raw=False):
+    def variables_get(self, names, raw=False, fmt=None):
         ret = {}
         for name in names:
-            ret[name] = self.variable_get(name, raw=raw)
+            ret[name] = self.variable_get(name, raw=raw, fmt=fmt)
         return ret
 
     def variable_get(self, name, raw=False, fmt=None):
@@ -298,15 +298,15 @@ class ControllerDebugInterface:
             raise Error(f"Cannot set unknown variable {name}")
 
         variable = self.variable_metadata[name]
-        # \TODO this will not work for FloatArray
+
         if verbose:
             text = variable.print_value(value, show_access=False)
             print(f"  applying {text}")
 
         data = variable.to_bytes(value)
+
         if self.print_raw:
             print(f"  data converted as {data}")
-
         self.send_command(
             OP_VAR, [SUBCMD_VAR_SET] + debug_types.int16s_to_bytes(variable.id) + data
         )

@@ -33,10 +33,12 @@ from lib.colors import *
 from lib.error import Error
 from lib.serial_detect import detect_stm32_ports, print_detected_ports
 from controller_debug import ControllerDebugInterface, MODE_BOOT
-from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE
+from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
+import numpy as np
 import matplotlib.pyplot as plt
 import test_data
 from pathlib import Path
+import debug_funcs
 
 
 class ArgparseShowHelpError(Exception):
@@ -511,6 +513,7 @@ named {self.scripts_directory} will be searched for the python script.
         self.interface.poke(address, data, poke_type)
 
     def do_get(self, line):
+        # TODO: plotting (-p/--plot) floatarrays to visualize linearity and other properties present in the values
         cl = line.split()
         if len(cl) < 1:
             print("Please give the variable name to read")
@@ -527,37 +530,59 @@ named {self.scripts_directory} will be searched for the python script.
 
         if var_name == "all":
             found = self.interface.variables_find()
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=True)
-            return
         elif var_name == "set":
             found = self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=False)
-            return
         elif var_name == "read":
             found = self.interface.variables_find(access_filter=VAR_ACCESS_READ_ONLY)
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=False)
-            return
         elif "*" in var_name or "?" in var_name:
             found = self.interface.variables_find(pattern=var_name)
-            all_vars = self.interface.variables_get(found, raw=raw)
-            self.print_variable_values(all_vars, show_access=False)
-            return
         else:
-            variable_md = self.interface.variable_metadata[var_name]
-            val = self.interface.variable_get(var_name, raw=raw, fmt=fmt)
-            print(variable_md.print_value(val))
+            found = [var_name]
 
-    def print_variable_values(self, names_values, show_access):
+        all_vars = self.interface.variables_get(found, raw=True)
+        self.print_variable_values(
+            all_vars, show_access=(var_name == "all"), raw=raw, fmt=fmt
+        )
+
+    def print_variable_values(self, names_values, show_access, raw=False, fmt=None):
         for count, name in enumerate(sorted(names_values.keys())):
             variable_md = self.interface.variable_metadata[name]
-            text = variable_md.print_value(names_values[name], show_access=show_access)
+            raw_value = names_values[name]
+            properties = ""
+
+            if variable_md.type == VAR_FLOAT_ARRAY:
+                properties = self.float_array_analysis(raw_value)
+
+            formatted_value = variable_md.format_value(raw_value, raw=raw, fmt=fmt)
+            print_value = variable_md.print_value(
+                formatted_value, show_access=show_access
+            )
+            text = print_value + properties
+
             if (count % 2) == 0:
                 print(white(text))
             else:
                 print(dark_orange(text))
+
+    def float_array_analysis(self, floatarray):
+        properties = []
+
+        # Linear: array values have constant rate of change
+        expected = debug_funcs.lin(floatarray[0], floatarray[-1])
+        tolerance = np.finfo(np.float32).resolution  # precision of 32-bit float
+        linear = True
+        for i in range(len(floatarray)):
+            val = floatarray[i]
+            exp = expected[i]
+            if exp == 0:
+                linear = linear and abs(val) <= tolerance
+            else:
+                linear = linear and abs((exp - val) / exp) <= tolerance
+        if linear:
+            properties.append("linear")
+
+        # comma-delimited list of properties
+        return ",".join(properties)
 
     def complete_get(self, text, line, begidx, endidx):
         return self.interface.variables_find(pattern=(text + "*")) + [
@@ -578,28 +603,44 @@ named {self.scripts_directory} will be searched for the python script.
             print(f" {self.interface.variable_metadata[k].verbose()}")
 
     def do_set(self, line):
-        cl = line.split()
-        if len(cl) < 1:
-            print(red("Not enough parameters"))
-            return
-        varname = cl[0]
+        set_parser = CmdArgumentParser(description="set value(s) to debug variables")
+        set_parser.add_argument("var", help="variable to set")
+        set_parser.add_argument("data", nargs="+", help="data to assign to variable")
 
-        if varname == "force_off":
+        cl = line.split()
+        args = set_parser.parse_args(cl)
+
+        if args.var == "force_off":
             self.interface.variables_force_off()
             return
-
-        if varname == "force_open":
+        elif args.var == "force_open":
             self.interface.variables_force_open()
             return
 
-        if len(cl) < 2:
-            print("Please give the variable name and value")
-            return
+        string_to_eval = "".join(args.data)
 
-        if len(cl) == 2:
-            self.interface.variable_set(varname, cl[1])  # single variable
-        else:
-            self.interface.variable_set(varname, cl[1:])  # array
+        try:
+            data = debug_funcs.scoped_eval(string_to_eval)
+
+            # low-level interface expects native Python list while user-generated data may be numpy arrays
+            if isinstance(data, np.ndarray):
+                data = data.tolist()
+
+            self.interface.variable_set(args.var, data)
+        except TypeError as e:
+            print(red(str(e)))
+            print("You may have either")
+            print("    - incorrectly used a supported function")
+            print("    - set a variable to data of unexpected type")
+            print("Run 'help set' to see available functions and usage.")
+            return
+        except NameError as e:
+            print(red(str(e)))
+            print("You may have tried to use an unsupported function.")
+            print("Run 'help set' to see available functions and usage.")
+            return
+        except Exception as e:
+            print(red(str(e)))
 
     def complete_set(self, text, line, begidx, endidx):
         return self.interface.variables_find(
@@ -607,14 +648,29 @@ named {self.scripts_directory} will be searched for the python script.
         ) + [x for x in ["force_off", "force_open"] if x.startswith(text)]
 
     def help_set(self):
+        print("usage: set [var] [value(s)]")
         print("Sets value for a ventilator debug variable (or convenience macro):")
         print("  force_off           - resets all forced actuator variables")
         print("  force_open          - forces all valves open and blower to maximum")
+        print()
         print("Available variables:")
         for k in sorted(self.interface.variables_find(access_filter=VAR_ACCESS_WRITE)):
             print(
                 f" {self.interface.variable_metadata[k].verbose(show_access=False, show_format=False)}"
             )
+        print()
+        print("If a variable points to an array, then there are two ways to set it.")
+        print(
+            "  manually               - list the values in the order they should be set in the array"
+        )
+        print("  automatically          - populate the array values using a function")
+        print("Available shortcut functions:")
+        for key, value in debug_funcs.SUPPORTED_FUNCTIONS.items():
+            print("  {0:20} - {1}".format(key, value))
+        print(
+            "All native Python functionality and numpy can be used for function composition as well"
+        )
+        print("e.g.: set var np.flip(lin(1,5) + 5)")
 
     def do_trace(self, line):
         """The `trace` command controls/reads the controller's trace buffer.

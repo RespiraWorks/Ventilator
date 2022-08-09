@@ -192,7 +192,22 @@ bool DaisyChain<MaxSlaves, QueueLength>::SendRequest(const Request &request, siz
   }
   // Ensure thread safety as this function might be called from a timer interrupt
   // as well as the main loop.
-  BlockInterrupts block;
+  if(!Interrupts::singleton().InInterruptHandler()) {
+    // We don't block interrupts if we are already in an interrupt handler. This means that we are
+    // only allowing a timer interrupt to call this function: our high priority task. No other
+    // interrupt handler should queue SPI requests to a daisy chain.
+    // It also means that high priority task needs to be finished before the requests it sends are
+    // fully transmitted (should be OK as the DMA interrupt management takes longer than the high
+    // priority task: by the time we get the first DMA interrupt, the high priority task is already
+    // finished - as of this writing, but we don't expect said high priority task to get much
+    // bigger than it already is).
+    // This is a temporary solution to issue 1298, and should be dealt with more nicely once we have
+    // implemented proper framing for the debug interface, which we will then be able to run with
+    // DMA.
+    /// \TODO always block interrupts here, once the debug interface uses DMA (see issue 1306).
+    BlockInterrupts block;
+  }
+
   // Check that the slave is valid, and there is room in the command buffer
   if(slave >= num_slaves_ || request.length > CommandBufferSize - command_buffer_count_){
     /// \TODO log an error (along with its nature?)

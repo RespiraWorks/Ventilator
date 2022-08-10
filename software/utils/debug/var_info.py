@@ -193,5 +193,13 @@ class VarInfo:
                     f"FloatArray size mismatch. Should be {self.size()}, was {len(float_array)}"
                 )
             return debug_types.float32s_to_bytes(float_array)
+        elif self.type == VAR_STRING:
+            if not isinstance(value, str):
+                raise TypeError(f"Expected type STRING, got {val_type}")
+            if len(value) > self.size():
+                raise Error(
+                    f"String size exceeds limit. Should be {self.size()}, was {len(value)}"
+                )
+            return list(value.ljust(self.size(), "\0").encode("ascii", "replace"))
         else:
             raise Error(f"Sorry, I don't know how to handle variable type {self.type}")

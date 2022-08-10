@@ -32,19 +32,19 @@ limitations under the License.
 #include "system_timer.h"
 #include "vars.h"
 
+namespace NVParams {
+
 static Debug::Variable::UInt32 dbg_reinit(
     "nvparams_reinit", Debug::Variable::Access::ReadWrite, 0, "",
     "Set to 1 to request a reinit of NV params on next boot.");
 
 /// \TODO use String type to allow alphanumeric?
-static Debug::Variable::UInt32 dbg_serial("0_ventilator_serial_number",
-                                          Debug::Variable::Access::ReadWrite, 0, "",
-                                          "Serial number of the ventilator, in EEPROM");
+static Debug::Variable::String<SerialNumLength> dbg_serial(
+    "0_ventilator_serial_number", Debug::Variable::Access::ReadWrite, "invalid", 7,
+    "Serial number of the ventilator, in EEPROM");
 
 static Debug::Variable::UInt32 dbg_nvparams("nvparams_address", Debug::Variable::Access::ReadOnly,
                                             0, "", "Address of nv_params");
-
-namespace NVParams {
 
 // Size of the parameter block including the header
 static constexpr size_t Size{sizeof(Structure)};
@@ -121,7 +121,7 @@ void Handler::Init(I2Ceeprom *eeprom) {
   // set write access dbg_vars = nv_params to prevent the first pass in
   // handler to reset those to their default values in nv_params
   dbg_reinit.set(nv_param_.reinit);
-  dbg_serial.set(nv_param_.vent_serial_number);
+  dbg_serial.set(nv_param_.vent_serial, sizeof(nv_param_.vent_serial));
   // increase power cycles counter in nv_params
   uint32_t counter = nv_param_.power_cycles + 1;
   Set(offsetof(Structure, power_cycles), &counter, 4);
@@ -209,9 +209,9 @@ void Handler::Update(const Time now, VentParams *params) {
   if (reinit != nv_param_.reinit) {
     Set(offsetof(Structure, reinit), &reinit, 1);
   }
-  uint32_t serial = dbg_serial.get();
-  if (serial != nv_param_.vent_serial_number) {
-    Set(offsetof(Structure, vent_serial_number), &serial, 4);
+  if (0 != strcmp(dbg_serial.get(), nv_param_.vent_serial)) {
+    Set(offsetof(Structure, vent_serial), dbg_serial.get(),
+        static_cast<uint16_t>(dbg_serial.byte_size()));
   }
 }
 

@@ -1,8 +1,11 @@
-/* Copyright 2020, RespiraWorks
+/* Copyright 2020-2022, RespiraWorks
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -11,6 +14,8 @@ limitations under the License.
 */
 
 #include "nvparams.h"
+
+#include <cstring>
 
 #include "checksum.h"
 #include "gtest/gtest.h"
@@ -24,7 +29,7 @@ static constexpr uint32_t kMemSize{8192};
 static void CompareParams(int16_t address, const Structure &ref, NVParams::Handler &nv_params_,
                           TestEeprom &eeprom_) {
   // Reminder to update this function when Structure changes size.
-  static_assert(sizeof(Structure) == 228);
+  ASSERT_EQ(sizeof(Structure), 244);
   Structure read;
   if (address < 0) {
     nv_params_.Get(0, &read, sizeof(Structure));
@@ -38,7 +43,7 @@ static void CompareParams(int16_t address, const Structure &ref, NVParams::Handl
   EXPECT_EQ(read.version, ref.version);
   EXPECT_EQ(read.reinit, ref.reinit);
   EXPECT_EQ(read.reserved, ref.reserved);
-  EXPECT_EQ(read.vent_serial_number, ref.vent_serial_number);
+  EXPECT_STREQ(read.vent_serial, ref.vent_serial);
   EXPECT_EQ(read.power_cycles, ref.power_cycles);
   EXPECT_EQ(read.cumulated_service, ref.cumulated_service);
 
@@ -160,10 +165,10 @@ TEST_F(NVparamsTest, Update) {
 
   // Set vent serial number and check resulting params
   ref_params.count++;
-  ref_params.vent_serial_number = 789;
+  std::memcpy(ref_params.vent_serial, "xyz", 3);
   ref_params.crc = ParamsCRC(&ref_params);
 
-  nv_params_.Set(8, &ref_params.vent_serial_number, 4);
+  nv_params_.Set(8, &ref_params.vent_serial, SerialNumLength);
 
   SCOPED_TRACE("nv_param_ check after Set");
   CompareParams(-1, ref_params, nv_params_, eeprom_);
@@ -209,7 +214,7 @@ TEST_F(NVparamsTest, GetAndReadMacro) {
 
   uint32_t var_32b{0};
   // power_cycles should be equal to 1 after previous test
-  nv_params_.Get(12, &var_32b, 4);
+  nv_params_.Get(offsetof(Structure, power_cycles), &var_32b, 4);
   EXPECT_EQ(var_32b, 1);
 
   VentParams settings = VentParams_init_zero;
@@ -227,7 +232,7 @@ TEST_F(NVparamsTest, InitValidFlip) {
       .version = 0,
       .reinit = 0,
       .reserved = 0,
-      .vent_serial_number = 1234,
+      .vent_serial = {'a', 'b', 'c', 0},
       .power_cycles = 6,
       .cumulated_service = 456780,
       .last_settings =
@@ -252,7 +257,7 @@ TEST_F(NVparamsTest, InitValidFlip) {
       .version = 0,
       .reinit = 0,
       .reserved = 0,
-      .vent_serial_number = 2345,
+      .vent_serial = {'b', 'c', 'd', 0},
       .power_cycles = 6,
       .cumulated_service = 784560,
       .last_settings =
@@ -314,7 +319,7 @@ TEST_F(NVparamsTest, InitValidFlop) {
       .version = 0,
       .reinit = 0,
       .reserved = 0,
-      .vent_serial_number = 2345,
+      .vent_serial = {'b', 'c', 'd', 0},
       .power_cycles = 6,
       .cumulated_service = 784560,
       .last_settings =
@@ -339,7 +344,7 @@ TEST_F(NVparamsTest, InitValidFlop) {
       .version = 0,
       .reinit = 0,
       .reserved = 0,
-      .vent_serial_number = 1234,
+      .vent_serial = {'a', 'b', 'c', 0},
       .power_cycles = 6,
       .cumulated_service = 456780,
       .last_settings =
@@ -401,7 +406,7 @@ TEST_F(NVparamsTest, InitBothValid) {
       .version = 0,
       .reinit = 0,
       .reserved = 0,
-      .vent_serial_number = 1234,
+      .vent_serial = {'a', 'b', 'c', 0},
       .power_cycles = 6,
       .cumulated_service = 456780,
       .last_settings =
@@ -426,7 +431,7 @@ TEST_F(NVparamsTest, InitBothValid) {
       .version = 0,
       .reinit = 0,
       .reserved = 0,
-      .vent_serial_number = 2345,
+      .vent_serial = {'b', 'c', 'd', 0},
       .power_cycles = 6,
       .cumulated_service = 784560,
       .last_settings =

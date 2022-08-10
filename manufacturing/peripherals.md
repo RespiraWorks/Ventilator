@@ -11,13 +11,13 @@ BEFORE purchasing any parts.**
 
 [ppg]: purchasing_guidelines.md
 
-| Item | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg]         | Notes |
-| ---- |---------:| --------------| ------------------ | -----------:|:-----------------------:| ----- |
-|**A1**| 1        | Mean Well     | GSM160A12-R7B      | 63.99       | [K][a1key]              | 12v Power supply adapter, medical grade, 11.5A |
-|**A2**| 1        | Cablelera     | ZWACPCAY-10        | 8.99        | [Z][a2amzn]             | Hospital grade power cord |
-|**A3**| (1)      | Anker         | 68ANREADER-B2A     | 12.99       | [Z][a3amzn]             | microSD-USB adapter, for flashing RasPi images |
-|**A4**| (1)      | Monoprice     | 3896               | 0.83        | [Z][a4amzn] [O][a4mono] | USB-A to miniUSB-B cable, for programming the nucleo |
-|**A5**| (1)      | VicTsing      | IC192305US         | 23.99       | [Z][a5amzn]             | Wireless keyboard and mouse, for setting up Rpi, **OPTIONAL** |
+| Item | Quantity | Manufacturer  | Part Number        | Price (USD) | Sources[*][ppg] | Notes |
+| ---- |---------:| --------------| ------------------ | -----------:|:---------------:| ----- |
+|**A1**| 1        | Mean Well     | GSM160A12-R7B      | 63.99       |   [K][a1key]    | 12v Power supply adapter, medical grade, 11.5A |
+|**A2**| 1        | Cablelera     | ZWACPCAY-10        | 8.99        |   [Z][a2amzn]   | Hospital grade power cord |
+|**A3**| (1)      | Anker         | 68ANREADER-B2A     | 12.99       |   [Z][a3amzn]   | microSD-USB adapter, for flashing RasPi images |
+|**A4**| (1)      | Monoprice     | 3896               | 0.83        |  [Z][a4amzn]    | USB-A to miniUSB-B cable, for programming the nucleo |
+|**A5**| (1)      | VicTsing      | IC192305US         | 23.99       |   [Z][a5amzn]   | Wireless keyboard and mouse, for setting up Rpi, **OPTIONAL** |
 
 **Essentials (A1+A2):** USD 72.98
 
@@ -25,7 +25,6 @@ BEFORE purchasing any parts.**
 [a2amzn]: https://www.amazon.com/Cablelera-North-American-Hospital-ZWACPCAY-10/dp/B00GP6CB5A
 [a3amzn]: https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2
 [a4amzn]: https://www.amazon.com/AmazonBasics-USB-2-0-Cable-Male/dp/B00NH13S44/
-[a4mono]: https://www.monoprice.com/product?p_id=3896
 [a5amzn]: https://www.amazon.com/VicTsing-Keyboard-Adjustable-Independent-Indicator/dp/B07TT3VN4X
 
 

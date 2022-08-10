@@ -23,11 +23,14 @@ limitations under the License.
 #include "network_protocol.pb.h"
 #include "units.h"
 
+/// \todo This parameter might be better kept in system_constants? And use template here?
 // Actuators calibration size, defined here because the tables are stored in NVParams.
 // Size 11 means the settings are given with a 10% output increment between two points.
 static constexpr size_t ActuatorsCalSize{11};
 
 namespace NVParams {
+
+static constexpr size_t SerialNumLength{20};
 
 // This structure defines the layout of the non-volatile
 // parameter info stored in the I²C EEPROM.
@@ -50,7 +53,7 @@ struct Structure {
 
   uint8_t reserved{0};  // Kept here for 32bits-alignment's sake
 
-  uint32_t vent_serial_number{0};
+  char vent_serial[SerialNumLength]{0};
   // Non-volatile parameters should be added here
   uint32_t power_cycles{0};       // Count of device ON/OFF cycles.
   uint32_t cumulated_service{0};  // Cumulated power-ON time, stored in seconds.

@@ -128,6 +128,10 @@ update_platformio() {
   exit $EXIT_SUCCESS
 }
 
+patch_ocd_stlink() {
+  cp -fr platformio/stlink.cfg ${HOME}/.platformio/packages/tool-openocd/scripts/interface
+}
+
 run_checks() {
     # Code style / bug-prone pattern checks (eg. clang-tidy)
     # WARNING: This might sometimes give different results for different people,
@@ -237,7 +241,7 @@ build() {
 
   if [ ! -z "$SN" ]
   then
-    echo "SERIAL=$(get_serial_sn ${SN}) pio run -e ${env_name}"
+    echo "CUSTOM_HLA_SERIAL=$(get_serial_sn ${SN}) pio run -e ${env_name}"
   else
     echo "pio run -e ${env_name}"
   fi
@@ -446,7 +450,7 @@ elif [ "$1" == "run" ]; then
   # generate comms protocols
   ../common/common.sh generate
 
-  eval deploy stm32
+  eval "$(deploy stm32)"
 
   exit $EXIT_SUCCESS
 
@@ -454,12 +458,18 @@ elif [ "$1" == "run" ]; then
 # DEBUG #
 #########
 elif [ "$1" == "debug" ]; then
-
   shift
   pushd ../utils/debug
   ./debug_cli.py "$@"
   popd
 
+  exit $EXIT_SUCCESS
+
+#############
+# PATCH OCD #
+#############
+elif [ "$1" == "patch" ]; then
+  patch_ocd_stlink
   exit $EXIT_SUCCESS
 
 #############

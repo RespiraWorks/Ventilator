@@ -135,7 +135,10 @@ class ControllerDebugInterface:
         # we do this just for the git info
         test = TestData(test_scenario.TestScenario())
 
-        # \TODO check that serial number is valid?
+        try:
+            sn = self.variable_get("0_ventilator_serial_number")
+        except Exception as e:
+            sn = "invalid"
 
         try:
             ctrl_version = self.variable_get("0_controller_version")
@@ -152,6 +155,7 @@ class ControllerDebugInterface:
         except Exception as e:
             ctrl_branch = "invalid"
 
+        bad_serial = (len(sn) == 0) or (sn == "invalid")
         bad_version = (
             (ctrl_version == "invalid")
             or (ctrl_dirty == "invalid")
@@ -160,7 +164,8 @@ class ControllerDebugInterface:
         version_mismatch = test.git_version != ctrl_version
         branch_mismatch = test.git_branch != ctrl_branch
         problem = (
-            bad_version
+            bad_serial
+            or bad_version
             or version_mismatch
             or branch_mismatch
             or test.git_dirty
@@ -182,6 +187,8 @@ class ControllerDebugInterface:
                 " Potential controller version incompatibility or uncertain provenance "
             )
         )
+        if bad_serial:
+            print(red("    * ventilator serial number invalid"))
         if ctrl_version == "invalid":
             print(red("    * controller version invalid"))
         if ctrl_dirty == "invalid":

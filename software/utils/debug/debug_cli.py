@@ -120,11 +120,8 @@ class CmdLine(cmd.Cmd):
         if mode == MODE_BOOT:
             self.prompt = orange(f"[{self.interface.serial_port.port}:boot] ")
         else:
-            sn = self.interface.variable_get("0_ventilator_serial_number", raw=True)
-            if sn > 0:
-                self.prompt = green(f"[sn:{sn}] ")
-            else:
-                self.prompt = green(f"[port:{self.interface.serial_port.port}] ")
+            sn = self.interface.variable_get("0_ventilator_serial_number")
+            self.prompt = green(f"[sn:{sn}] ")
 
     def cli_loop(self):
         self.autoload()

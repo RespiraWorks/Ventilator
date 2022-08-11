@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2020-2021, RespiraWorks
+# Copyright 2020-2022, RespiraWorks
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 # CircleCI runs this script (via .circleci/config.yml), but might have some
 # environment differences, so the approximation is not perfect. For
 
+# \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
 PIO_VERSION=6.1.0
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
@@ -64,6 +65,7 @@ Utility script for the RespiraWorks Ventilator common code testing.
 
 The following options are available:
   install     One-time installation of build toolchain and dependencies
+  generate    Generates network protocols via Nanopb and protobuf
   update      Updates platformio and required libraries
   check       Runs static checks only
   clean       Clean build directories
@@ -106,18 +108,42 @@ install_linux() {
                cppcheck \
                gcovr \
                lcov \
-               clang-tidy
+               clang-tidy \
+               protobuf-compiler
   pip3 install -U pip
-  pip3 install codecov
+  pip3 install codecov nanopb
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
 
 update_platformio() {
+  python3 -m pip install --upgrade pip
   pip3 install platformio==${PIO_VERSION}
   pio pkg uninstall -d .
   pio pkg install -d .
   exit $EXIT_SUCCESS
+}
+
+generate_network_protocols() {
+  PROTOCOLS_DIR=generated_libs/protocols
+  PYTHON_LIB_PATH=../utils/debug/lib/protocols
+  GUI_LIB_PATH=../gui/src/protocols
+  NANOPB_PATH=$(pip3 show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
+
+  # ensure paths exist
+  mkdir -p "$PYTHON_LIB_PATH"
+  mkdir -p "$GUI_LIB_PATH"
+  #ensure old files are gone
+  rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
+
+  protoc \
+  --plugin=$NANOPB_PATH/protoc-gen-nanopb \
+  -I $NANOPB_PATH/proto \
+  -I $PROTOCOLS_DIR \
+  --nanopb_out=$PROTOCOLS_DIR \
+  --cpp_out=$GUI_LIB_PATH \
+  --python_out=$PYTHON_LIB_PATH \
+  network_protocol.proto
 }
 
 run_checks() {
@@ -190,6 +216,8 @@ generate_coverage_reports() {
   lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
        "*_test_transport.c" \
+       "*/protocols/*" \
+       "*/third_party/*" \
        "*output_export.c*" \
        "*test*" \
        "*.pio/libdeps/*" \
@@ -203,12 +231,12 @@ generate_coverage_reports() {
       --output-directory "${COVERAGE_OUTPUT_DIR}"
 
   echo "Coverage reports generated at '${COVERAGE_OUTPUT_DIR}/index.html'"
-  echo "   You may open it in browser with 'python -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
+  echo "   You may open it in browser with 'python3 -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
 
 }
 
 launch_browser() {
-  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
+  python3 -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
 ########
@@ -252,6 +280,7 @@ elif [ "$1" == "clean" ]; then
 # CHECK #
 #########
 elif [ "$1" == "check" ]; then
+  generate_network_protocols
   run_checks
   exit $EXIT_SUCCESS
 
@@ -260,6 +289,7 @@ elif [ "$1" == "check" ]; then
 #############
 elif [ "$1" == "unit" ]; then
   clean_all
+  generate_network_protocols
 
   if [ -n "$2" ]; then
     pio test -e native -f "$2"
@@ -280,6 +310,7 @@ elif [ "$1" == "unit" ]; then
 ############
 elif [ "$1" == "test" ]; then
   clean_all
+  generate_network_protocols
 
   # If we need to generate coverage reports, perform a first build of a single unit test
   # because platformio clears the build dir after the first unit test it builds.
@@ -307,6 +338,14 @@ elif [ "$1" == "test" ]; then
 ###################
 elif [ "$1" == "cov_upload" ]; then
   upload_coverage_reports
+
+  exit $EXIT_SUCCESS
+
+##############################
+# GENERATE NETWORK PROTOCOLS #
+##############################
+elif [ "$1" == "generate" ]; then
+  generate_network_protocols
 
   exit $EXIT_SUCCESS
 

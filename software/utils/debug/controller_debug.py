@@ -1,6 +1,6 @@
 # Ventilator debug interface: fundamental implementation and API
 
-__copyright__ = "Copyright 2021 RespiraWorks"
+__copyright__ = "Copyright 2020-2022 RespiraWorks"
 
 __license__ = """
 

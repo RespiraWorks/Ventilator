@@ -1,7 +1,7 @@
 set(this_target common)
 
 set(${this_target}_sources
-  ${PROJECT_SOURCE_DIR}/../common/generated_libs/network_protocol/network_protocol.pb.c
+  ${PROJECT_SOURCE_DIR}/../common/generated_libs/protocols/network_protocol.pb.c
   ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb/pb_common.c
   ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb/pb_decode.c
   ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb/pb_encode.c
@@ -9,7 +9,7 @@ set(${this_target}_sources
   )
 
 set(${this_target}_headers
-  ${PROJECT_SOURCE_DIR}/../common/generated_libs/network_protocol/network_protocol.pb.h
+  ${PROJECT_SOURCE_DIR}/../common/generated_libs/protocols/network_protocol.pb.h
   ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb/pb.h
   ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb/pb_common.h
   ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb/pb_decode.h
@@ -33,7 +33,7 @@ add_library(
 
 target_include_directories(
   ${this_target}
-  PUBLIC ${PROJECT_SOURCE_DIR}/../common/generated_libs/network_protocol
+  PUBLIC ${PROJECT_SOURCE_DIR}/../common/generated_libs/protocols
   PUBLIC ${PROJECT_SOURCE_DIR}/../common/third_party/nanopb
   PUBLIC ${PROJECT_SOURCE_DIR}/../common/libs/units
   PUBLIC ${PROJECT_SOURCE_DIR}/../common/libs/checksum

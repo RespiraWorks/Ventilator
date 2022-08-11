@@ -1,2 +1,4 @@
-This is nanopb 0.4.1:
-https://github.com/nanopb/nanopb/tree/3eb9a75c1e66e6182e87e2bd758ff2a4d16acbdc
+> TODO: find a way to import this code using either Conan, PlatformIO registry, or worst case... git submodules
+
+This is nanopb 0.4.6:
+https://github.com/nanopb/nanopb/releases/tag/0.4.6

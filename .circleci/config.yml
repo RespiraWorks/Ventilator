@@ -36,6 +36,24 @@ jobs:
             git reset --soft $merge_base
             pre-commit run --show-diff-on-failure --files $changed_files
 
+  common-tests:
+    machine:
+      image: ubuntu-2004:current
+    environment:
+      GIT_LFS_SKIP_SMUDGE: 1
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            export FORCED_ROOT=1
+            ./software/common/common.sh install
+      - run:
+          name: Run tests & publish coverage
+          command: |
+            ./software/common/common.sh test --cov --no-checks
+            ./software/common/common.sh cov_upload
+
   controller-tests:
     machine:
       image: ubuntu-2004:current
@@ -54,24 +72,6 @@ jobs:
           command: |
             ./software/controller/controller.sh test --cov --no-checks
             ./software/controller/controller.sh cov_upload
-
-  common-tests:
-    machine:
-      image: ubuntu-2004:current
-    environment:
-      GIT_LFS_SKIP_SMUDGE: 1
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            export FORCED_ROOT=1
-            ./software/common/common.sh install
-      - run:
-          name: Run tests & publish coverage
-          command: |
-            ./software/common/common.sh test --cov --no-checks
-            ./software/common/common.sh cov_upload
 
   gui-tests:
     machine:

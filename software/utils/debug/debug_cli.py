@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-# Ventilator debug self.interface: simple command line self.interface
+# Ventilator debug interface: simple command line interface
 # For a list of available commands, enter 'help'
 
-__copyright__ = "Copyright 2021 RespiraWorks"
+__copyright__ = "Copyright 2020-2022 RespiraWorks"
 
 __license__ = """
 

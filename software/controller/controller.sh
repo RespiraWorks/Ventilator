@@ -32,6 +32,7 @@
 # - They have to have a very good chance of passing for other
 #   developers if they run via ./controller.sh test
 
+# \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
 PIO_VERSION=6.1.0
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
@@ -104,19 +105,7 @@ clean_all() {
 }
 
 install_linux() {
-  sudo apt-get update
-  sudo apt-get install -y \
-               build-essential \
-               python3-pip \
-               git \
-               curl \
-               libtinfo5 \
-               cppcheck \
-               gcovr \
-               lcov \
-               clang-tidy
-  pip3 install -U pip
-  pip3 install codecov pyserial matplotlib pandas gitpython numpy pytest
+  pip3 install pyserial matplotlib pandas gitpython numpy pytest
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
@@ -132,6 +121,7 @@ configure_platformio() {
 }
 
 update_platformio() {
+  python3 -m pip install --upgrade pip
   pip3 install platformio==${PIO_VERSION}
   pio pkg uninstall -d .
   pio pkg install -d .
@@ -258,6 +248,7 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
+  ../common/common.sh install
   if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run install with root privileges!"
     exit $EXIT_FAILURE
@@ -327,6 +318,9 @@ elif [ "$1" == "unit" ]; then
 elif [ "$1" == "test" ]; then
   clean_all
 
+  # generate comms protocols
+  ../common/common.sh generate
+
   # Make sure controller builds for target platform
   pio run -e stm32
 
@@ -375,6 +369,9 @@ elif [ "$1" == "run" ]; then
     echo "Please do not deploy with root privileges!"
     exit $EXIT_FAILURE
   fi
+
+  # generate comms protocols
+  ../common/common.sh generate
 
   platformio/deploy.sh stm32
 

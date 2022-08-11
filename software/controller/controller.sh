@@ -148,18 +148,6 @@ run_checks() {
     pio check -e native --fail-on-defect=high
 }
 
-run_integration_tests() {
-  # Make sure controller integration tests build for target platform.
-  # TODO(martukas) This will actually have to build an deploy on Jenkins and not here
-  INTEGRATION_TEST_H=idle_test.h pio run -e integration-test
-  INTEGRATION_TEST_H=buzzer_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
-  INTEGRATION_TEST_H=blower_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
-  INTEGRATION_TEST_H=stepper_test.h TEST_PARAM_1=0 TEST_PARAM_2=90.0f pio run -e integration-test
-  INTEGRATION_TEST_H=pinch_valve_test.h TEST_PARAM_1=0 pio run -e integration-test
-  INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
-  INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
-}
-
 upload_coverage_reports() {
   echo "Uploading coverage reports to Codecov"
 
@@ -235,6 +223,91 @@ generate_coverage_reports() {
 launch_browser() {
   python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
+
+# returns
+get_serial_sn() {
+  device_id="$1"
+  serial_sn=$(awk '$1 == LOOKUPVAL { print $2 }' "LOOKUPVAL=$device_id" platformio/device_lookup_table.txt)
+  echo "$serial_sn"
+}
+
+# build <target_name>
+build() {
+  env_name="$1"
+
+  if [ ! -z "$SN" ]
+  then
+    echo "SERIAL=$(get_serial_sn ${SN}) pio run -e ${env_name}"
+  else
+    echo "pio run -e ${env_name}"
+  fi
+}
+
+# deploy <target_name>
+deploy() {
+  env_name="$1"
+  echo "$(build ${env_name}) -t upload"
+}
+
+integration_test() {
+  test_name="$1"
+  test_param_1="$2"
+  test_param_2="$3"
+  test_param_3="$4"
+  test_param_4="$5"
+  test_param_5="$6"
+
+  test_name="${test_name}_test.h"
+
+  echo "INTEGRATION_TEST_H=$test_name TEST_PARAM_1=$test_param_1 TEST_PARAM_2=$test_param_2 \
+  TEST_PARAM_3=$test_param_3 TEST_PARAM_4=$test_param_4 TEST_PARAM_5=$test_param_5 "
+}
+
+build_integration_test() {
+  echo "$(integration_test "$@") $(build "integration-test")"
+}
+
+deploy_integration_test() {
+  echo "$(integration_test "$@") $(deploy "integration-test")"
+}
+
+build_all_integration_tests() {
+  # Make sure controller integration tests build for target platform.
+  eval "$(build_integration_test idle)"
+  eval "$(build_integration_test buzzer 0.0f 1.0f)"
+  eval "$(build_integration_test blower 0.0f 1.0f)"
+  eval "$(build_integration_test stepper 0 90.0f)"
+  eval "$(build_integration_test pinch_valve 0)"
+  eval "$(build_integration_test psol)"
+  eval "$(build_integration_test eeprom 0 85 10)"
+}
+
+run_all_integration_tests() {
+  wait_time="$1"
+
+  # This is a work in progress, honing in on deploying this in CI
+
+  # This script runs a few of the integration tests in order, with slight pauses in between
+  # Ends with putting controller in idle loop.
+
+  eval "$(deploy_integration_test blower 0.0f 1.0f)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test buzzer 0.0f 1.0f)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test pinch_valve 0)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test pinch_valve 1)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test eeprom 0 85 10)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test idle)"
+}
+
 
 ########
 # HELP #
@@ -322,10 +395,10 @@ elif [ "$1" == "test" ]; then
   ../common/common.sh generate
 
   # Make sure controller builds for target platform
-  pio run -e stm32
+  eval "$(build stm32)"
 
   # Make sure integration tests build
-  run_integration_tests
+  build_all_integration_tests
 
   # Controller unit tests on native
   # This must be the last thing built
@@ -373,7 +446,7 @@ elif [ "$1" == "run" ]; then
   # generate comms protocols
   ../common/common.sh generate
 
-  platformio/deploy.sh stm32
+  eval deploy stm32
 
   exit $EXIT_SUCCESS
 
@@ -386,6 +459,19 @@ elif [ "$1" == "debug" ]; then
   pushd ../utils/debug
   ./debug_cli.py "$@"
   popd
+
+  exit $EXIT_SUCCESS
+
+#############
+# INTEGRATE #
+#############
+elif [ "$1" == "integrate" ]; then
+  if [ "$2" == "all" ]
+  then
+    run_all_integration_tests "$3"
+  else
+    deploy_integration_test "${@:2}"
+  fi
 
   exit $EXIT_SUCCESS
 

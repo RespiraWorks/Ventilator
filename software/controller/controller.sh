@@ -485,6 +485,13 @@ elif [ "$1" == "integrate" ]; then
 
   exit $EXIT_SUCCESS
 
+########
+# LIST #
+########
+elif [ "$1" == "list" ]; then
+  udevadm info /dev/ttyACM* | grep SERIAL_SHORT | awk -F  "=" '{print $2}'
+  exit $EXIT_SUCCESS
+
 ################
 # ERROR & HELP #
 ################

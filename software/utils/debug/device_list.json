@@ -1,0 +1,56 @@
+[
+  {
+    "alias": "p1",
+    "hla_serial": "0668FF303435554157122853",
+    "configuration": "pizza1",
+    "description": "Pizza #1 at Edwin's Workshop"
+  },
+  {
+    "alias": "p2",
+    "hla_serial": "066DFF303435554157105522",
+    "configuration": "pizza1",
+    "description": "Pizza #2 on the road"
+  },
+  {
+    "alias": "p3",
+    "hla_serial": "0668FF303435554157105440",
+    "configuration": "pizza1",
+    "description": "Pizza #3 at Martin's farm"
+  },
+  {
+    "alias": "p4",
+    "hla_serial": "066BFF303435554157104916",
+    "configuration": "pizza1",
+    "description": "Pizza #4 at Martin's farm"
+  },
+  {
+    "alias": "p5",
+    "hla_serial": "066FFF303435554157105014",
+    "configuration": "pizza1",
+    "description": "Pizza #5 at Martin's farm"
+  },
+  {
+    "alias": "p6",
+    "hla_serial": "066BFF303435554157122746",
+    "configuration": "pizza1",
+    "description": "Pizza #6, Shyam"
+  },
+  {
+    "alias": "p7",
+    "hla_serial": "0663FF303435554157115746",
+    "configuration": "pizza1",
+    "description": "Pizza #7, Jerome"
+  },
+  {
+    "alias": "e2",
+    "hla_serial": "066EFF343334434257145023",
+    "configuration": "enclosed3",
+    "description": "Enclosed #2 on the West Coast"
+  },
+  {
+    "alias": "n6",
+    "hla_serial": "066CFF554857868367094021",
+    "configuration": "v0.4",
+    "description": "New v0.4 prototype PCB#6 in Oakland"
+  }
+]

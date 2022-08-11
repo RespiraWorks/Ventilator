@@ -24,14 +24,59 @@ __license__ = """
 
 import json
 import subprocess
+from .colors import green, red, gray
 
 
 def detect_stm32_ports():
-    j = json.loads(
+    scanned_devices = json.loads(
         subprocess.check_output(["platformio", "device", "list", "--json-output"])
     )
-    ports = [d["port"] for d in j if "STM32" in d.get("description", "")]
+    ports = {}
+    for entry in scanned_devices:
+        if "STM32" in entry.get("description", ""):
+            port = entry["port"]
+            hla_serial = entry["hwid"].split()[2].split("=")[1]
+            ports[port] = hla_serial
     return ports
+
+
+def check_value(data, val):
+    return any(entry["hla_serial"] == val for entry in data)
+
+
+def list_devices(file_name, unknown=True, disconnected=True):
+    ports = detect_stm32_ports()
+    ports_inv = {v: k for k, v in ports.items()}
+    json_file = open(file_name, "r")
+    manifest = json.load(json_file)
+    for entry in manifest:
+        hla = entry.get("hla_serial")
+        if hla in ports_inv:
+            entry["port"] = ports_inv[hla]
+        else:
+            entry["port"] = ""
+    for hla in ports_inv:
+        if not any(entry["hla_serial"] == hla for entry in manifest):
+            manifest.append(
+                {
+                    "hla_serial": hla,
+                    "port": ports_inv[hla],
+                    "alias": "",
+                    "description": "",
+                    "configuration": "",
+                }
+            )
+    for entry in manifest:
+        outstr = (
+            f" {entry.get('alias'):<10} {entry.get('port'):<15} {entry.get('hla_serial'):>24} "
+            f"{entry.get('configuration'):<12} {entry.get('description')} "
+        )
+        if len(entry.get("port")) == 0:
+            print(gray(outstr))
+        elif len(entry.get("alias")) == 0:
+            print(red(outstr))
+        else:
+            print(green(outstr))
 
 
 def print_detected_ports():
@@ -41,7 +86,7 @@ def print_detected_ports():
     else:
         print("STM32 devices detected on the following ports:")
         for p in ports:
-            print(f"  {p}")
+            print(f"  {p} = {ports[p]}")
 
 
 if __name__ == "__main__":

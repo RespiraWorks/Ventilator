@@ -31,7 +31,7 @@ import shlex
 import traceback
 from lib.colors import *
 from lib.error import Error
-from lib.serial_detect import detect_stm32_ports, print_detected_ports
+from lib.serial_detect import detect_stm32_ports, print_detected_ports, list_devices
 from controller_debug import ControllerDebugInterface, MODE_BOOT
 from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
 import numpy as np
@@ -203,7 +203,8 @@ class CmdLine(cmd.Cmd):
         subcommand = params[0]
 
         if subcommand == "list":
-            print_detected_ports()
+            # print_detected_ports()
+            list_devices("device_list.json")
 
         elif subcommand == "auto":
             self.interface.connect(auto_select_port())

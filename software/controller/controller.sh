@@ -70,6 +70,8 @@ Utility script for the RespiraWorks Ventilator controller.
 The following options are available:
   install     One-time installation of build toolchain and dependencies
   configure   One-time configuring of udev rules for deployment to controller
+  patch_ocd   One-time patching of OCD script for ST-Link for multi-device deployment environments
+  devices     List all devices available for deploying to
   update      Updates platformio and required libraries
   check       Runs static checks only
   clean       Clean build directories
@@ -228,7 +230,8 @@ launch_browser() {
   python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
-# returns
+# get_serial_sn <alias>
+# prints ST-Link serial number by defined alias
 get_serial_sn() {
   device_id="$1"
   serial_sn=$(awk '$1 == LOOKUPVAL { print $2 }' "LOOKUPVAL=$device_id" platformio/device_lookup_table.txt)
@@ -236,23 +239,29 @@ get_serial_sn() {
 }
 
 # build <target_name>
+# prints command for building the specified target
 build() {
+  env_name="$1"
+
+  echo "pio run -e ${env_name}"
+}
+
+# deploy <target_name>
+# prints command for deploying the specified target
+# if SN=alias is defined, prepends ST-Link serial number to deploy to specific device
+deploy() {
   env_name="$1"
 
   if [ ! -z "$SN" ]
   then
-    echo "CUSTOM_HLA_SERIAL=$(get_serial_sn ${SN}) pio run -e ${env_name}"
+    echo "CUSTOM_HLA_SERIAL=$(get_serial_sn ${SN}) $(build ${env_name}) -t upload"
   else
-    echo "pio run -e ${env_name}"
+    echo "$(build ${env_name}) -t upload"
   fi
 }
 
-# deploy <target_name>
-deploy() {
-  env_name="$1"
-  echo "$(build ${env_name}) -t upload"
-}
-
+# deploy <test_name> [param1] ... [param5]
+# prints environment variable definitions required for generating specific integration test
 integration_test() {
   test_name="$1"
   test_param_1="$2"
@@ -267,10 +276,15 @@ integration_test() {
   TEST_PARAM_3=$test_param_3 TEST_PARAM_4=$test_param_4 TEST_PARAM_5=$test_param_5 "
 }
 
+# build_integration_test <test_name> [param1] ... [param5]
+# prints command for building specific integration test with desired parameters
 build_integration_test() {
   echo "$(integration_test "$@") $(build "integration-test")"
 }
 
+# deploy_integration_test <test_name> [param1] ... [param5]
+# prints command for deploying specific integration test with desired parameters
+# if SN=alias is defined, this will be honored by call to deploy()
 deploy_integration_test() {
   echo "$(integration_test "$@") $(deploy "integration-test")"
 }
@@ -289,7 +303,7 @@ build_all_integration_tests() {
 run_all_integration_tests() {
   wait_time="$1"
 
-  # This is a work in progress, honing in on deploying this in CI
+  # \todo This is a work in progress, honing in on deploying this in CI
 
   # This script runs a few of the integration tests in order, with slight pauses in between
   # Ends with putting controller in idle loop.
@@ -468,7 +482,7 @@ elif [ "$1" == "debug" ]; then
 #############
 # PATCH OCD #
 #############
-elif [ "$1" == "patch" ]; then
+elif [ "$1" == "patch-ocd" ]; then
   patch_ocd_stlink
   exit $EXIT_SUCCESS
 
@@ -485,10 +499,10 @@ elif [ "$1" == "integrate" ]; then
 
   exit $EXIT_SUCCESS
 
-########
-# LIST #
-########
-elif [ "$1" == "list" ]; then
+###########
+# DEVICES #
+###########
+elif [ "$1" == "devices" ]; then
   udevadm info /dev/ttyACM* | grep SERIAL_SHORT | awk -F  "=" '{print $2}'
   exit $EXIT_SUCCESS
 

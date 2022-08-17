@@ -22,6 +22,7 @@ limitations under the License.
 #include "circular_buffer.h"
 #include "dma.h"
 #include "gpio.h"
+#include "vars.h"
 
 namespace I2C {
 
@@ -52,8 +53,8 @@ struct Request {
   uint16_t size{1};          // size (in bytes) of the data to be sent or
                              // received - limited to 16 bits because of DMA
                              // limitation
-  void *data{nullptr};       // pointer to the data to be sent or received.
-  bool *processed{nullptr};  // pointer to a boolean that informs the
+  void* data{nullptr};       // pointer to the data to be sent or received.
+  bool* processed{nullptr};  // pointer to a boolean that informs the
                              // caller that his request has been
                              // processed
 };
@@ -80,8 +81,10 @@ struct Request {
 // monitor what is sent on the bus.
 class Channel {
  public:
-  explicit Channel(Base i2c) : i2c_(i2c){};
-  Channel(Base i2c, DMA::Base dma);
+  Channel(Base i2c, const char* name, const char* help_supplement) : i2c_(i2c) {
+    UpdateDebugVariables(name, help_supplement);
+  };
+  Channel(Base i2c, DMA::Base dma, const char* name, const char* help_supplement);
 
   // Init I²C channel, setting up registers to enable the channel and use
   // DMA if a valid dma channel was provided during constuction.
@@ -97,7 +100,7 @@ class Channel {
   // Read) *request.data contains desired data. Return value is false in
   // case the request cannot be processed (this can only happen if queue
   // is full).
-  bool SendRequest(const Request &request);
+  bool SendRequest(const Request& request);
 
   // Interrupt handlers
   void I2CEventHandler();
@@ -125,7 +128,7 @@ class Channel {
 
   // For non-DMA transfers, store pointer to the next data to be
   // sent/received
-  uint8_t *next_data_{nullptr};
+  uint8_t* next_data_{nullptr};
   // For transfers longer than 255 bytes and non-DMA transfers, store size
   // of data that is still expected to be received/sent
   uint16_t remaining_size_{0};
@@ -193,7 +196,33 @@ class Channel {
   size_t write_buffer_index_{0};
   size_t write_buffer_start_{0};
   size_t wrapping_index_{WriteBufferSize};
-  bool CopyDataToWriteBuffer(const void *data, uint16_t size);
+  bool CopyDataToWriteBuffer(const void* data, uint16_t size);
+
+  // Log specific events for debug purposes
+  Debug::Variable::UInt32 write_buffer_full_{"write_buffer_full", Debug::Variable::Access::ReadOnly,
+                                             0, "",
+                                             "Counter of how many times we can't fit a send request"
+                                             " to our write buffer"};
+  Debug::Variable::UInt32 queue_full_{"queueing_errors", Debug::Variable::Access::ReadOnly, 0, "",
+                                      "Counter of how many times we couldn't queue a request"};
+  Debug::Variable::UInt32 invalid_transfer_{"invalid_transfers", Debug::Variable::Access::ReadOnly,
+                                            0, "", "Counter of invalid byte transfers"};
+  Debug::Variable::UInt32 nacked_transfers_{"nacked_transfers", Debug::Variable::Access::ReadOnly,
+                                            0, "", "Counter of transfers NACK'ed by I2C slave"};
+  Debug::Variable::UInt32 transfer_errors_{"transfer_errors", Debug::Variable::Access::ReadOnly, 0,
+                                           "", "Counter of transfer errors"};
+  void UpdateDebugVariables(const char* name, const char* help_supplement) {
+    write_buffer_full_.prepend_name(name);
+    write_buffer_full_.append_help(help_supplement);
+    queue_full_.prepend_name(name);
+    queue_full_.append_help(help_supplement);
+    invalid_transfer_.prepend_name(name);
+    invalid_transfer_.append_help(help_supplement);
+    nacked_transfers_.prepend_name(name);
+    nacked_transfers_.append_help(help_supplement);
+    transfer_errors_.prepend_name(name);
+    transfer_errors_.append_help(help_supplement);
+  }
 };
 
 }  // namespace I2C

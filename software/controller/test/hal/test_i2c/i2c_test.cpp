@@ -21,7 +21,7 @@ using namespace I2C;
 
 class TestChannel : public Channel {
  public:
-  TestChannel() : Channel(Base::I2C1){};
+  TestChannel() : Channel(Base::I2C1, "test", "for test I2C channel"){};
   // in test mode, setters and getters for faked sent/received data
   std::optional<uint8_t> TESTGetSentData() { return sent_buffer_.Get(); };
   bool TESTQueueReceiveData(uint8_t data) { return rx_buffer_.Put(data); };

@@ -165,7 +165,7 @@ void V03Actuators::beep(float volume) {
 V03System::V03System()
     : rpi_uart_(UART::Base::UART3, DMA::Base::DMA1, "rpi", "for the GUI", FramingMark),
       debug_uart_(UART::Base::UART2, "debug", "for the debug interface"),
-      i2c1_(I2C::Base::I2C1, DMA::Base::DMA2),
+      i2c1_(I2C::Base::I2C1, DMA::Base::DMA2, "i2c1", "for I2C1 channel"),
       eeprom_(0x50, 64, 32768, &i2c1_),
       spi1_(SPI::Base::SPI1, DMA::Base::DMA2),
       stepper_daisy_chain_("stepper", "for stepper drivers daisy chain", &spi1_,

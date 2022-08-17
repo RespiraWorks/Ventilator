@@ -115,7 +115,7 @@ std::vector<uint8_t> ProcessCmd(UART::MockChannel *uart, Interface *serial,
 TEST(Interface, Mode) {
   UART::MockChannel uart;
   Command::ModeHandler mode_command;
-  Interface serial(&uart);
+  Interface serial(&uart, "", "");
   serial.add_handler(Command::Code::Mode, &mode_command);
 
   std::vector<uint8_t> req = {static_cast<uint8_t>(Command::Code::Mode)};
@@ -145,7 +145,7 @@ TEST(Interface, GetVar) {
 
   UART::MockChannel uart;
   Command::VarHandler var_command;
-  Interface serial(&uart);
+  Interface serial(&uart, "", "");
   serial.add_handler(Command::Code::Variable, &var_command);
   // Run a bunch of times with different expected results
   // to exercise buffer management.
@@ -159,7 +159,7 @@ TEST(Interface, AwaitingResponseState) {
   UART::MockChannel uart;
   TestEeprom eeprom_test(0x50, 64, 4096);
   Command::EepromHandler eeprom_command(&eeprom_test);
-  Interface serial(&uart);
+  Interface serial(&uart, "", "");
   serial.add_handler(Command::Code::EepromAccess, &eeprom_command);
   // EEPROM read command needs time to be processed
   std::vector<uint8_t> req = {
@@ -195,7 +195,7 @@ TEST(Interface, Errors) {
   Command::TraceHandler trace_command(&trace);
   Command::EepromHandler eeprom_command(&eeprom_test);
 
-  Debug::Interface serial(&uart);
+  Debug::Interface serial(&uart, "", "");
   serial.add_handler(Debug::Command::Code::Mode, &mode_command);
   serial.add_handler(Debug::Command::Code::Peek, &peek_command);
   serial.add_handler(Debug::Command::Code::Poke, &poke_command);

@@ -37,7 +37,7 @@ void MainContainer::init() {
   hardware_layer.init_hal();
 
   comms.emplace(hardware_layer.comms_channel());
-  debug.emplace(hardware_layer.debug_channel());
+  debug.emplace(hardware_layer.debug_channel(), "debug_interface", "on the debug interface");
   // Create a handler for each of the known commands that the Debug Handler can link to.
   // This is a bit tedious, but I can't find a simpler way.
   debug->add_handler(Debug::Command::Code::Mode, &mode_command);

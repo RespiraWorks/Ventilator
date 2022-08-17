@@ -57,7 +57,7 @@ namespace Debug {
 // has a special value.
 class Interface {
  public:
-  explicit Interface(UART::Channel *uart);
+  Interface(UART::Channel *uart, const char *name, const char *help_supplement);
 
   void add_handler(Command::Code code, Command::Handler *handler);
 
@@ -107,6 +107,22 @@ class Interface {
 
   void SendResponse(ErrorCode error, size_t response_length);
   void SendError(ErrorCode error) { SendResponse(error, 0); }
+
+  // Logging data about errors for debug purposes.
+  Debug::Variable::UInt32 uart_buffer_full_{"uart_buffer_full", Debug::Variable::Access::ReadOnly,
+                                            0, "",
+                                            "Counter for UART buffer full events.  Note that this "
+                                            "will only defer the response, and not change it."};
+  Debug::Variable::UInt32 received_checksum_{"received_checksum", Debug::Variable::Access::ReadOnly,
+                                             0, "",
+                                             "Contains the last checksum we received which did not "
+                                             "match the computed one."};
+  Debug::Variable::UInt32 computed_checksum_{"computed_checksum", Debug::Variable::Access::ReadOnly,
+                                             0, "",
+                                             "Contains the last checksum we computed which did not "
+                                             "match the received one."};
+  Debug::Variable::UInt32 unknown_command_{"unknown_command", Debug::Variable::Access::ReadOnly, 0,
+                                           "", "Contains the last unknown command we received."};
 };
 
 }  // namespace Debug

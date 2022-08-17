@@ -20,7 +20,17 @@ limitations under the License.
 
 namespace Debug {
 
-Interface::Interface(UART::Channel *uart) : uart_(uart) {}
+Interface::Interface(UART::Channel *uart, const char *name, const char *help_supplement)
+    : uart_(uart) {
+  uart_buffer_full_.prepend_name(name);
+  uart_buffer_full_.append_help(help_supplement);
+  received_checksum_.prepend_name(name);
+  received_checksum_.append_help(help_supplement);
+  computed_checksum_.prepend_name(name);
+  computed_checksum_.append_help(help_supplement);
+  unknown_command_.prepend_name(name);
+  unknown_command_.append_help(help_supplement);
+}
 
 void Interface::add_handler(Command::Code code, Command::Handler *handler) {
   registry_[static_cast<uint8_t>(code)] = handler;
@@ -115,6 +125,7 @@ bool Interface::SendNextByte() {
   // To simplify things below, I require at least 3 bytes
   // in the output buffer to continue
   if (uart_->TxFree() < MinFrameSize) {
+    uart_buffer_full_ += 1;
     return false;
   }
 
@@ -163,14 +174,18 @@ void Interface::ProcessCommand() {
   }
 
   uint16_t crc = ComputeCRC(request_, request_size_ - 2);
+  uint16_t received_crc = u8_to_u16(&request_[request_size_ - 2]);
 
-  if (crc != u8_to_u16(&request_[request_size_ - 2])) {
+  if (crc != received_crc) {
+    computed_checksum_.set(crc);
+    received_checksum_.set(received_crc);
     SendError(ErrorCode::CrcError);
     return;
   }
 
   Command::Handler *cmd_handler = registry_[request_[0]];
   if (!cmd_handler) {
+    unknown_command_.set(request_[0]);
     SendError(ErrorCode::UnknownCommand);
     return;
   }

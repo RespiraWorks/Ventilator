@@ -145,7 +145,9 @@ I2CReg *get_register(const Base id) {
   __builtin_unreachable();
 }
 
-Channel::Channel(Base i2c, DMA::Base dma) : i2c_(i2c) {
+Channel::Channel(Base i2c, DMA::Base dma, const char *name, const char *help_supplement)
+    : i2c_(i2c) {
+  UpdateDebugVariables(name, help_supplement);
   // DMA mapping for I²C (see [RM] p299)
   static struct {
     DMA::Base dma_base;
@@ -262,6 +264,7 @@ bool Channel::SendRequest(const Request &request) {
   // Queue the request if possible: check that there is room in the index
   // buffer
   if (buffer_.IsFull()) {
+    queue_full_ += 1;
     return false;
   }
 
@@ -269,6 +272,7 @@ bool Channel::SendRequest(const Request &request) {
   if (buffer_.Put(ind_queue_)) {
     queue_[ind_queue_] = request;
   } else {
+    queue_full_ += 1;
     return false;
   }
 
@@ -312,6 +316,7 @@ bool Channel::CopyDataToWriteBuffer(const void *data, const uint16_t size) {
     if (size >= write_buffer_start_) {
       // There is no contiguous space left in buffer that is big enough,
       // we can't safely send this Write request.
+      write_buffer_full_ += 1;
       return false;
     }
 
@@ -372,6 +377,7 @@ void Channel::SetupI2CTransfer() {
 void Channel::TransferByte() {
   if (remaining_size_ == 0) {
     // this shouldn't happen, but just to be safe, we stop here.
+    invalid_transfer_ += 1;
     return;
   }
   if (last_request_.direction == ExchangeDirection::Read) {
@@ -450,6 +456,7 @@ void Channel::I2CEventHandler() {
 
   // resend the request in case the slave NACK'd our request
   if (NackDetected()) {
+    nacked_transfers_ += 1;
     // clear the nack
     ClearNack();
     // the slave is non-responsive --> start the request anew
@@ -522,6 +529,7 @@ void Channel::SetupDMATransfer() {
 
 // Interrupt handlers
 void Channel::I2CErrorHandler() {
+  transfer_errors_ += 1;
   // I²C error --> clear all error flags (except those that are SMBus only)
   ClearErrors();
   // and restart the request up to error_retry_ times
@@ -558,8 +566,8 @@ void Channel::DMAInterruptHandler(ExchangeDirection direction) {
       EndTransfer();
     }
   } else if (channel->InterruptStatus(DMA::Interrupt::TransferError)) {
-    // we are dealing with an error --> reset transfer (up to MaxRetries
-    // times)
+    transfer_errors_ += 1;
+    // we are dealing with an error --> reset transfer (up to MaxRetries times)
     if (--error_retry_ > 0) {
       next_data_ = reinterpret_cast<uint8_t *>(last_request_.data);
       remaining_size_ = last_request_.size;

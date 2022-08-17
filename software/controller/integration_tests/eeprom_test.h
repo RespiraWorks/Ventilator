@@ -70,7 +70,7 @@ static constexpr uint8_t Data{TEST_PARAM_2};
 static constexpr uint16_t Length{TEST_PARAM_3};
 
 /// \TODO initialize based on system constants, and instantiate inside function
-I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2);
+I2C::Channel i2c1(I2C::Base::I2C1, DMA::Base::DMA2, "i2c1", "for I2C1 channel");
 UART::SoftChannel debug_uart(UART::Base::UART2, "debug", "for the debug interface");
 
 // declaration of EEPROM
@@ -87,7 +87,7 @@ static Debug::Command::VarHandler var_command;
 static Debug::Command::TraceHandler trace_command(&trace);
 static Debug::Command::EepromHandler eeprom_command(&eeprom);
 
-static Debug::Interface debug(&debug_uart);
+static Debug::Interface debug(&debug_uart, "debug_interface", "on the debug interface");
 
 void RunTest() {
   hal.Init(CPUFrequency);

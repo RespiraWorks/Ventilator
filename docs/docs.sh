@@ -61,7 +61,7 @@ clean_dir() {
   if [ -d "$dir_name" ]; then
     echo "Removing $dir_name"
     rm -rf "$dir_name"
-    return 0
+    return $EXIT_SUCCESS
   elif [ -f "$dir_name" ]; then
     echo "File with this name already exists, not a directory."
     return 1

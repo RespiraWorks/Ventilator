@@ -64,7 +64,7 @@ clean_dir() {
     return $EXIT_SUCCESS
   elif [ -f "$dir_name" ]; then
     echo "File with this name already exists, not a directory."
-    return 1
+    return $EXIT_FAILURE
   fi
 }
 

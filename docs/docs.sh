@@ -73,7 +73,8 @@ install_linux() {
   sudo apt-get install -y \
                make \
                doxygen \
-               graphviz
+               graphviz \
+               python3-pip
   pip3 install -U pip
   pip3 install sphinx-rtd-theme breathe sphinx-sitemap mlx.traceability wireviz pandas
   source ${HOME}/.profile

@@ -39,7 +39,7 @@ BEFORE purchasing any parts.**
 [a2mcmc]: https://www.mcmaster.com/96439A650/
 [a3mcmc]:  https://www.mcmaster.com/8560K357/
 [a4rw]:    #display-panel-acrylic-plate
-[a5ali]:   https://www.aliexpress.com/item/4000747984746.html
+[a5ali]:   https://www.aliexpress.us/item/2255800561669994.html
 [a5amzn]:  https://www.amazon.com/Eviciv-Portable-Monitor-Display-1024X600/dp/B07L6WT77H
 [a6mcmc]:  https://www.mcmaster.com/93625A102/
 [a7mcmc]:  https://www.mcmaster.com/98689A111/

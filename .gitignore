@@ -36,7 +36,6 @@ cscope.out
 *.lck
 OldVersions/
 
-gui/build
 .DS_Store
 .clangd/
 .*.swp

@@ -18,26 +18,32 @@ C++ API documentation is generated using [Doxygen](https://github.com/doxygen/do
 
 Frequently used values that may change can be defined in the `conf.py` file in the `rst_prolog` section. The `rst_prolog` gets including in every `.rst` file and the variables can be referenced by using the format `|VARIABLE_NAME|` which will get expanded into the generated text.
 
-## Building the docs locally
+## Building the docs
 
-Install `Doxygen`, `Graphviz` and `Make` using your system package manager. For example, On Ubuntu, use:
+Use the [docs.sh](docs.sh) script in this directory to install required dependencies and build the documentation.
+
+To install all needed dependencies (do this once on your development machine):
+
 ```shell
-apt-get install make doxygen graphviz
+./docs.sh install
 ```
 
-Install Sphinx and the necessary extensions:
+To generate the documentation, run:
+
 ```shell
-pip install sphinx sphinx-rtd-theme breathe sphinx_sitemap mlx.traceability wireviz pandas
+./docs.sh build
 ```
 
-Then, to generate the docs, just run:
+If the directories are polluted and you want a clean slate:
 ```shell
-wiring/make_wiring.sh
-purchasing/make_parts.sh
-make html
+./docs.sh clean
 ```
 
-The generated output can be viewed by opening the file `docs/_build/html/index.html`
+The generated output can be viewed by opening the file `docs/_build/html/index.html`, or you can run this script to have it open it up for you in your browser:
+
+```shell
+./docs.sh view
+```
 
 ## Additional features and scripts
 

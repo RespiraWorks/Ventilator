@@ -36,5 +36,11 @@ if [ $PLATFORM != "Linux" ]; then
   exit $EXIT_FAILURE
 fi
 
-wireviz power_entry.yml
-./decorate_table.py power_entry.bom.tsv
+for filename in ./*.yml; do
+  stripped_name=$(basename "$filename" .yml)
+  echo "Processing wiring documentation for '${stripped_name}'"
+  wireviz ${filename}
+  ./decorate_table.py ${stripped_name}.bom.tsv
+done
+
+exit $EXIT_SUCCESS

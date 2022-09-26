@@ -37,3 +37,5 @@ if [ $PLATFORM != "Linux" ]; then
 fi
 
 ./make_parts.py
+
+exit $EXIT_SUCCESS

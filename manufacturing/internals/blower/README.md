@@ -48,7 +48,7 @@ BEFORE purchasing any parts.**
 
 **Total assembly price:** USD 84.02
 
-[a1ali]:   https://www.aliexpress.com/item/32980201709.html
+[a1ali]:   https://www.aliexpress.us/item/2251832793886957.html
 [a2won]:   https://wonsmart-motor.en.made-in-china.com/product/hsjxFewOppVg/China-Air-Pump12V-Brushless-Motor-12V-Blower-Fan-Driver.html
 [a3rw]:    #tubing-adapter-c1
 [a4mcmc]:  https://www.mcmaster.com/8560K357/

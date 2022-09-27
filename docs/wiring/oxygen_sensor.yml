@@ -37,10 +37,10 @@ connectors:
  
 cables:
   W1:
-    pn: ew-26awg-kit
+    pn: ew-24awg-kit
     wirecount: 2
     type: 10-color 24awg Wire Kit
-    mpn: 26UL1007STRKIT10COLOR
+    mpn: 24UL1007STRKIT10COLOR100
     manufacturer: Remington
     # more cable parameters:
     length: 300 mm

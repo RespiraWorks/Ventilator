@@ -204,19 +204,19 @@
     ]
   },
   {
-    "pn": "ew-26awg-kit",
+    "pn": "ew-24awg-kit",
     "notes": "10-color 24awg Wire Kit",
     "manufacturer": "Remington",
-    "mpn": "26UL1007STRKIT10COLOR",
-    "avg_price": 42.35,
+    "mpn": "24UL1007STRKIT10COLOR100",
+    "avg_price": 106.64,
     "price_unit": "ft",
     "sources": [
       {
         "supplier": "Digikey",
-        "spn": "2328-26UL1007STRKIT10COLOR-ND",
-        "price": 42.35,
-        "price_units": 250,
-        "url": "https://www.digikey.com/en/products/detail/remington-industries/26UL1007STRKIT10COLOR/11613823"
+        "spn": "2328-24UL1007STRKIT10COLOR100-ND",
+        "price": 106.64,
+        "price_units": 100,
+        "url": "https://www.digikey.com/en/products/detail/remington-industries/24UL1007STRKIT10COLOR100/11614276"
       }
     ]
   }

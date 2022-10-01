@@ -10,12 +10,12 @@ connectors:
     additional_components:                           # defines additional components such as contacts
       -
         type: crimp                                    # additional component type
-        subtype: Molex Micro-Fit 3.0 Female Crimp Contact 20-24awg   # additional component name 
+        subtype: Molex Micro-Fit 3.0 Female Crimp Contact 20-24awg   # additional component name
         qty_multiplier: populated                      # this multiples by the number of connector instances for the BOM
         manufacturer: Molex                            # additional component manufacturer
         mpn: 43030-0002                                # additional component part number
         pn: ec-microfit-f-crimp-20-24awg                  # RW part number
-        
+
   X2:
     pn: ec-kk-f-wire-3
     pincount: 3
@@ -27,14 +27,14 @@ connectors:
     additional_components:                           # defines additional components such as contacts
       -
         type: crimp                                    # additional component type
-        subtype:  KK 2.54 Female Crimp Contact 22-30awg   # additional component name 
+        subtype:  KK 2.54 Female Crimp Contact 22-30awg   # additional component name
         qty: 1
         qty_multiplier: populated                      # this multiples by the number of connector instances for the BOM
         manufacturer: Molex                            # additional component manufacturer
         mpn: 08-55-0102                                # additional component part number
-        pn: ec-kk-f-crimp                  # RW part number 
-  
- 
+        pn: ec-kk-f-crimp                  # RW part number
+
+
 cables:
   W1:
     pn: ew-24awg-kit
@@ -49,7 +49,7 @@ cables:
     colors: [WH, BU]
 
 connections:
-  - 
+  -
     - X1: [1,3]
     - W1: [1,2]
     - X2: [1,3]

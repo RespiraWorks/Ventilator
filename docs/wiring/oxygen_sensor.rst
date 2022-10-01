@@ -27,7 +27,7 @@ You will need all the tools listed.
    #. Crimp the Micro-Fit contacts to one end, and the KK contacts to the other on each wire.
    #. Cut 3 pieces, 15mm long each, of heat shrink tubing, and thread them onto the set of two wire.  Do not shrink the heat shrink yet.  Make sure to keep the simlar types of contacts on the same side.
    #. Insert each contact into the Micro-Fit connector housing, according to the wiring diagram.  Then do the same for the KK connector.
-   #. Do a gentle pull test to confirm proper seating of the contacts. 
+   #. Do a gentle pull test to confirm proper seating of the contacts.
    #. Distribute the heat shrink tubing evenly along the harness and shrink them with the heat gun.
 
 Total price: USD 2.00

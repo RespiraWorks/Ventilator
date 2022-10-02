@@ -29,7 +29,7 @@ import dateutil.parser
 import json
 import platform
 import git
-from lib.colors import red
+from util.colors import red
 from pathlib import Path
 
 

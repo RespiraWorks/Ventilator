@@ -28,7 +28,7 @@ import json
 import copy
 import argparse
 from pathlib import Path
-from lib.colors import Color, blue
+from util.colors import Color, blue
 
 
 def trim_all_columns(df):

@@ -26,11 +26,11 @@ import time
 import debug_types
 import var_info
 import fnmatch
-from lib.error import Error
+from util.error import Error
 import test_scenario
 from test_data import *
 from pathlib import Path
-from lib.colors import red, orange
+from util.colors import red, orange
 
 # TODO: Import constants from proto instead!
 
@@ -105,6 +105,10 @@ class ControllerDebugInterface:
         self.serial_port = serial.Serial(port=port, baudrate=115200)
         self.serial_port.timeout = 0.8
         print(f"Debug interface connected to device at {port}")
+
+    def disconnect(self):
+        self.serial_port.close()
+        print(f"Debug interface disconnected from device.")
 
     def connected(self):
         return self.serial_port.isOpen()

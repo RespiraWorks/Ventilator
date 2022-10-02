@@ -21,7 +21,7 @@ __license__ = """
 """
 
 import debug_types
-from lib.error import Error
+from util.error import Error
 
 # TODO: Import constants from proto instead!
 

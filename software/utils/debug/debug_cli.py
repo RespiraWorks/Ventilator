@@ -29,9 +29,9 @@ import glob
 import os
 import shlex
 import traceback
-from lib.colors import *
-from lib.error import Error
-from lib.serial_detect import detect_stm32_ports, print_detected_ports, list_devices
+from util.colors import *
+from util.error import Error
+from util.serial_detect import DeviceScanner
 from controller_debug import ControllerDebugInterface, MODE_BOOT
 from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
 import numpy as np
@@ -78,16 +78,13 @@ class CmdLine(cmd.Cmd):
     test_scenarios_dir: Path
     test_data_dir: Path
 
-    def __init__(self, port):
+    def __init__(self, connect_to):
         super(CmdLine, self).__init__()
         self.scripts_directory = "scripts"
         self.test_scenarios_dir = Path("test_scenarios").absolute().resolve()
         self.test_data_dir = Path("../../../test_data").absolute().resolve()
         self.interface = ControllerDebugInterface()
-        if not port:
-            port = auto_select_port()
-        if port:
-            self.interface.connect(port)
+        self.maybe_connect(connect_to)
 
         # We must do this so that autocomplete will work with dash `-` in filenames
         try:
@@ -178,6 +175,22 @@ class CmdLine(cmd.Cmd):
         else:
             print("Unknown command; pass 'on' or 'off'.")
 
+    def maybe_connect(self, alias_or_port):
+        devices = DeviceScanner("device_list.json").filter(connected=True)
+        selected = None
+        if not alias_or_port:
+            print("Auto-selecting device")
+            selected = devices.auto_select()
+        else:
+            print(f"Looking for device with alias={alias_or_port}")
+            selected = devices.get(alias_or_port)
+            if not selected:
+                print(f"Looking for device at port={alias_or_port}")
+                selected = devices.find(alias_or_port)
+        if selected:
+            print(f"Attempting to connect to: {selected.print()}")
+            self.interface.connect(selected.port)
+
     def do_connect(self, line):
         """This command manages the connection of the debug interface to the ventilator controller
 
@@ -188,8 +201,14 @@ class CmdLine(cmd.Cmd):
         connect list
           searches and lists available STM32 devices on the serial bus
 
+        connect off
+          disconnect if connected
+
         connect auto
           attempt to connect to a plugged in controller automatically
+
+        connect <alias>
+          connect to controller pointed to by alias in device manifest
 
         connect <port>
           connect to controller on a specific port
@@ -203,17 +222,22 @@ class CmdLine(cmd.Cmd):
         subcommand = params[0]
 
         if subcommand == "list":
-            # print_detected_ports()
-            list_devices("device_list.json")
+            print(DeviceScanner("device_list.json").list_devices())
+
+        elif subcommand == "off":
+            self.interface.disconnect()
+            self.interface.resynchronize()
+            self.interface.variables_update_info()
+            self.update_prompt()
 
         elif subcommand == "auto":
-            self.interface.connect(auto_select_port())
+            self.maybe_connect(None)
             self.interface.resynchronize()
             self.interface.variables_update_info()
             self.update_prompt()
 
         else:
-            self.interface.connect(params[0])
+            self.maybe_connect(subcommand)
             self.interface.resynchronize()
             self.interface.variables_update_info()
             self.update_prompt()
@@ -816,33 +840,14 @@ named {self.scripts_directory} will be searched for the python script.
             print("Error: Unknown subcommand %s" % cl[0])
             return
 
-
-def auto_select_port():
-    ports = detect_stm32_ports()
-    if not ports:
-        red(
-            "Could not auto-detect serial port; platformio device list did not "
-            "yield any STM32 devices."
-        )
-        return None
-    if len(ports) > 1:
-        red(
-            "Could not auto-detect serial port; platformio device list "
-            f"yielded multiple STM32 devices: {', '.join(ports)}.  "
-            "Choose port explicitly with --port."
-        )
-        return None
-    return ports[0]
-
-
 def main():
     terminal_parser = argparse.ArgumentParser()
     terminal_parser.add_argument(
-        "--port",
-        "-p",
+        "--device",
+        "-d",
         type=str,
-        help="Serial port device is connected to, e.g. /dev/ttyACM0."
-        " If unspecified, we try to auto-detect the port.",
+        help="Serial port device is connected to, e.g. /dev/ttyACM0, or alias from manifest."
+        " If unspecified, we try to auto-detect.",
     )
     terminal_parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."
@@ -850,7 +855,7 @@ def main():
 
     terminal_args = terminal_parser.parse_args()
 
-    interpreter = CmdLine(terminal_args.port)
+    interpreter = CmdLine(terminal_args.device)
     path = Path(interpreter.test_data_dir)
     path.mkdir(parents=True, exist_ok=True)
 

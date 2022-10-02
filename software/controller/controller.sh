@@ -107,7 +107,7 @@ clean_all() {
 }
 
 install_linux() {
-  pip3 install pyserial matplotlib pandas gitpython numpy pytest
+  pip3 install pyserial matplotlib pandas gitpython numpy pytest gdown
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
@@ -227,7 +227,7 @@ generate_coverage_reports() {
 }
 
 launch_browser() {
-  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
+  python3 -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
 # get_serial_sn <alias>
@@ -503,7 +503,10 @@ elif [ "$1" == "integrate" ]; then
 # DEVICES #
 ###########
 elif [ "$1" == "devices" ]; then
-  udevadm info /dev/ttyACM* | grep SERIAL_SHORT | awk -F  "=" '{print $2}'
+  pushd ../utils/debug/util
+  ./serial_detect.py
+  popd
+#  udevadm info /dev/ttyACM* | grep SERIAL_SHORT | awk -F  "=" '{print $2}'
   exit $EXIT_SUCCESS
 
 ################

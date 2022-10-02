@@ -23,9 +23,10 @@ __license__ = """
 """
 
 import json
+import gdown
 import subprocess
 from typing import List
-from util.colors import green, red, gray
+from colors import green, red, gray
 
 class DeviceInfo:
     alias: str
@@ -144,7 +145,11 @@ class DeviceScanner:
         # "Choose port explicitly with --port."
 
 if __name__ == "__main__":
-    devices = DeviceScanner("../device_list.json")
+    url = "https://drive.google.com/file/d/11Hsspy9_VFy6HVnV8iIkUo0Y2vPf67Lm/view?usp=sharing"
+    output = "device_list.json"
+    gdown.download(url=url, output=output, quiet=True, fuzzy=True)
+
+    devices = DeviceScanner("device_list.json")
     print("ALL: ")
     print(devices.list_devices())
     print("ONLY KNOWN: ")

@@ -107,7 +107,7 @@ clean_all() {
 }
 
 install_linux() {
-  pip3 install pyserial matplotlib pandas gitpython numpy pytest gdown
+  pip3 install pyserial matplotlib pandas gitpython numpy pytest
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
@@ -233,9 +233,8 @@ launch_browser() {
 # get_serial_sn <alias>
 # prints ST-Link serial number by defined alias
 get_serial_sn() {
-  device_id="$1"
-  serial_sn=$(awk '$1 == LOOKUPVAL { print $2 }' "LOOKUPVAL=$device_id" platformio/device_lookup_table.txt)
-  echo "$serial_sn"
+  device_alias="$1"
+  ../utils/debug/debug_cli.py -c "devices find $device_alias h"
 }
 
 # build <target_name>
@@ -496,17 +495,13 @@ elif [ "$1" == "integrate" ]; then
   else
     deploy_integration_test "${@:2}"
   fi
-
   exit $EXIT_SUCCESS
 
 ###########
 # DEVICES #
 ###########
 elif [ "$1" == "devices" ]; then
-  pushd ../utils/debug/util
-  ./serial_detect.py
-  popd
-#  udevadm info /dev/ttyACM* | grep SERIAL_SHORT | awk -F  "=" '{print $2}'
+  ../utils/debug/debug_cli.py -c "devices list"
   exit $EXIT_SUCCESS
 
 ################

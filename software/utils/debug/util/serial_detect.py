@@ -23,10 +23,13 @@ __license__ = """
 """
 
 import json
-import gdown
+import pandas
 import subprocess
 from typing import List
-from colors import green, red, gray
+from util.colors import green, red, gray
+
+MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
+
 
 class DeviceInfo:
     alias: str
@@ -54,13 +57,14 @@ class DeviceInfo:
         else:
             return green(output_string)
 
+
 class DeviceScanner:
     manifest: List
 
-    def __init__(self, file_name = ""):
+    def __init__(self, load_manifest=True):
         self.manifest = []
-        if file_name:
-            self.get_devices(file_name)
+        if load_manifest:
+            self.get_devices()
 
     @staticmethod
     def detect_stm32_ports():
@@ -75,21 +79,23 @@ class DeviceScanner:
                 ports[port] = hla_serial
         return ports
 
-
     @staticmethod
     def check_value(data, val):
         return any(entry["hla_serial"] == val for entry in data)
 
-    def get_devices(self, file_name):
+    def get_devices(self):
         ports = DeviceScanner.detect_stm32_ports()
         ports_inverted = {v: k for k, v in ports.items()}
-        json_file = open(file_name, "r")
-        loaded_manifest = json.load(json_file)
+        loaded_manifest = json.loads(
+            pandas.read_csv(MANIFEST_URL, sep="\t", header=0).to_json(orient="records")
+        )
         for entry in loaded_manifest:
-            dev = DeviceInfo(alias=entry.get("alias"),
-                             hla_serial=entry.get("hla_serial"),
-                             configuration=entry.get("configuration"),
-                             description=entry.get("description"))
+            dev = DeviceInfo(
+                alias=entry.get("Alias"),
+                hla_serial=entry.get("HLA serial"),
+                configuration=entry.get("Configuration"),
+                description=entry.get("Description"),
+            )
             if dev.hla_serial in ports_inverted:
                 dev.port = ports_inverted[dev.hla_serial]
             self.manifest.append(dev)
@@ -100,7 +106,7 @@ class DeviceScanner:
                 self.manifest.append(dev)
 
     def filter(self, known=False, connected=False):
-        filtered = DeviceScanner()
+        filtered = DeviceScanner(load_manifest=False)
         for m in self.manifest:
             if not len(m.alias) and known:
                 continue
@@ -129,27 +135,27 @@ class DeviceScanner:
 
     def auto_select(self):
         if not self.manifest:
-            print(red(
-                "Could not auto-detect serial port; "
-                "platformio device list did not yield any STM32 devices."
-            ))
+            print(
+                red(
+                    "Could not auto-detect serial port; "
+                    "platformio device list did not yield any STM32 devices."
+                )
+            )
             return None
         if len(self.manifest) > 1:
-            print(red(
-                "Could not auto-detect serial port; "
-                "platformio device list yielded multiple STM32 devices:\n"
-                f"{self.list_devices()}"
-            ))
+            print(
+                red(
+                    "Could not auto-detect serial port; "
+                    "platformio device list yielded multiple STM32 devices:\n"
+                    f"{self.list_devices()}"
+                )
+            )
             return None
         return self.manifest[0]
-        # "Choose port explicitly with --port."
+
 
 if __name__ == "__main__":
-    url = "https://drive.google.com/file/d/11Hsspy9_VFy6HVnV8iIkUo0Y2vPf67Lm/view?usp=sharing"
-    output = "device_list.json"
-    gdown.download(url=url, output=output, quiet=True, fuzzy=True)
-
-    devices = DeviceScanner("device_list.json")
+    devices = DeviceScanner(load_manifest=True)
     print("ALL: ")
     print(devices.list_devices())
     print("ONLY KNOWN: ")

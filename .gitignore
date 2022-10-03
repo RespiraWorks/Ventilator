@@ -59,4 +59,4 @@ fp-info-cache
 
 #performance test data
 test_data/
-device_list.json
+device_list.*

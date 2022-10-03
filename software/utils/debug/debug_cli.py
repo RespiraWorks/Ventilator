@@ -176,12 +176,12 @@ class CmdLine(cmd.Cmd):
             print("Unknown command; pass 'on' or 'off'.")
 
     def maybe_connect(self, alias_or_port):
-        devices = DeviceScanner("device_list.json").filter(connected=True)
+        devices = DeviceScanner(load_manifest=True).filter(connected=True)
         selected = None
-        if not alias_or_port:
+        if alias_or_port == "auto":
             print("Auto-selecting device")
             selected = devices.auto_select()
-        else:
+        elif alias_or_port and len(alias_or_port):
             print(f"Looking for device with alias={alias_or_port}")
             selected = devices.get(alias_or_port)
             if not selected:
@@ -191,27 +191,31 @@ class CmdLine(cmd.Cmd):
             print(f"Attempting to connect to: {selected.print()}")
             self.interface.connect(selected.port)
 
-    def do_connect(self, line):
+    def do_devices(self, line):
         """This command manages the connection of the debug interface to the ventilator controller
 
         If ventilator USB cable is unplugged, the CLI prompt should update to reflect this on the next loop
         (blank line or failed command). You may also start the debugger without a plugged in device.
         Use one of the following commands to reconnect.
 
-        connect list
+        devices list
           searches and lists available STM32 devices on the serial bus
 
-        connect off
+        devices off
           disconnect if connected
 
-        connect auto
-          attempt to connect to a plugged in controller automatically
+        devices find <alias> [h/p/c]
+          print information for specific device
+          alias - string must match alias as defined in manifest
+          h - print HLA serial number only
+          p - print port only
+          c - print configuration only
 
-        connect <alias>
-          connect to controller pointed to by alias in device manifest
-
-        connect <port>
-          connect to controller on a specific port
+        devices connect <device>
+          connect to device, where <device> is one of:
+          - `auto` find port of and connect to plugged in device, must be only one
+          - alias, as definded in device manifest
+          - port name, e.g. /dev/ttyACM0
 
         """
 
@@ -222,7 +226,7 @@ class CmdLine(cmd.Cmd):
         subcommand = params[0]
 
         if subcommand == "list":
-            print(DeviceScanner("device_list.json").list_devices())
+            print(DeviceScanner(load_manifest=True).list_devices())
 
         elif subcommand == "off":
             self.interface.disconnect()
@@ -230,17 +234,31 @@ class CmdLine(cmd.Cmd):
             self.interface.variables_update_info()
             self.update_prompt()
 
-        elif subcommand == "auto":
-            self.maybe_connect(None)
+        elif subcommand == "connect":
+            self.maybe_connect(params[1])
             self.interface.resynchronize()
             self.interface.variables_update_info()
             self.update_prompt()
 
+        elif subcommand == "find":
+            alias = params[1]
+            devices = DeviceScanner(load_manifest=True)
+            device = devices.get(alias)
+            if not device:
+                print(f"No definition for device '{alias}'")
+                return
+            if len(params) > 2:
+                if params[2] == "h":
+                    print(device.hla_serial)
+                elif params[2] == "p":
+                    print(device.port)
+                elif params[2] == "c":
+                    print(device.configuration)
+            else:
+                print(device.print())
+
         else:
-            self.maybe_connect(subcommand)
-            self.interface.resynchronize()
-            self.interface.variables_update_info()
-            self.update_prompt()
+            print("Invalid device args: {}", params)
 
     def help_run(self):
         print(
@@ -840,14 +858,14 @@ named {self.scripts_directory} will be searched for the python script.
             print("Error: Unknown subcommand %s" % cl[0])
             return
 
+
 def main():
     terminal_parser = argparse.ArgumentParser()
     terminal_parser.add_argument(
         "--device",
         "-d",
         type=str,
-        help="Serial port device is connected to, e.g. /dev/ttyACM0, or alias from manifest."
-        " If unspecified, we try to auto-detect.",
+        help="Device to connect to: serial, e.g. /dev/ttyACM0, or alias from manifest, or 'auto'.",
     )
     terminal_parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."

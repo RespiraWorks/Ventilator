@@ -230,9 +230,18 @@ launch_browser() {
   python3 -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
-# get_serial_sn <alias>
+# prints info from device manifest, if SN is defined in environment
+print_device_info() {
+  if [ ! -z "$SN" ]
+  then
+    echo "SN has been defined in environment, will be deploying to the following device:"
+    ../utils/debug/debug_cli.py -c "devices find $SN"
+  fi
+}
+
+# get_hla_serial <alias>
 # prints ST-Link serial number by defined alias
-get_serial_sn() {
+get_hla_serial() {
   device_alias="$1"
   ../utils/debug/debug_cli.py -c "devices find $device_alias h"
 }
@@ -253,7 +262,7 @@ deploy() {
 
   if [ ! -z "$SN" ]
   then
-    echo "CUSTOM_HLA_SERIAL=$(get_serial_sn ${SN}) $(build ${env_name}) -t upload"
+    echo "CUSTOM_HLA_SERIAL=$(get_hla_serial ${SN}) $(build ${env_name}) -t upload"
   else
     echo "$(build ${env_name}) -t upload"
   fi
@@ -463,6 +472,7 @@ elif [ "$1" == "run" ]; then
   # generate comms protocols
   ../common/common.sh generate
 
+  print_device_info
   eval "$(deploy stm32)"
 
   exit $EXIT_SUCCESS
@@ -489,6 +499,7 @@ elif [ "$1" == "patch-ocd" ]; then
 # INTEGRATE #
 #############
 elif [ "$1" == "integrate" ]; then
+  print_device_info
   if [ "$2" == "all" ]
   then
     run_all_integration_tests "$3"

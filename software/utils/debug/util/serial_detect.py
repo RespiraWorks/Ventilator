@@ -22,13 +22,14 @@ __license__ = """
 
 """
 
+from util.colors import green, red, gray
 import json
 import pandas
 import subprocess
 from typing import List
-from util.colors import green, red, gray
-
-MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
+from pathlib import Path
+import urllib.request
+import shutil
 
 
 class DeviceInfo:
@@ -58,13 +59,62 @@ class DeviceInfo:
             return green(output_string)
 
 
-class DeviceScanner:
-    manifest: List
+class DeviceManifest:
+    device_list: List
 
-    def __init__(self, load_manifest=True):
-        self.manifest = []
-        if load_manifest:
-            self.get_devices()
+    def __init__(self):
+        self.device_list = []
+
+    def filter(self, known=False, connected=False):
+        filtered = DeviceManifest()
+        for m in self.device_list:
+            if not len(m.alias) and known:
+                continue
+            if not len(m.port) and connected:
+                continue
+            filtered.device_list.append(m)
+        return filtered
+
+    def list_devices(self):
+        return_string = ""
+        for entry in self.device_list:
+            return_string += f" {entry.print()}\n"
+        return return_string
+
+    def get(self, alias):
+        for device in self.device_list:
+            if device.alias == alias:
+                return device
+        return None
+
+    def find(self, port):
+        for device in self.device_list:
+            if device.port == port:
+                return device
+        return None
+
+    def auto_select(self):
+        if not self.device_list:
+            print(red("Could not auto-select: no devices connected."))
+            return None
+        if len(self.device_list) > 1:
+            print(red("Could not auto-select: multiple devices connected."))
+            print(self.list_devices())
+            return None
+        return self.device_list[0]
+
+
+class DeviceScanner:
+    cached_manifest_path: Path
+
+    def __init__(self, cached_path):
+        self.cached_manifest_path = cached_path
+
+    def update_manifest(self, url):
+        with urllib.request.urlopen(url) as response, open(
+            self.cached_manifest_path, "wb"
+        ) as out_file:
+            shutil.copyfileobj(response, out_file)
 
     @staticmethod
     def detect_stm32_ports():
@@ -79,16 +129,15 @@ class DeviceScanner:
                 ports[port] = hla_serial
         return ports
 
-    @staticmethod
-    def check_value(data, val):
-        return any(entry["hla_serial"] == val for entry in data)
-
     def get_devices(self):
         ports = DeviceScanner.detect_stm32_ports()
         ports_inverted = {v: k for k, v in ports.items()}
         loaded_manifest = json.loads(
-            pandas.read_csv(MANIFEST_URL, sep="\t", header=0).to_json(orient="records")
+            pandas.read_csv(self.cached_manifest_path, sep="\t", header=0).to_json(
+                orient="records"
+            )
         )
+        manifest = DeviceManifest()
         for entry in loaded_manifest:
             dev = DeviceInfo(
                 alias=entry.get("Alias"),
@@ -98,54 +147,29 @@ class DeviceScanner:
             )
             if dev.hla_serial in ports_inverted:
                 dev.port = ports_inverted[dev.hla_serial]
-            self.manifest.append(dev)
+            manifest.device_list.append(dev)
         for hla in ports_inverted:
-            if not any(entry.hla_serial == hla for entry in self.manifest):
+            if not any(entry.hla_serial == hla for entry in manifest.device_list):
                 dev = DeviceInfo(hla_serial=hla, description="unregistered_device")
                 dev.port = ports_inverted[hla]
-                self.manifest.append(dev)
+                manifest.device_list.append(dev)
+        return manifest
 
-    def filter(self, known=False, connected=False):
-        filtered = DeviceScanner(load_manifest=False)
-        for m in self.manifest:
-            if not len(m.alias) and known:
-                continue
-            if not len(m.port) and connected:
-                continue
-            filtered.manifest.append(m)
-        return filtered
-
-    def list_devices(self):
-        return_string = ""
-        for entry in self.manifest:
-            return_string += f" {entry.print()}\n"
-        return return_string
-
-    def get(self, alias):
-        for device in self.manifest:
-            if device.alias == alias:
-                return device
-        return None
-
-    def find(self, port):
-        for device in self.manifest:
-            if device.port == port:
-                return device
-        return None
-
-    def auto_select(self):
-        if not self.manifest:
-            print(red("Could not auto-select: no devices connected."))
-            return None
-        if len(self.manifest) > 1:
-            print(red("Could not auto-select: multiple devices connected."))
-            print(self.list_devices())
-            return None
-        return self.manifest[0]
+    def rescan(self):
+        return
 
 
-if __name__ == "__main__":
-    devices = DeviceScanner(load_manifest=True)
+def main():
+    MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
+    mod_path = Path(__file__).parent
+    rel_path = "../../../../local_data/device_manifest.tsv"
+    CACHED_MANIFEST_PATH = (mod_path / rel_path).resolve()
+
+    print(CACHED_MANIFEST_PATH)
+    device_finder = DeviceScanner(CACHED_MANIFEST_PATH)
+    device_finder.update_manifest(MANIFEST_URL)
+
+    devices = device_finder.get_devices()
     print("ALL: ")
     print(devices.list_devices())
     print("ONLY KNOWN: ")
@@ -166,3 +190,7 @@ if __name__ == "__main__":
         print(sel.print())
     else:
         print("None")
+
+
+if __name__ == "__main__":
+    main()

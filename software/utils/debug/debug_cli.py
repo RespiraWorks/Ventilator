@@ -40,6 +40,10 @@ from debug_lib.var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT
 import debug_lib.test_data
 import debug_funcs
 
+MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
+CACHED_MANIFEST_PATH = "../../../local_data/device_manifest.tsv"
+TEST_DATA_PATH = "../../../local_data/test_data"
+
 
 class ArgparseShowHelpError(Exception):
     """Exception raised when CmdArgumentParser encounters --help.
@@ -73,6 +77,7 @@ class CmdArgumentParser(argparse.ArgumentParser):
 # more details.
 class CmdLine(cmd.Cmd):
 
+    device_finder: DeviceScanner
     interface: ControllerDebugInterface
     scripts_directory: str
     test_scenarios_dir: Path
@@ -80,9 +85,15 @@ class CmdLine(cmd.Cmd):
 
     def __init__(self, connect_to):
         super(CmdLine, self).__init__()
+        script_path = Path(__file__).parent
         self.scripts_directory = "scripts"
-        self.test_scenarios_dir = Path("test_scenarios").absolute().resolve()
-        self.test_data_dir = Path("../../../local_data/test_data").absolute().resolve()
+        self.test_scenarios_dir = (
+            Path(script_path / "test_scenarios").absolute().resolve()
+        )
+        self.test_data_dir = Path(script_path / TEST_DATA_PATH).absolute().resolve()
+        self.device_finder = DeviceScanner(
+            (script_path / CACHED_MANIFEST_PATH).resolve()
+        )
         self.interface = ControllerDebugInterface()
         self.maybe_connect(connect_to)
 
@@ -176,7 +187,7 @@ class CmdLine(cmd.Cmd):
             print("Unknown command; pass 'on' or 'off'.")
 
     def maybe_connect(self, alias_or_port):
-        devices = DeviceScanner(load_manifest=True).filter(connected=True)
+        devices = self.device_finder.get_devices().filter(connected=True)
         selected = None
         if alias_or_port == "auto":
             print("Auto-selecting device")
@@ -200,6 +211,9 @@ class CmdLine(cmd.Cmd):
 
         device list
           searches and lists available STM32 devices on the serial bus
+
+        device update
+          updates device manifest from RespiraWorks canonical spreadsheet on Google Drive
 
         device off
           disconnect if connected
@@ -226,7 +240,10 @@ class CmdLine(cmd.Cmd):
         subcommand = params[0]
 
         if subcommand == "list":
-            print(DeviceScanner(load_manifest=True).list_devices())
+            print(self.device_finder.get_devices().list_devices())
+
+        elif subcommand == "update":
+            self.device_finder.update_manifest(MANIFEST_URL)
 
         elif subcommand == "off":
             self.interface.disconnect()
@@ -247,8 +264,7 @@ class CmdLine(cmd.Cmd):
 
         elif subcommand == "find":
             alias = params[1]
-            devices = DeviceScanner(load_manifest=True)
-            device = devices.get(alias)
+            device = self.device_finder.get_devices().get(alias)
             if not device:
                 print(f"No definition for device '{alias}'")
                 return

@@ -41,9 +41,7 @@ import debug_lib.test_data
 import debug_funcs
 
 MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
-CACHED_MANIFEST_PATH = "../../../local_data/device_manifest.tsv"
-TEST_DATA_PATH = "../../../local_data/test_data"
-
+LOCAL_DATA_PATH = "../../../local_data"
 
 class ArgparseShowHelpError(Exception):
     """Exception raised when CmdArgumentParser encounters --help.
@@ -81,19 +79,17 @@ class CmdLine(cmd.Cmd):
     interface: ControllerDebugInterface
     scripts_directory: str
     test_scenarios_dir: Path
+    local_data_dir : Path
     test_data_dir: Path
 
     def __init__(self, connect_to):
         super(CmdLine, self).__init__()
-        script_path = Path(__file__).parent
+        script_path = Path(__file__).parent.resolve()
         self.scripts_directory = "scripts"
-        self.test_scenarios_dir = (
-            Path(script_path / "test_scenarios").absolute().resolve()
-        )
-        self.test_data_dir = Path(script_path / TEST_DATA_PATH).absolute().resolve()
-        self.device_finder = DeviceScanner(
-            (script_path / CACHED_MANIFEST_PATH).resolve()
-        )
+        self.test_scenarios_dir = (script_path / "test_scenarios").resolve()
+        self.local_data_dir = (script_path / LOCAL_DATA_PATH ).resolve(strict=False)
+        self.test_data_dir = (self.local_data_dir / "test_data").resolve(strict=False)
+        self.device_finder = DeviceScanner(self.local_data_dir / "device_manifest.tsv")
         self.interface = ControllerDebugInterface()
         self.maybe_connect(connect_to)
 
@@ -895,8 +891,8 @@ def main():
     terminal_args = terminal_parser.parse_args()
 
     interpreter = CmdLine(terminal_args.device)
-    path = Path(interpreter.test_data_dir)
-    path.mkdir(parents=True, exist_ok=True)
+    interpreter.local_data_dir.mkdir(parents=True, exist_ok=True)
+    interpreter.test_data_dir.mkdir(parents=True, exist_ok=True)
 
     if terminal_args.command:
         # Set matplotlib to noninteractive mode.  This causes show() to block,

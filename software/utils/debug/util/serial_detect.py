@@ -126,17 +126,18 @@ class DeviceScanner:
             if "STM32" in entry.get("description", ""):
                 port = entry["port"]
                 hla_serial = entry["hwid"].split()[2].split("=")[1]
-                ports[port] = hla_serial
+                ports[hla_serial] = port
         return ports
 
     def get_devices(self):
         ports = DeviceScanner.detect_stm32_ports()
-        ports_inverted = {v: k for k, v in ports.items()}
-        loaded_manifest = json.loads(
-            pandas.read_csv(self.cached_manifest_path, sep="\t", header=0).to_json(
-                orient="records"
+        loaded_manifest = {}
+        if self.cached_manifest_path.exists():
+            loaded_manifest = json.loads(
+                pandas.read_csv(self.cached_manifest_path, sep="\t", header=0).to_json(
+                    orient="records"
+                )
             )
-        )
         manifest = DeviceManifest()
         for entry in loaded_manifest:
             dev = DeviceInfo(
@@ -145,13 +146,13 @@ class DeviceScanner:
                 configuration=entry.get("Configuration"),
                 description=entry.get("Description"),
             )
-            if dev.hla_serial in ports_inverted:
-                dev.port = ports_inverted[dev.hla_serial]
+            if dev.hla_serial in ports:
+                dev.port = ports[dev.hla_serial]
             manifest.device_list.append(dev)
-        for hla in ports_inverted:
+        for hla in ports:
             if not any(entry.hla_serial == hla for entry in manifest.device_list):
                 dev = DeviceInfo(hla_serial=hla, description="unregistered_device")
-                dev.port = ports_inverted[hla]
+                dev.port = ports[hla]
                 manifest.device_list.append(dev)
         return manifest
 

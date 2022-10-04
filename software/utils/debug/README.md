@@ -1,32 +1,31 @@
 # Debug serial interface
 
-[debug_cli.py](debug_cli.py) which can also be run from the common controller utilities script at
-[software/controller/controller.sh](../../controller/controller.sh)
+The controller debug interface should be run using [debug.sh](debug.sh) wrapper of from the common controller utilities script at [software/controller/controller.sh](../../controller/controller.sh)
 
 This Python script can be used to interface with the controller via the virtual serial port that is created when you plug a USB cable into the controller's debug port. The command line interface allows you to examine and directly manipulate a number of low level variables, as well as run calibration routines and automated performance tests.
 
-To use this debug tool you will need to have Python 3.x installed on your development computer.  Several additional Python modules will also be needed:
-- pyserial.  This is a Python module that allows serial port access
-- matplotlib.  This is a graphing module used to display data
-- pandas. For  loading test scenarios
-- gitpython.  For git-aware test metadata
+To use this debug tool you will need to have Python 3.x installed on your development computer, as well as a number of python packages. Necessary dependencies will be installed by the [controller.sh](../../controller/controller.sh) script.
 
 The debug tool was developed and tested using Linux, but it should be possible to use it with other operating systems. The command line interface will allow you to discover available commands using `help`. Some commands provide an "autocomplete" feature you can access with `TAB`. To get help on a specific command, enter help _command name_.  For example, to get a description of the `get` command:
 ```
-/dev/ttyACM0] help get
+[sn:v03e2] help get
 ```
 
 ## Connecting
 
-To use the debug tool you will first need to connect your development computer to the controller's debug port using a USB cable.  This should create a virtual serial port.  Under Linux the default device file is named `/dev/ttyACM0`.  Make note of the device file name if the default one is not used.
+To use the debug tool you will first need to connect your development computer to the controller's debug port using a USB cable. This should create a virtual serial port.
 
-The tool can also run in offline mode. Serial ports can be searched and connection established using the `connect` command. This is useful when testing multiple units.
+Serial ports can be searched and connection established using the `device` command.
 
-- `connect list` - will detect STM controllers connected to machine and print them out
-- `connect auto` - will detect a controller and connect to it, if there is one
-- `connect <port>` - will connect to specific port. Might have to do this manually if there is more than one available.
+- `device list` - will detect STM controllers connected to machine and print them out
+- `device auto` - will detect a controller and connect to it, if there is one
+- `device <alias/port>` - will connect to specific device, using either its alias or port name.
+- `device update` - will download the canonical RespiraWorks device manifest from Google Drive. At some point you should register your device on the spreadsheet.
 
 Once connected, the prompt should display the hardware unit's serial number. If there is no assigned serial number, the prompt will display the serial port name.
+
+You may also immediately connect when calling the debug script using
+`./debug.sh --device /dev/ttyACM01` or `./debug.sh -d e2` or `./debug.sh -d auto`.
 
 ## Commands
 
@@ -76,7 +75,7 @@ eeprom write 128 255 255 255 255 255 255 255
 ### trace
 One of the most useful features of the debug utilities is the trace buffer.  The trace buffer is a large block of RAM into which debug variables can be saved periodically.  That data can then be downloaded using the trace command and either saved to a file or displayed graphically.
 
-To start the trace, one needs to provide a list of traced vars and (optionnaly) a trace period:
+To start the trace, one needs to provide a list of traced vars and (optionally) a trace period:
 ```
 trace start [--period <period>] <var_name1 ... var_name4>
 ```
@@ -124,5 +123,4 @@ test read 2021-08-15-23-23-23_john_test.json --plot
 Test scenarios are defined in `json` files in the [test_scenarios](test_scenarios) directory. All files in that directory should be loaded when the script starts. You may also see additional commands provided by this interface with `help test`.
 
 ### run
-This command takes the name of a python script and executes it in the same environment that the debug program runs in.  This allows the script to use functions defined in the debug tool to do things like get or set variables.
-The debug tool will search for scripts in the [scripts](scripts) subdirectory. These scripts may take additional parameters.
+This command takes the name of a python script and executes it in the same environment that the debug program runs in.  This allows the script to use functions defined in the debug tool to do things like get or set variables. The debug tool will search for scripts in the [scripts](scripts) subdirectory. These scripts may take additional parameters.

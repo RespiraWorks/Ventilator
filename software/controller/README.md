@@ -24,9 +24,12 @@ The controller shares the [common code](../common) with the GUI. The part of the
 
 **Files:**
 * [controller.sh](controller.sh) - general utility script for:
+  * installation of dependencies
+  * configuration of host system for deployment
   * building controller firmware
   * running unit tests
   * running static checks
+  * running integration tests
   * generating coverage reports locally
   * uploading/deploying firmware
   * shortcut to [debug interface](../utils/debug)

@@ -29,15 +29,15 @@ import glob
 import os
 import shlex
 import traceback
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
 from util.colors import *
 from util.error import Error
 from util.serial_detect import DeviceScanner
-from controller_debug import ControllerDebugInterface, MODE_BOOT
-from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
-import numpy as np
-import matplotlib.pyplot as plt
-import test_data
-from pathlib import Path
+from debug_lib.controller_debug import ControllerDebugInterface, MODE_BOOT
+from debug_lib.var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
+import debug_lib.test_data
 import debug_funcs
 
 
@@ -82,7 +82,7 @@ class CmdLine(cmd.Cmd):
         super(CmdLine, self).__init__()
         self.scripts_directory = "scripts"
         self.test_scenarios_dir = Path("test_scenarios").absolute().resolve()
-        self.test_data_dir = Path("../../../test_data").absolute().resolve()
+        self.test_data_dir = Path("../../../local_data/test_data").absolute().resolve()
         self.interface = ControllerDebugInterface()
         self.maybe_connect(connect_to)
 
@@ -191,27 +191,27 @@ class CmdLine(cmd.Cmd):
             print(f"Attempting to connect to: {selected.print()}")
             self.interface.connect(selected.port)
 
-    def do_devices(self, line):
+    def do_device(self, line):
         """This command manages the connection of the debug interface to the ventilator controller
 
         If ventilator USB cable is unplugged, the CLI prompt should update to reflect this on the next loop
         (blank line or failed command). You may also start the debugger without a plugged in device.
         Use one of the following commands to reconnect.
 
-        devices list
+        device list
           searches and lists available STM32 devices on the serial bus
 
-        devices off
+        device off
           disconnect if connected
 
-        devices find <alias> [h/p/c]
+        device find <alias> [h/p/c]
           print information for specific device
           alias - string must match alias as defined in manifest
           h - print HLA serial number only
           p - print port only
           c - print configuration only
 
-        devices connect <device>
+        device connect <device>
           connect to device, where <device> is one of:
           - `auto` find port of and connect to plugged in device, must be only one
           - alias, as definded in device manifest

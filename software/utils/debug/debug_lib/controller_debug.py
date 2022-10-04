@@ -20,17 +20,17 @@ __license__ = """
 
 """
 
+import debug_lib.debug_types
+import debug_lib.var_info
+from debug_lib.test_scenario import TestScenario
+from debug_lib.test_data import *
+from util.error import Error
+from util.colors import red, orange
 import serial
 import threading
 import time
-import debug_types
-import var_info
 import fnmatch
-from util.error import Error
-import test_scenario
-from test_data import *
 from pathlib import Path
-from util.colors import red, orange
 
 # TODO: Import constants from proto instead!
 
@@ -327,11 +327,11 @@ class ControllerDebugInterface:
         if not in_file.is_file():
             raise Error(f"Input file does not exist {file_name}")
         elif in_file.suffix == ".csv":
-            imported_scenarios = test_scenario.TestScenario.from_csv(
+            imported_scenarios = TestScenario.from_csv(
                 in_file, self.variable_metadata.keys()
             )
         elif in_file.suffix == ".json":
-            imported_scenarios = test_scenario.TestScenario.from_json(in_file)
+            imported_scenarios = TestScenario.from_json(in_file)
         else:
             raise Error(f"Unknown file format `{in_file.suffix}`")
         if bool(set(imported_scenarios.keys()) & set(self.scenarios.keys())):
@@ -403,7 +403,7 @@ class ControllerDebugInterface:
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
-        test = TestData(test_scenario.TestScenario())
+        test = TestData(TestScenario())
 
         # get data
         self.save_test_data(test)

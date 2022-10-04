@@ -20,16 +20,16 @@ __license__ = """
 
 """
 
+from debug_lib.test_scenario import TestScenario
+from util.colors import red
 import datetime
-from test_scenario import TestScenario
-from typing import Dict, List
-from datetime import datetime
 import matplotlib.pyplot as plt
 import dateutil.parser
 import json
 import platform
 import git
-from util.colors import red
+from typing import Dict, List
+from datetime import datetime
 from pathlib import Path
 
 

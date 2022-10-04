@@ -1,9 +1,9 @@
 #network protocol output files
 software/common/generated_libs/protocols/*.c
 software/common/generated_libs/protocols/*.h
-software/utils/debug/lib/protocols/*
 software/gui/src/protocols/*.cc
 software/gui/src/protocols/*.h
+software/utils/debug/protocols/*
 
 build/
 build_autotests/
@@ -58,5 +58,5 @@ fp-info-cache
 *-cache.lib
 
 #performance test data
+local_data/
 test_data/
-device_list.*

@@ -126,7 +126,7 @@ update_platformio() {
 
 generate_network_protocols() {
   PROTOCOLS_DIR=generated_libs/protocols
-  PYTHON_LIB_PATH=../utils/debug/lib/protocols
+  PYTHON_LIB_PATH=../utils/debug/protocols
   GUI_LIB_PATH=../gui/src/protocols
   NANOPB_PATH=$(pip3 show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
 

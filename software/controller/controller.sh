@@ -84,6 +84,9 @@ The following options are available:
   unit        Builds and runs unit tests only (and generates coverage reports)
                 <name>  - run specific unit test, may include wildcards, i.e. '*debug*'
                 [-o]    - open coverage report in browser when done
+  integrate   Run integration tests
+                all [delay_time] - run all integration tests, pause for [delay time] in between
+                <test_name> [parameters...] - run specific integration test with parameters
   cov_upload  Upload coverage reports to Codecov server
   help/-h     Display this help info
 EOF
@@ -235,7 +238,7 @@ print_device_info() {
   if [ ! -z "$SN" ]
   then
     echo "SN has been defined in environment, will be deploying to the following device:"
-    ../utils/debug/debug_cli.py -c "devices find $SN"
+    ../utils/debug/debug.sh -c "device find $SN"
   fi
 }
 
@@ -243,7 +246,7 @@ print_device_info() {
 # prints ST-Link serial number by defined alias
 get_hla_serial() {
   device_alias="$1"
-  ../utils/debug/debug_cli.py -c "devices find $device_alias h"
+  ../utils/debug/debug.sh -c "device find $device_alias h"
 }
 
 # build <target_name>
@@ -483,7 +486,7 @@ elif [ "$1" == "run" ]; then
 elif [ "$1" == "debug" ]; then
   shift
   pushd ../utils/debug
-  ./debug_cli.py "$@"
+  ./debug.sh "$@"
   popd
 
   exit $EXIT_SUCCESS
@@ -512,7 +515,7 @@ elif [ "$1" == "integrate" ]; then
 # DEVICES #
 ###########
 elif [ "$1" == "devices" ]; then
-  ../utils/debug/debug_cli.py -c "devices list"
+  ../utils/debug/debug.sh -c "device list"
   exit $EXIT_SUCCESS
 
 ################

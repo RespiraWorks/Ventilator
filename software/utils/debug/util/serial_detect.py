@@ -135,21 +135,11 @@ class DeviceScanner:
 
     def auto_select(self):
         if not self.manifest:
-            print(
-                red(
-                    "Could not auto-detect serial port; "
-                    "platformio device list did not yield any STM32 devices."
-                )
-            )
+            print(red("Could not auto-select: no devices connected."))
             return None
         if len(self.manifest) > 1:
-            print(
-                red(
-                    "Could not auto-detect serial port; "
-                    "platformio device list yielded multiple STM32 devices:\n"
-                    f"{self.list_devices()}"
-                )
-            )
+            print(red("Could not auto-select: multiple devices connected."))
+            print(self.list_devices())
             return None
         return self.manifest[0]
 

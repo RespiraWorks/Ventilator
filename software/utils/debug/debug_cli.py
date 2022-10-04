@@ -238,6 +238,11 @@ class CmdLine(cmd.Cmd):
             self.maybe_connect(params[1])
             self.interface.resynchronize()
             self.interface.variables_update_info()
+            if self.interface.connected() and not self.interface.sanity_checks():
+                self.interface.disconnect()
+                self.interface.resynchronize()
+                self.interface.variables_update_info()
+                return
             self.update_prompt()
 
         elif subcommand == "find":

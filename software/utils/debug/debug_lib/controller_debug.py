@@ -20,8 +20,8 @@ __license__ = """
 
 """
 
-import debug_lib.debug_types
-import debug_lib.var_info
+import debug_lib.debug_types as debug_types
+import debug_lib.var_info as var_info
 from debug_lib.test_scenario import TestScenario
 from debug_lib.test_data import *
 from util.error import Error
@@ -137,7 +137,7 @@ class ControllerDebugInterface:
     def sanity_checks(self):
         # \TODO: make sure git is configured and we have identity for tester
         # we do this just for the git info
-        test = TestData(test_scenario.TestScenario())
+        test = TestData(TestScenario())
 
         try:
             sn = self.variable_get("0_ventilator_serial_number")

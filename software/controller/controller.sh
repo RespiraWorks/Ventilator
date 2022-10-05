@@ -499,10 +499,12 @@ elif [ "$1" == "run" ]; then
 #########
 elif [ "$1" == "debug" ]; then
   shift
-  pushd ../utils/debug
-  ./debug.sh "$@"
-  popd
-
+  if [ ! -z "$SN" ]
+  then
+    ../utils/debug/debug.sh -d $SN "$@"
+  else
+    ../utils/debug/debug.sh "$@"
+  fi
   exit $EXIT_SUCCESS
 
 #############

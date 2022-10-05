@@ -151,7 +151,9 @@ The interactive command-line debug interface can also be accessed from here, als
 ./controller.sh debug -d e2 -c "get set"
 ```
 
-Debug interface and manual testing utilities are in the [../utils](../utils) directory.
+If you have the environment variable `SN` set to a registered device alias, then the script will pass that along to the `-d` argument for connecting. This then makes it possible for you to have local terminal sessions dedicated to deploying to and testing different devices without having to type out the alias every single time.
+
+For more info about the debug interface and other manual testing utilities, see the [../utils](../utils) directory.
 
 ## Common problems
 

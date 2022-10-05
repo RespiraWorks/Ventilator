@@ -181,11 +181,7 @@ class ControllerDebugInterface:
         if not problem:
             return True
 
-        print(
-            red(
-                "---------------================= WARNING =================---------------"
-            )
-        )
+        print(red("-" * 30 + "=" * 30 + " WARNING " + "=" * 30 + "-" * 30))
         print(
             red(
                 " Potential controller version incompatibility or uncertain provenance "
@@ -215,11 +211,7 @@ class ControllerDebugInterface:
             print(red(f"    * controller built from dirty (uncommitted) code"))
         if test.git_dirty:
             print(red(f"    * debugger running with dirty (uncommitted) code"))
-        print(
-            red(
-                "---------------================= WARNING =================---------------"
-            )
-        )
+        print(red("-" * 30 + "=" * 30 + " WARNING " + "=" * 30 + "-" * 30))
         print(
             "The above might be a sign of problems. Test results may not be meaningful or"
             " reproducible."

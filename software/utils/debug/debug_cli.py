@@ -198,6 +198,13 @@ class CmdLine(cmd.Cmd):
         if selected:
             print(f"Attempting to connect to: {selected.print()}")
             self.interface.connect(selected.port)
+            self.interface.resynchronize()
+            self.interface.variables_update_info()
+
+    def disconnect(self):
+        self.interface.disconnect()
+        self.interface.resynchronize()
+        self.interface.variables_update_info()
 
     def do_device(self, line):
         """This command manages the connection of the debug interface to the ventilator controller
@@ -243,19 +250,13 @@ class CmdLine(cmd.Cmd):
             self.device_finder.update_manifest(MANIFEST_URL)
 
         elif subcommand == "off":
-            self.interface.disconnect()
-            self.interface.resynchronize()
-            self.interface.variables_update_info()
+            self.disconnect()
             self.update_prompt()
 
         elif subcommand == "connect":
             self.maybe_connect(params[1])
-            self.interface.resynchronize()
-            self.interface.variables_update_info()
             if self.interface.connected() and not self.interface.sanity_checks():
-                self.interface.disconnect()
-                self.interface.resynchronize()
-                self.interface.variables_update_info()
+                self.disconnect()
                 return
             self.update_prompt()
 

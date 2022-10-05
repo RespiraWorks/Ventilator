@@ -59,6 +59,16 @@ if [ $PLATFORM != "Linux" ]; then
   exit $EXIT_FAILURE
 fi
 
+# Silent pushd
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+# Silent popd
+popd () {
+    command popd > /dev/null
+}
+
 #########
 # UTILS #
 #########

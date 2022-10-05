@@ -23,13 +23,16 @@ if [ -n "$VERBOSE" ]; then
   set -o xtrace
 fi
 
+# Silent pushd
 pushd () {
     command pushd "$@" > /dev/null
 }
 
+# Silent popd
 popd () {
     command popd > /dev/null
 }
+
 
 # This script should work no matter where you call it from.
 MY_PATH="$(dirname "$0")"

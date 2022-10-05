@@ -151,7 +151,7 @@ class DeviceScanner:
             manifest.device_list.append(dev)
         for hla in ports:
             if not any(entry.hla_serial == hla for entry in manifest.device_list):
-                dev = DeviceInfo(hla_serial=hla, description="unregistered_device")
+                dev = DeviceInfo(hla_serial=hla, description="Unregistered device")
                 dev.port = ports[hla]
                 manifest.device_list.append(dev)
         return manifest

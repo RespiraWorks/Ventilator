@@ -85,10 +85,14 @@ The following options are available:
                 <name>  - run specific unit test, may include wildcards, i.e. '*debug*'
                 [-o]    - open coverage report in browser when done
   integrate   Run integration tests
-                all [delay_time] - run all integration tests, pause for [delay time] in between
+                all [delay_time] - run all integration tests, pause for [delay_time] in between
                 <test_name> [parameters...] - run specific integration test with parameters
   cov_upload  Upload coverage reports to Codecov server
   help/-h     Display this help info
+
+Additionally, the following environment variables may be evaluated:
+  SN      - serial number or alias of device to deploy firmware or integration tests, as per manifest
+  VERBOSE - print all shell commands as they are being executed, pass verbose flags to some scripts
 EOF
 }
 

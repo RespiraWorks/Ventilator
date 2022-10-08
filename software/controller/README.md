@@ -136,7 +136,7 @@ Integration tests are pared-down versions of the controller code that contain le
 ./controller.sh integrate buzzer 0.0f 1.0f
 ```
 
-For more information, see the integration test code, which will also explain what parameters these deploymen commands take. Integration tests are in the [integration_tests](integration_tests) directory.
+For more information, see the integration test code, which will also explain what parameters these deployment commands take. Integration tests are in the [integration_tests](integration_tests) directory.
 
 ## Debug interface
 

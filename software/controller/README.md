@@ -115,7 +115,7 @@ Now the output for the `controller.sh devices` command should look something lik
  n6         /dev/ttyACM0     066CFF554857868367094021 v0.4         v0.4 prototype PCB#6 in Oakland
 ```
 
-Any devices that are in the manifest but not connected to this system and will be greyed out. The bottom 2 should be green and are the ones that are detected on the `/dev/tty*` ports. You can now deploy to them by using the alias in the first column, for example:
+Any devices that are in the manifest but not connected to this system will be greyed out. The bottom 2 should be green and are the ones that are detected on the `/dev/tty*` ports. You can now deploy to them by using the alias in the first column, for example:
 
 ```shell
 SN="e2" ./controller.sh run

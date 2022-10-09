@@ -145,4 +145,4 @@ If you want to use parameters, they will be provided as pre-processor macros fol
 
 If you need more parameters, you may have to modify [../controller.sh](../controller.sh) as well as the`[env:integration-test]` entry in [../platformio.ini](../platformio.ini).
 
-Once your new test is meaningful and functionao, you should also add it to the sequence of tests run by the `run_all_integration_tests` function in [../controller.sh](../controller.sh).
+Once your new test is meaningful and functional, you should also add it to the sequence of tests run by the `run_all_integration_tests` function in [../controller.sh](../controller.sh).

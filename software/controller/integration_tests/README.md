@@ -135,28 +135,14 @@ measure that was used to judge the acceptance, and should also save the relevant
 
 ## Hardware-in-the-loop tests
 
-The following two scripts are available for (semi-)automated integration testing.
-
-[deploy_test.sh](deploy_test.sh) - will build and deploy a specified integration test to a specific prototype
-referenced by serial designation alias. Script is self-documented.
-
-[run_all.sh](run_all.sh) - will deploy a sequence of integration tests each for about 15 seconds, ending
-by putting the controller into an idle loop. Must specify serial alias.
+The integration tests can be run using `controller.sh integrate`, which is self-documented via the `--help` option. Positional parameters may be passed to these tests, which are then compiled into the code as constants. See each implementation for what those positional parameters are used for.
 
 ### How to create a new test
 
-Take something like [buzzer_test.h](buzzer_test.h) as a template. Create a new header in this directory ending
-in `_test.h`. It should contain a function `void run_test()`.
+Take something like [buzzer_test.h](buzzer_test.h) as a template. Create a new header in this directory ending in `_test.h`. It should contain a function `void run_test()`.
 
-Now you can use the [deploy_test.sh](deploy_test.sh) script and provide the name of your test as a parameter. For
-example, if the header you created is called `starship_test.h`, then you would run something like:
+If you want to use parameters, they will be provided as pre-processor macros following the pattern of `TEST_PARAM_1`, `TEST_PARAM_2`, etc..
 
-```
-./deploy_test.sh p3 starship
-```
+If you need more parameters, you may have to modify [../controller.sh](../controller.sh) as well as the`[env:integration-test]` entry in [../platformio.ini](../platformio.ini).
 
-If you want to use parameters, they will be provided as pre-processor macros following the pattern of
-`TEST_PARAM_1`, `TEST_PARAM_2`, etc..
-
-If you need more parameters, you may have to modify [deploy_test.sh](deploy_test.sh) as well as the
-`[env:integration-test]` entry in [../platformio.ini](../platformio.ini).
+Once your new test is meaningful and functional, you should also add it to the sequence of tests run by the `run_all_integration_tests` function in [../controller.sh](../controller.sh).

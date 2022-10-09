@@ -22,13 +22,13 @@ __license__ = """
 
 """
 
+from util.colors import Color, blue
 from typing import Dict
-import pandas  # pip install pandas
+from pathlib import Path
+import pandas
 import json
 import copy
 import argparse
-from pathlib import Path
-from lib.colors import Color, blue
 
 
 def trim_all_columns(df):

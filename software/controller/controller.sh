@@ -59,6 +59,16 @@ if [ $PLATFORM != "Linux" ]; then
   exit $EXIT_FAILURE
 fi
 
+# Silent pushd
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+# Silent popd
+popd () {
+    command popd > /dev/null
+}
+
 #########
 # UTILS #
 #########
@@ -70,6 +80,8 @@ Utility script for the RespiraWorks Ventilator controller.
 The following options are available:
   install     One-time installation of build toolchain and dependencies
   configure   One-time configuring of udev rules for deployment to controller
+  patch_ocd   One-time patching of OCD script for ST-Link for multi-device deployment environments
+  devices     List all devices available for deploying to
   update      Updates platformio and required libraries
   check       Runs static checks only
   clean       Clean build directories
@@ -82,8 +94,15 @@ The following options are available:
   unit        Builds and runs unit tests only (and generates coverage reports)
                 <name>  - run specific unit test, may include wildcards, i.e. '*debug*'
                 [-o]    - open coverage report in browser when done
+  integrate   Run integration tests
+                all [delay_time] - run all integration tests, pause for [delay_time] in between
+                <test_name> [parameters...] - run specific integration test with parameters
   cov_upload  Upload coverage reports to Codecov server
   help/-h     Display this help info
+
+Additionally, the following environment variables may be evaluated:
+  SN      - serial number or alias of device to deploy firmware or integration tests, as per manifest
+  VERBOSE - print all shell commands as they are being executed, pass verbose flags to some scripts
 EOF
 }
 
@@ -128,6 +147,10 @@ update_platformio() {
   exit $EXIT_SUCCESS
 }
 
+patch_ocd_stlink() {
+  cp -fr platformio/stlink.cfg ${HOME}/.platformio/packages/tool-openocd/scripts/interface
+}
+
 run_checks() {
     # Code style / bug-prone pattern checks (eg. clang-tidy)
     # WARNING: This might sometimes give different results for different people,
@@ -146,18 +169,6 @@ run_checks() {
 
     # Native - cppcheck & clangtidy
     pio check -e native --fail-on-defect=high
-}
-
-run_integration_tests() {
-  # Make sure controller integration tests build for target platform.
-  # TODO(martukas) This will actually have to build an deploy on Jenkins and not here
-  INTEGRATION_TEST_H=idle_test.h pio run -e integration-test
-  INTEGRATION_TEST_H=buzzer_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
-  INTEGRATION_TEST_H=blower_test.h TEST_PARAM_1=0.0f TEST_PARAM_2=1.0f pio run -e integration-test
-  INTEGRATION_TEST_H=stepper_test.h TEST_PARAM_1=0 TEST_PARAM_2=90.0f pio run -e integration-test
-  INTEGRATION_TEST_H=pinch_valve_test.h TEST_PARAM_1=0 pio run -e integration-test
-  INTEGRATION_TEST_H=psol_test.h pio run -e integration-test
-  INTEGRATION_TEST_H=eeprom_test.h pio run -e integration-test
 }
 
 upload_coverage_reports() {
@@ -233,8 +244,113 @@ generate_coverage_reports() {
 }
 
 launch_browser() {
-  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
+  python3 -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
+
+# prints info from device manifest, if SN is defined in environment
+print_device_info() {
+  if [ ! -z "$SN" ]
+  then
+    echo "SN has been defined in environment, will be deploying to the following device:"
+    ../utils/debug/debug.sh -c "device find $SN"
+  fi
+}
+
+# get_hla_serial <alias>
+# prints ST-Link serial number by defined alias
+get_hla_serial() {
+  device_alias="$1"
+  ../utils/debug/debug.sh -c "device find $device_alias h"
+}
+
+# build <target_name>
+# prints command for building the specified target
+build() {
+  env_name="$1"
+
+  echo "pio run -e ${env_name}"
+}
+
+# deploy <target_name>
+# prints command for deploying the specified target
+# if SN=alias is defined, prepends ST-Link serial number to deploy to specific device
+deploy() {
+  env_name="$1"
+
+  if [ ! -z "$SN" ]
+  then
+    echo "CUSTOM_HLA_SERIAL=$(get_hla_serial ${SN}) $(build ${env_name}) -t upload"
+  else
+    echo "$(build ${env_name}) -t upload"
+  fi
+}
+
+# deploy <test_name> [param1] ... [param5]
+# prints environment variable definitions required for generating specific integration test
+integration_test() {
+  test_name="$1"
+  test_param_1="$2"
+  test_param_2="$3"
+  test_param_3="$4"
+  test_param_4="$5"
+  test_param_5="$6"
+
+  test_name="${test_name}_test.h"
+
+  echo "INTEGRATION_TEST_H=$test_name TEST_PARAM_1=$test_param_1 TEST_PARAM_2=$test_param_2 \
+  TEST_PARAM_3=$test_param_3 TEST_PARAM_4=$test_param_4 TEST_PARAM_5=$test_param_5 "
+}
+
+# build_integration_test <test_name> [param1] ... [param5]
+# prints command for building specific integration test with desired parameters
+build_integration_test() {
+  echo "$(integration_test "$@") $(build "integration-test")"
+}
+
+# deploy_integration_test <test_name> [param1] ... [param5]
+# prints command for deploying specific integration test with desired parameters
+# if SN=alias is defined, this will be honored by call to deploy()
+deploy_integration_test() {
+  echo "$(integration_test "$@") $(deploy "integration-test")"
+}
+
+build_all_integration_tests() {
+  # Make sure controller integration tests build for target platform.
+  eval "$(build_integration_test idle)"
+  eval "$(build_integration_test buzzer 0.0f 1.0f)"
+  eval "$(build_integration_test blower 0.0f 1.0f)"
+  eval "$(build_integration_test stepper 0 90.0f)"
+  eval "$(build_integration_test pinch_valve 0)"
+  eval "$(build_integration_test psol)"
+  eval "$(build_integration_test eeprom 0 85 10)"
+}
+
+run_all_integration_tests() {
+  wait_time="$1"
+
+  # \todo This is a work in progress, honing in on deploying this in CI
+
+  # This script runs a few of the integration tests in order, with slight pauses in between
+  # Ends with putting controller in idle loop.
+
+  eval "$(deploy_integration_test blower 0.0f 1.0f)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test buzzer 0.0f 1.0f)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test pinch_valve 0)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test pinch_valve 1)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test eeprom 0 85 10)"
+  sleep $wait_time
+
+  eval "$(deploy_integration_test idle)"
+}
+
 
 ########
 # HELP #
@@ -322,10 +438,10 @@ elif [ "$1" == "test" ]; then
   ../common/common.sh generate
 
   # Make sure controller builds for target platform
-  pio run -e stm32
+  eval "$(build stm32)"
 
   # Make sure integration tests build
-  run_integration_tests
+  build_all_integration_tests
 
   # Controller unit tests on native
   # This must be the last thing built
@@ -373,7 +489,8 @@ elif [ "$1" == "run" ]; then
   # generate comms protocols
   ../common/common.sh generate
 
-  platformio/deploy.sh stm32
+  print_device_info
+  eval "$(deploy stm32)"
 
   exit $EXIT_SUCCESS
 
@@ -381,12 +498,40 @@ elif [ "$1" == "run" ]; then
 # DEBUG #
 #########
 elif [ "$1" == "debug" ]; then
-
   shift
-  pushd ../utils/debug
-  ./debug_cli.py "$@"
-  popd
+  if [ ! -z "$SN" ]
+  then
+    ../utils/debug/debug.sh -d $SN "$@"
+  else
+    ../utils/debug/debug.sh "$@"
+  fi
+  exit $EXIT_SUCCESS
 
+#############
+# PATCH OCD #
+#############
+elif [ "$1" == "patch-ocd" ]; then
+  patch_ocd_stlink
+  exit $EXIT_SUCCESS
+
+#############
+# INTEGRATE #
+#############
+elif [ "$1" == "integrate" ]; then
+  print_device_info
+  if [ "$2" == "all" ]
+  then
+    run_all_integration_tests "$3"
+  else
+    deploy_integration_test "${@:2}"
+  fi
+  exit $EXIT_SUCCESS
+
+###########
+# DEVICES #
+###########
+elif [ "$1" == "devices" ]; then
+  ../utils/debug/debug.sh -c "device list"
   exit $EXIT_SUCCESS
 
 ################

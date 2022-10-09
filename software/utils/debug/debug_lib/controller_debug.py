@@ -20,17 +20,17 @@ __license__ = """
 
 """
 
+import debug_lib.debug_types as debug_types
+import debug_lib.var_info as var_info
+from debug_lib.test_scenario import TestScenario
+from debug_lib.test_data import *
+from util.error import Error
+from util.colors import red, orange
 import serial
 import threading
 import time
-import debug_types
-import var_info
 import fnmatch
-from lib.error import Error
-import test_scenario
-from test_data import *
 from pathlib import Path
-from lib.colors import red, orange
 
 # TODO: Import constants from proto instead!
 
@@ -106,6 +106,10 @@ class ControllerDebugInterface:
         self.serial_port.timeout = 0.8
         print(f"Debug interface connected to device at {port}")
 
+    def disconnect(self):
+        self.serial_port.close()
+        print(f"Debug interface disconnected from device.")
+
     def connected(self):
         return self.serial_port.isOpen()
 
@@ -133,7 +137,7 @@ class ControllerDebugInterface:
     def sanity_checks(self):
         # \TODO: make sure git is configured and we have identity for tester
         # we do this just for the git info
-        test = TestData(test_scenario.TestScenario())
+        test = TestData(TestScenario())
 
         try:
             sn = self.variable_get("0_ventilator_serial_number")
@@ -177,11 +181,7 @@ class ControllerDebugInterface:
         if not problem:
             return True
 
-        print(
-            red(
-                "---------------================= WARNING =================---------------"
-            )
-        )
+        print(red("-" * 30 + "=" * 30 + " WARNING " + "=" * 30 + "-" * 30))
         print(
             red(
                 " Potential controller version incompatibility or uncertain provenance "
@@ -211,11 +211,7 @@ class ControllerDebugInterface:
             print(red(f"    * controller built from dirty (uncommitted) code"))
         if test.git_dirty:
             print(red(f"    * debugger running with dirty (uncommitted) code"))
-        print(
-            red(
-                "---------------================= WARNING =================---------------"
-            )
-        )
+        print(red("-" * 30 + "=" * 30 + " WARNING " + "=" * 30 + "-" * 30))
         print(
             "The above might be a sign of problems. Test results may not be meaningful or"
             " reproducible."
@@ -323,11 +319,11 @@ class ControllerDebugInterface:
         if not in_file.is_file():
             raise Error(f"Input file does not exist {file_name}")
         elif in_file.suffix == ".csv":
-            imported_scenarios = test_scenario.TestScenario.from_csv(
+            imported_scenarios = TestScenario.from_csv(
                 in_file, self.variable_metadata.keys()
             )
         elif in_file.suffix == ".json":
-            imported_scenarios = test_scenario.TestScenario.from_json(in_file)
+            imported_scenarios = TestScenario.from_json(in_file)
         else:
             raise Error(f"Unknown file format `{in_file.suffix}`")
         if bool(set(imported_scenarios.keys()) & set(self.scenarios.keys())):
@@ -399,7 +395,7 @@ class ControllerDebugInterface:
         return test
 
     def trace_save(self, scenario_name="manual_trace"):
-        test = TestData(test_scenario.TestScenario())
+        test = TestData(TestScenario())
 
         # get data
         self.save_test_data(test)

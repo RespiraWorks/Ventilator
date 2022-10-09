@@ -29,16 +29,19 @@ import glob
 import os
 import shlex
 import traceback
-from lib.colors import *
-from lib.error import Error
-from lib.serial_detect import detect_stm32_ports, print_detected_ports
-from controller_debug import ControllerDebugInterface, MODE_BOOT
-from var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
 import numpy as np
 import matplotlib.pyplot as plt
-import test_data
 from pathlib import Path
+from util.colors import *
+from util.error import Error
+from util.serial_detect import DeviceScanner
+from debug_lib.controller_debug import ControllerDebugInterface, MODE_BOOT
+from debug_lib.var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
+import debug_lib.test_data
 import debug_funcs
+
+MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
+LOCAL_DATA_PATH = "../../../local_data"
 
 
 class ArgparseShowHelpError(Exception):
@@ -73,21 +76,23 @@ class CmdArgumentParser(argparse.ArgumentParser):
 # more details.
 class CmdLine(cmd.Cmd):
 
+    device_finder: DeviceScanner
     interface: ControllerDebugInterface
     scripts_directory: str
     test_scenarios_dir: Path
+    local_data_dir: Path
     test_data_dir: Path
 
-    def __init__(self, port):
+    def __init__(self, connect_to):
         super(CmdLine, self).__init__()
+        script_path = Path(__file__).parent.resolve()
         self.scripts_directory = "scripts"
-        self.test_scenarios_dir = Path("test_scenarios").absolute().resolve()
-        self.test_data_dir = Path("../../../test_data").absolute().resolve()
+        self.test_scenarios_dir = (script_path / "test_scenarios").resolve()
+        self.local_data_dir = (script_path / LOCAL_DATA_PATH).resolve(strict=False)
+        self.test_data_dir = (self.local_data_dir / "test_data").resolve(strict=False)
+        self.device_finder = DeviceScanner(self.local_data_dir / "device_manifest.tsv")
         self.interface = ControllerDebugInterface()
-        if not port:
-            port = auto_select_port()
-        if port:
-            self.interface.connect(port)
+        self.maybe_connect(connect_to)
 
         # We must do this so that autocomplete will work with dash `-` in filenames
         try:
@@ -178,21 +183,57 @@ class CmdLine(cmd.Cmd):
         else:
             print("Unknown command; pass 'on' or 'off'.")
 
-    def do_connect(self, line):
+    def maybe_connect(self, alias_or_port):
+        devices = self.device_finder.get_devices().filter(connected=True)
+        selected = None
+        if alias_or_port == "auto":
+            print("Auto-selecting device")
+            selected = devices.auto_select()
+        elif alias_or_port and len(alias_or_port):
+            print(f"Looking for device with alias={alias_or_port}")
+            selected = devices.get(alias_or_port)
+            if not selected:
+                print(f"Looking for device at port={alias_or_port}")
+                selected = devices.find(alias_or_port)
+        if selected:
+            print(f"Attempting to connect to: {selected.print()}")
+            self.interface.connect(selected.port)
+            self.interface.resynchronize()
+            self.interface.variables_update_info()
+
+    def disconnect(self):
+        self.interface.disconnect()
+        self.interface.resynchronize()
+        self.interface.variables_update_info()
+
+    def do_device(self, line):
         """This command manages the connection of the debug interface to the ventilator controller
 
         If ventilator USB cable is unplugged, the CLI prompt should update to reflect this on the next loop
         (blank line or failed command). You may also start the debugger without a plugged in device.
         Use one of the following commands to reconnect.
 
-        connect list
+        device list
           searches and lists available STM32 devices on the serial bus
 
-        connect auto
-          attempt to connect to a plugged in controller automatically
+        device update
+          updates device manifest from RespiraWorks canonical spreadsheet on Google Drive
 
-        connect <port>
-          connect to controller on a specific port
+        device off
+          disconnect if connected
+
+        device find <alias> [h/p/c]
+          print information for specific device
+          alias - string must match alias as defined in manifest
+          h - print HLA serial number only
+          p - print port only
+          c - print configuration only
+
+        device connect <device>
+          connect to device, where <device> is one of:
+          - `auto` find port of and connect to plugged in device, must be only one
+          - alias, as definded in device manifest
+          - port name, e.g. /dev/ttyACM0
 
         """
 
@@ -203,19 +244,40 @@ class CmdLine(cmd.Cmd):
         subcommand = params[0]
 
         if subcommand == "list":
-            print_detected_ports()
+            print(self.device_finder.get_devices().list_devices())
 
-        elif subcommand == "auto":
-            self.interface.connect(auto_select_port())
-            self.interface.resynchronize()
-            self.interface.variables_update_info()
+        elif subcommand == "update":
+            self.device_finder.update_manifest(MANIFEST_URL)
+
+        elif subcommand == "off":
+            self.disconnect()
             self.update_prompt()
+
+        elif subcommand == "connect":
+            self.maybe_connect(params[1])
+            if self.interface.connected() and not self.interface.sanity_checks():
+                self.disconnect()
+                return
+            self.update_prompt()
+
+        elif subcommand == "find":
+            alias = params[1]
+            device = self.device_finder.get_devices().get(alias)
+            if not device:
+                print(f"No definition for device '{alias}'")
+                return
+            if len(params) > 2:
+                if params[2] == "h":
+                    print(device.hla_serial)
+                elif params[2] == "p":
+                    print(device.port)
+                elif params[2] == "c":
+                    print(device.configuration)
+            else:
+                print(device.print())
 
         else:
-            self.interface.connect(params[0])
-            self.interface.resynchronize()
-            self.interface.variables_update_info()
-            self.update_prompt()
+            print("Invalid device args: {}", params)
 
     def help_run(self):
         print(
@@ -816,32 +878,13 @@ named {self.scripts_directory} will be searched for the python script.
             return
 
 
-def auto_select_port():
-    ports = detect_stm32_ports()
-    if not ports:
-        red(
-            "Could not auto-detect serial port; platformio device list did not "
-            "yield any STM32 devices."
-        )
-        return None
-    if len(ports) > 1:
-        red(
-            "Could not auto-detect serial port; platformio device list "
-            f"yielded multiple STM32 devices: {', '.join(ports)}.  "
-            "Choose port explicitly with --port."
-        )
-        return None
-    return ports[0]
-
-
 def main():
     terminal_parser = argparse.ArgumentParser()
     terminal_parser.add_argument(
-        "--port",
-        "-p",
+        "--device",
+        "-d",
         type=str,
-        help="Serial port device is connected to, e.g. /dev/ttyACM0."
-        " If unspecified, we try to auto-detect the port.",
+        help="Device to connect to: serial, e.g. /dev/ttyACM0, or alias from manifest, or 'auto'.",
     )
     terminal_parser.add_argument(
         "--command", "-c", type=str, help="Run the given command and exit."
@@ -849,9 +892,9 @@ def main():
 
     terminal_args = terminal_parser.parse_args()
 
-    interpreter = CmdLine(terminal_args.port)
-    path = Path(interpreter.test_data_dir)
-    path.mkdir(parents=True, exist_ok=True)
+    interpreter = CmdLine(terminal_args.device)
+    interpreter.local_data_dir.mkdir(parents=True, exist_ok=True)
+    interpreter.test_data_dir.mkdir(parents=True, exist_ok=True)
 
     if terminal_args.command:
         # Set matplotlib to noninteractive mode.  This causes show() to block,

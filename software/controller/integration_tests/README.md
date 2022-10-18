@@ -93,7 +93,7 @@ Instructions for how to operate the relay are [here](relay8).
 
 Analog and digital signal acquisition will be handled using
 * [Labjack T7](https://labjack.com/products/t7), possibly with optional
-* [CB37 terminal expander board](https://labjack.com/accessories/cb37-terminal-board).
+* [CB37 terminal expander board](https://labjack.com/products/cb37-terminal-board).
 
 There is a bit of code for this under [/labjack](labjack).
 

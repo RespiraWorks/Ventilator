@@ -47,6 +47,7 @@ The following options are available:
   clean       Clean build directories
   build       Generate documentation
   view        Open generated documentation in browser
+  check       Check for broken links using lyche
   help/-h     Display this help info
 EOF
 }
@@ -89,6 +90,10 @@ build_all() {
 
 launch_browser() {
   python3 -m webbrowser "${OUTPUT_DIR}/html/index.html"
+}
+
+check_links() {
+  lychee ..
 }
 
 ########
@@ -137,6 +142,17 @@ elif [ "$1" == "view" ]; then
     exit $EXIT_FAILURE
   fi
   launch_browser
+  exit $EXIT_SUCCESS
+
+#########
+# CHECK #
+#########
+elif [ "$1" == "check" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run view with root privileges!"
+    exit $EXIT_FAILURE
+  fi
+  check_links
   exit $EXIT_SUCCESS
 
 ################

@@ -1,0 +1,20 @@
+name: Check Links
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v1.5.1
+        with:
+          fail: true
+          # Check all markdown and html files in repo (default)
+          args: --no-progress -c docs/lychee.toml .
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

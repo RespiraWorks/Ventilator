@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  common-precommit-checks:
+  pre-commit-checks:
     docker:
       - image: cimg/python:3.10.4
     environment:
@@ -105,9 +105,8 @@ jobs:
 workflows:
   commit:
     jobs:
-      - dead-link-test
-      - common-precommit-checks
-      - controller-tests
+      - pre-commit-checks
       - common-tests
+      - controller-tests
       - gui-tests
       - debug-tests

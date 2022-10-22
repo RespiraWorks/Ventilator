@@ -47,7 +47,7 @@ The following options are available:
   clean       Clean build directories
   build       Generate documentation
   view        Open generated documentation in browser
-  check       Check for broken links using lyche
+  check       Check for broken links
   help/-h     Display this help info
 EOF
 }

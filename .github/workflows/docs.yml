@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  build:
+  build-check-upload:
 
     runs-on: ubuntu-latest
 

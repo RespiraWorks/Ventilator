@@ -1,21 +1,6 @@
 version: 2.1
 
 jobs:
-  dead-link-test:
-    docker:
-      - image: cimg/go:1.17
-    environment:
-      GIT_LFS_SKIP_SMUDGE: 1
-    steps:
-      - checkout
-      - run:
-          name: Install Liche
-          command: go get -u github.com/raviqqe/liche
-      - run:
-          name: Check for broken links
-          command: |
-            git ls-files -z '**/*.md' | xargs -0 liche -d . -x "amazon.com|mouser.com|cypress.com|digikey.com|st.com|rsdelivers.com|platformio.org|smcpneumatics.com|all3dp.com|uflowvalve.com|aliexpress.us|omc-stepperonline.com" -t 30
-
   common-precommit-checks:
     docker:
       - image: cimg/python:3.10.4

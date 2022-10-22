@@ -31,8 +31,8 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.1
         with:
           fail: true
-          # Check all markdown and html files in repo (default)
-          args: --no-progress -c docs/lychee.toml .
+          # Check all markdown and html files
+          args: -c docs/lychee.toml .
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Deploy to Github Pages

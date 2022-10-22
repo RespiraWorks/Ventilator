@@ -45,6 +45,15 @@ The generated output can be viewed by opening the file `docs/_build/html/index.h
 ./docs.sh view
 ```
 
+You can also check the validity of all links in all markdown and RST-generated files by running:
+
+```shell
+./docs.sh check
+```
+
+however, for this to work you must install the `lychee` tool, as described here: https://github.com/lycheeverse/lychee.
+Otherwise, validity of links will be checked by CI scripts upon committing changes to the repo.
+
 ## Additional features and scripts
 
 ### Part purchasing tables

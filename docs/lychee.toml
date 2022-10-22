@@ -75,6 +75,7 @@ exclude = [
 #    '.*\.grainger.com\.*',
     '.*\.mouser.com\.*',
     '.*\.omc-stepperonline.com\.*',
+    '.*\.opensource.org\.*',
     '.*\.platformio.org\.*',
     '.*\.rsdelivers.com\.*',
     '.*\.smcpneumatics.com\.*',

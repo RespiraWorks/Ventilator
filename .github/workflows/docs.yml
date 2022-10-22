@@ -2,8 +2,7 @@ name: Docs
 
 on:
   push:
-    branches:
-    - master
+  pull_request:
 
 jobs:
   build:
@@ -28,7 +27,16 @@ jobs:
         run: cd docs
           && ./docs.sh build
           && touch _build/html/.nojekyll
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v1.5.1
+        with:
+          fail: true
+          # Check all markdown and html files in repo (default)
+          args: --no-progress -c docs/lychee.toml .
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Deploy to Github Pages
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

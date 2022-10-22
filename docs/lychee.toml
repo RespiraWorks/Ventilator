@@ -73,7 +73,7 @@ exclude = [
     '.*\.amazon.com\.*',
     '.*\.cypress.com\.*',
     '.*\.digikey.com\.*',
-#    '.*\.grainger.com\.*',
+    '.*\.grainger.com\.*',
     '.*\.mouser.com\.*',
     '.*\.omc-stepperonline.com\.*',
     '.*\.platformio.org\.*',

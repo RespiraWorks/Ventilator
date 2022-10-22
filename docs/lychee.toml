@@ -68,6 +68,7 @@ glob_ignore_case = false
 exclude = [
     'all3dp.com\.*',
     'codecov.io\.*',
+    'opensource.org\.*',
     '.*\.aliexpress.us\.*',
     '.*\.amazon.com\.*',
     '.*\.cypress.com\.*',
@@ -75,13 +76,12 @@ exclude = [
 #    '.*\.grainger.com\.*',
     '.*\.mouser.com\.*',
     '.*\.omc-stepperonline.com\.*',
-    '.*\.opensource.org\.*',
     '.*\.platformio.org\.*',
     '.*\.rsdelivers.com\.*',
     '.*\.smcpneumatics.com\.*',
     '.*\.st.com\.*',
     '.*\.uflowvalve.com\.*',
-#    '.*\.valispace.com\.*',
+    '.*\.valispace.com\.*',
 ]
 
 # Exclude these filesystem paths from getting checked.

@@ -127,10 +127,7 @@ This command takes the name of a python script and executes it in the same envir
 
 ## Unit Tests
 ### Local Setup
-The unit tests for the debug interface were created using pytest. The pytest package is installed automatically by the `install` step of the common controller utilities script (`controller.sh install`). To install the standalone package, install it via pip:
-```bash
-pip3 install pytest
-```
+The unit tests for the debug interface were created using pytest. Necessary dependencies will be installed by the [controller.sh](../../controller/controller.sh) script.
 
 ### Running Unit Tests Locally
 To run the unit tests, run the following command in Bash (not in the debug interface) within this working directory (`Ventilator/software/utils/debug`):

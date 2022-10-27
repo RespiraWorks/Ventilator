@@ -79,7 +79,7 @@ install_linux() {
   pip3 install -U pip
   pip3 install sphinx-rtd-theme breathe sphinx-sitemap mlx.traceability wireviz pandas
   source ${HOME}/.profile
-  echo "If you wish to use `./docs.sh check` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
+  echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
 }
 
 build_all() {

@@ -124,3 +124,14 @@ Test scenarios are defined in `json` files in the [test_scenarios](test_scenario
 
 ### run
 This command takes the name of a python script and executes it in the same environment that the debug program runs in.  This allows the script to use functions defined in the debug tool to do things like get or set variables. The debug tool will search for scripts in the [scripts](scripts) subdirectory. These scripts may take additional parameters.
+
+## Unit Tests
+### Local Setup
+The unit tests for the debug interface were created using pytest. Necessary dependencies will be installed by the [controller.sh](../../controller/controller.sh) script.
+
+### Running Unit Tests Locally
+To run the unit tests, run the following command in Bash (not in the debug interface) within this working directory (`Ventilator/software/utils/debug`):
+```bash
+python3 -m pytest --verbose unit_test.py
+```
+Omit the verbose flag if you only need to see failed tests.

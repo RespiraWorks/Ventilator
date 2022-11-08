@@ -8,3 +8,4 @@ Wiring Documentation
 
    power_entry
    oxygen_sensor
+   blower

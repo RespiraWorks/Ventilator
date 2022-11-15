@@ -23,7 +23,7 @@ jobs:
 
   common-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     steps:
@@ -41,7 +41,7 @@ jobs:
 
   controller-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: large
@@ -60,7 +60,7 @@ jobs:
 
   gui-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     resource_class: large
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
@@ -85,7 +85,7 @@ jobs:
 
   debug-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: medium

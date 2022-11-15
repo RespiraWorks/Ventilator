@@ -23,7 +23,7 @@ jobs:
 
   common-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     steps:
@@ -31,6 +31,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
             ./software/common/common.sh install
       - run:
@@ -41,7 +42,7 @@ jobs:
 
   controller-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: large
@@ -50,6 +51,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:
@@ -60,7 +62,7 @@ jobs:
 
   gui-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     resource_class: large
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
@@ -69,6 +71,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
             ./software/gui/gui.sh install
       - run:
@@ -85,7 +88,7 @@ jobs:
 
   debug-tests:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: medium
@@ -94,6 +97,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:

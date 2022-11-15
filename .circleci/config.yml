@@ -32,6 +32,7 @@ jobs:
           name: Install dependencies
           command: |
             export FORCED_ROOT=1
+            export VERBOSE=1
             ./software/common/common.sh install
       - run:
           name: Run tests & publish coverage
@@ -51,6 +52,7 @@ jobs:
           name: Install dependencies
           command: |
             export FORCED_ROOT=1
+            export VERBOSE=1
             ./software/controller/controller.sh install
       - run:
           name: Run tests & publish coverage
@@ -70,6 +72,7 @@ jobs:
           name: Install dependencies
           command: |
             export FORCED_ROOT=1
+            export VERBOSE=1
             ./software/gui/gui.sh install
       - run:
           name: Build and run app

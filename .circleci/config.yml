@@ -33,7 +33,6 @@ jobs:
           command: |
             sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
-            export VERBOSE=1
             ./software/common/common.sh install
       - run:
           name: Run tests & publish coverage
@@ -52,8 +51,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
-            export VERBOSE=1
             ./software/controller/controller.sh install
       - run:
           name: Run tests & publish coverage
@@ -72,8 +71,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
-            export VERBOSE=1
             ./software/gui/gui.sh install
       - run:
           name: Build and run app
@@ -98,6 +97,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:

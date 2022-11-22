@@ -8,4 +8,4 @@ Wiring Documentation
 
    power_entry
    oxygen_sensor
-   blower
+   blower_TK_BA7050H12B

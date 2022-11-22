@@ -1,15 +1,15 @@
 .. _Blower Harness:
 
-Blower Harness
+Blower Harness for TKFAN BA7050H12B
 ======================
 
 .. csv-table:: **BOM**
    :widths: 5, 60, 5, 5, 5, 10, 10, 10
    :header-rows: 1
    :delim: 0009
-   :file: ./blower.bom.tsv
+   :file: ./blower_TK_BA7050H12B.bom.tsv
 
-.. image:: blower.png
+.. image:: blower_TK_BA7050H12B.png
   :width: 800
   :alt: Wiring diagram
 

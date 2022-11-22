@@ -277,7 +277,7 @@
     "manufacturer": "Molex",
     "mpn": "0638190000",
     "avg_price": 409.26,
-    "price_unit": 1,
+    "price_unit": "",
     "sources": [
       {
         "supplier": "Digikey",

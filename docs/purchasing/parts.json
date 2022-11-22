@@ -270,5 +270,22 @@
         "url": "https://www.digikey.com/en/products/detail/remington-industries/24UL1007STRKIT10COLOR100/11614276"
       }
     ]
+  },
+  {
+    "pn": "te-microfit-crimper",
+    "notes": "Micro-Fit 3.0 contact crimp tool",
+    "manufacturer": "Molex",
+    "mpn": "0638190000",
+    "avg_price": 409.26,
+    "price_unit": 1,
+    "sources": [
+      {
+        "supplier": "Digikey",
+        "spn": "WM9022-ND",
+        "price": 409.26,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/0638190000/1873800"
+      }
+    ]
   }
 ]

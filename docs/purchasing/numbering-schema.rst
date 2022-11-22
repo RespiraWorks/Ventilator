@@ -29,6 +29,11 @@ Currently proposed (incomplete) schema is as follows::
         * mh - hardware
     * c - cosmetic
         * cs - stickers, safety labels
+    * t - tools
+        * te - tools, electrical
+        * tm - tools, mechanical
+        * tp - tools, pneumatic
+        * tc - tools, cosmetic
 * descriptor - short alphanumeric descriptor, preferably around 4-5 characters long
 
 **Optional section:**

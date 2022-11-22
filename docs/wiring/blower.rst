@@ -19,7 +19,7 @@ You will need all the tools listed.
    * 3mm heat shrink tubing [:ref:`ew-shrink3`]
    * 5mm heat shrink tubing [:ref:`ew-shrink5`]
    * Heat gun
-   * Molex Micro-Fit 3.0 Crimper
+   * Molex Micro-Fit 3.0 Crimper [:ref:`te-microfit-crimper`]
    * Wire Strippers
    * Soldering iron
    * Solder

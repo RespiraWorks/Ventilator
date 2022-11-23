@@ -102,6 +102,57 @@
     ]
   },
   {
+    "pn": "ec-mega2x1",
+    "notes": "Mega-Fit 2x1",
+    "manufacturer": "Molex",
+    "mpn": "1716920102",
+    "avg_price": 0.47,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "WM10385-ND",
+        "price": 0.47,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/1716920102/4515271"
+      }
+    ]
+  },
+  {
+    "pn": "ec-micro1x4",
+    "notes": "Micro-Fit 1x4",
+    "manufacturer": "Molex",
+    "mpn": "0436450408",
+    "avg_price": 0.62,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "DigiKey",
+        "spn": "WM13985-ND",
+        "price": 0.62,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/0436450408/4481616"
+      }
+    ]
+  },
+  {
+    "pn": "ee-blower-tkfan",
+    "notes": "TKFAN Blower 12V",
+    "manufacturer": "TKFAN",
+    "mpn": "BA7050H12B",
+    "avg_price": 35.00,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "TKFAN",
+        "spn": "BA7050H12B",
+        "price": 35.00,
+        "price_units": 1,
+        "url": "https://www.alibaba.com/product-detail/BA7050H12B-12V-high-pressure-and-high_1600308159014.html"
+      }
+    ]
+  },
+  {
     "pn": "ew-shrink3",
     "notes": "Shrink tubing, black, 3mm diameter",
     "manufacturer": "",
@@ -217,6 +268,23 @@
         "price": 106.64,
         "price_units": 30,
         "url": "https://www.digikey.com/en/products/detail/remington-industries/24UL1007STRKIT10COLOR100/11614276"
+      }
+    ]
+  },
+  {
+    "pn": "te-microfit-crimper",
+    "notes": "Micro-Fit 3.0 contact crimp tool",
+    "manufacturer": "Molex",
+    "mpn": "0638190000",
+    "avg_price": 409.26,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "Digikey",
+        "spn": "WM9022-ND",
+        "price": 409.26,
+        "price_units": 1,
+        "url": "https://www.digikey.com/en/products/detail/molex/0638190000/1873800"
       }
     ]
   }

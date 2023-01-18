@@ -34,37 +34,19 @@ pipeline {
                 echo "BRANCH_NAME = $BRANCH_NAME"
                 git status
                 ls -al
+                ls -al manufacturing/images
                 """
             }
         }
 
-        stage('Unit Testing') {
+        stage('Pre-commit') {
             steps {
                 sh """
-                echo "Running Unit Tests"
-                """
-            }
-        }
-
-        stage('Code Analysis') {
-            steps {
-                sh """
-                echo "Running Code Analysis"
-                """
-            }
-        }
-
-        stage('Build Deploy Code') {
-            when {
-                branch 'master'
-            }
-            steps {
-                sh """
-                echo "Building Artifact"
-                """
-
-                sh """
-                echo "Deploying Code"
+                merge_base=$(git merge-base -a HEAD origin/master)
+                changed_files=$(git diff --name-only $merge_base...HEAD)
+                echo "Changed files since branched from origin/master: " $changed_files
+                git reset --soft $merge_base
+                pre-commit run --show-diff-on-failure --files $changed_files
                 """
             }
         }

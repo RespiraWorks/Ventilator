@@ -24,11 +24,7 @@ pipeline {
 
         stage('Code Checkout') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    userRemoteConfigs: [[url: 'https://github.com/RespiraWorks/Ventilator.git']]
-                ])
+                checkout scm
             }
         }
 
@@ -36,6 +32,7 @@ pipeline {
             steps {
                 sh """
                 echo "BRANCH_NAME = $BRANCH_NAME"
+                git status
                 ls -al
                 """
             }

@@ -42,14 +42,13 @@ pipeline {
         stage('Pre-commit') {
             steps {
                 sh """
-                merge_base=$(git merge-base -a HEAD origin/master)
-                changed_files=$(git diff --name-only $merge_base...HEAD)
-                echo "Changed files since branched from origin/master: " $changed_files
-                git reset --soft $merge_base
-                pre-commit run --show-diff-on-failure --files $changed_files
+                merge_base=\$(git merge-base -a HEAD origin/master)
+                changed_files=\$(git diff --name-only \$merge_base...HEAD)
+                echo "Changed files since branched from origin/master: " \$changed_files
+                git reset --soft \$merge_base
+                pre-commit run --show-diff-on-failure --files \$changed_files
                 """
             }
         }
-
     }
 }

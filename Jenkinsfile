@@ -32,6 +32,15 @@ pipeline {
             }
         }
 
+        stage('Branch info') {
+            steps {
+                sh """
+                echo "BRANCH_NAME = $BRANCH_NAME"
+                ls -al
+                """
+            }
+        }
+
         stage('Unit Testing') {
             steps {
                 sh """

@@ -20,8 +20,14 @@ set -o xtrace
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
-image_name="rw_ci_test_image"
-container_name="rw_ci_test_instance"
+test_name=$1
+base_container=$2
+
+image_name="rwv_${test_name}_image"
+container_name="rwv_${test_name}_instance"
+container_script="${test_name}.sh"
+dockerfile="Dockerfile_${base_container}"
+
 target_path="/home/jenkins/ventilator"
 
 cleanup() {
@@ -38,7 +44,7 @@ set -e
 set -o pipefail
 
 # Build image
-docker build . -t ${image_name}
+docker build -t ${image_name} -f ${dockerfile} .
 
 # Start instance
 docker run -t -d --name ${container_name} ${image_name}
@@ -50,7 +56,7 @@ docker cp ${code_root_path} ${container_name}:${target_path}
 docker exec -u root ${container_name} chown --silent --recursive jenkins:jenkins ${target_path}
 
 # Run test
-docker exec ${container_name} bash -e -x -c "cd ventilator && ./jenkins/test.sh"
+docker exec ${container_name} bash -e -x -c "cd ventilator && ./ci/${container_script}"
 
 #post-cleanup
 cleanup

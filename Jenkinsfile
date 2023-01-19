@@ -54,7 +54,7 @@ pipeline {
         stage('Pre-commit') {
             steps {
                 sh """
-                ./jenkins/go.sh
+                ./ci/do_docker_test.sh precommit python
                 """
             }
         }

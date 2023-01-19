@@ -43,6 +43,7 @@ docker build . -t ${image_name}
 docker run -t -d --name ${container_name} ${image_name}
 
 # Copy repo into container
+pwd
 docker cp ../../ventilator ${container_name}:/home/jenkins/ventilator
 
 # Run test

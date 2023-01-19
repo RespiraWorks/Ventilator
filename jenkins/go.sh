@@ -43,8 +43,9 @@ docker build . -t ${image_name}
 docker run -t -d --name ${container_name} ${image_name}
 
 # Copy repo into container
-pwd
-docker cp ../../ventilator ${container_name}:/home/jenkins/ventilator
+cd ..
+code_root_path="$(dirname "$0")"
+docker cp ${code_root_path} ${container_name}:/home/jenkins/ventilator
 
 # Run test
 docker exec ${container_name} bash -e -x -c "cd ventilator && ./jenkins/test.sh"

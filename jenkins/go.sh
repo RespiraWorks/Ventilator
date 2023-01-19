@@ -23,6 +23,19 @@ cd "$(dirname "$0")"
 image_name="rw_ci_test_image"
 container_name="rw_ci_test_instance"
 
+cleanup() {
+  docker stop ${container_name}
+  docker rm -f ${container_name}
+  docker rmi ${image_name}
+}
+
+#pre-cleanup
+cleanup
+
+# Fail if any command fails
+set -e
+set -o pipefail
+
 # Build image
 docker build . -t ${image_name}
 
@@ -35,6 +48,5 @@ docker cp ../../ventilator ${container_name}:/home/jenkins/ventilator
 # Run test
 docker exec ${container_name} bash -e -x -c "cd ventilator && ./jenkins/test.sh"
 
-# Cleanup
-docker stop ${container_name}
-docker rm -f ${container_name}
+#post-cleanup
+cleanup

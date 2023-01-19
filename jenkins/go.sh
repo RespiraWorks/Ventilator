@@ -22,6 +22,7 @@ cd "$(dirname "$0")"
 
 image_name="rw_ci_test_image"
 container_name="rw_ci_test_instance"
+target_path="/home/jenkins/ventilator"
 
 cleanup() {
   docker stop ${container_name}
@@ -29,7 +30,7 @@ cleanup() {
   docker rmi ${image_name}
 }
 
-#pre-cleanup
+#pre-cleanup without failing
 cleanup
 
 # Fail if any command fails
@@ -43,10 +44,10 @@ docker build . -t ${image_name}
 docker run -t -d --name ${container_name} ${image_name}
 
 # Copy repo into container
-pwd
 cd ..
 code_root_path=$(pwd)
-docker cp ${code_root_path} ${container_name}:/home/jenkins/ventilator
+docker cp ${code_root_path} ${container_name}:${target_path}
+docker exec -u root ${container_name} chown --silent --recursive jenkins:jenkins ${target_path}
 
 # Run test
 docker exec ${container_name} bash -e -x -c "cd ventilator && ./jenkins/test.sh"

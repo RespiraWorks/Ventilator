@@ -20,8 +20,4 @@ set -o xtrace
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"/..
 
-merge_base=$(git merge-base -a HEAD origin/master)
-changed_files=$(git diff --name-only $merge_base...HEAD)
-echo "Changed files since branched from origin/master: " $changed_files
-git reset --soft $merge_base
-pre-commit run --show-diff-on-failure --files $changed_files
+./software/common/common.sh test --cov --no-checks

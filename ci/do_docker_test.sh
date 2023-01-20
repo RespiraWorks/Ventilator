@@ -55,6 +55,11 @@ code_root_path=$(pwd)
 docker cp ${code_root_path} ${container_name}:${target_path}
 docker exec -u root ${container_name} chown --silent --recursive jenkins:jenkins ${target_path}
 
+# \TODO make this optional
+docker exec ${container_name} ls -al ${target_path}/software/common
+docker exec ${container_name} ${target_path}/software/common/common.sh help
+docker exec ${container_name} bash -c "export FORCED_ROOT=1 && ${target_path}/software/common/common.sh install"
+
 # Run test
 docker exec ${container_name} bash -e -x -c "cd ventilator && ./ci/${container_script}"
 

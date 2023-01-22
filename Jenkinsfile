@@ -47,6 +47,7 @@ pipeline {
                 sh """
                 echo "BRANCH_NAME = $BRANCH_NAME"
                 pwd
+                ls -l
                 """
             }
         }

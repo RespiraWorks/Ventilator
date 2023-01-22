@@ -47,7 +47,7 @@ set -e
 set -o pipefail
 
 # Build image
-docker build -t ${image_name} -f ${dockerfile} ../../Ventilator
+docker build -t ${image_name} -f ${dockerfile} ../
 
 # Start instance
 docker run -t -d --name ${container_name} ${image_name}

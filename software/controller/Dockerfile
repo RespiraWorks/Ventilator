@@ -28,7 +28,7 @@ ENV FORCED_ROOT=1
 # the local time is set to skip prompting time select for the tzdata package
 RUN ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
     DEBIAN_FRONTEND=noninteractive && \
-    /home/jenkins/Ventilator/software/common/common.sh install
+    /home/jenkins/Ventilator/software/controller/controller.sh install
 
 USER jenkins
 WORKDIR /home/jenkins

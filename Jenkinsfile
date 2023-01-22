@@ -67,5 +67,13 @@ pipeline {
                 """
             }
         }
+
+        stage('Controller Tests') {
+            steps {
+                sh """
+                ./ci/do_docker_test.sh controller
+                """
+            }
+        }
     }
 }

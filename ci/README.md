@@ -8,3 +8,4 @@ To manually run these tests, run
 ```
 
 TODO: gui and utils not yet implemented
+TODO: (maybe?) cross-compile Docker to ARM for GUI tests since it runs on the RPi

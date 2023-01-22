@@ -54,8 +54,7 @@ pipeline {
         stage('Pre-commit') {
             steps {
                 sh """
-                ./ci/do_docker_test.sh precommit python
-                ./ci/do_docker_test.sh common ubuntu
+                ./ci/do_docker_test.sh precommit
                 """
             }
         }

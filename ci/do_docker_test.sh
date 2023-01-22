@@ -21,14 +21,17 @@ set -o xtrace
 cd "$(dirname "$0")"
 
 test_name=$1
-base_container=$2
 
 image_name="rwv_${test_name}_image"
 container_name="rwv_${test_name}_instance"
 container_script="${test_name}.sh"
-dockerfile="Dockerfile_${base_container}"
 
-target_path="/home/jenkins/ventilator"
+if [ $test_name == "precommit" ]
+then
+  dockerfile="Dockerfile_precommit"
+else
+  dockerfile="../software/${test_name}/Dockerfile"
+fi
 
 cleanup() {
   docker stop ${container_name}
@@ -44,24 +47,13 @@ set -e
 set -o pipefail
 
 # Build image
-docker build -t ${image_name} -f ${dockerfile} .
+docker build -t ${image_name} -f ${dockerfile} ../../Ventilator
 
 # Start instance
 docker run -t -d --name ${container_name} ${image_name}
 
-# Copy repo into container
-cd ..
-code_root_path=$(pwd)
-docker cp ${code_root_path} ${container_name}:${target_path}
-docker exec -u root ${container_name} chown --silent --recursive jenkins:jenkins ${target_path}
-
-# \TODO make this optional
-docker exec ${container_name} ls -al ${target_path}/software/common
-docker exec ${container_name} ${target_path}/software/common/common.sh help
-docker exec ${container_name} bash -c "export FORCED_ROOT=1 && ${target_path}/software/common/common.sh install"
-
 # Run test
-docker exec ${container_name} bash -e -x -c "cd ventilator && ./ci/${container_script}"
+docker exec ${container_name} bash -e -x -c "cd Ventilator && ./ci/${container_script}"
 
 #post-cleanup
 cleanup

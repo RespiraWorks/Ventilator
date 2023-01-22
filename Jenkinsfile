@@ -59,5 +59,13 @@ pipeline {
                 """
             }
         }
+
+        stage('Common Tests') {
+            steps {
+                sh """
+                ./ci/do_docker_test.sh common
+                """
+            }
+        }
     }
 }

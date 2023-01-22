@@ -25,4 +25,4 @@ WORKDIR /home/jenkins
 #RUN pip3 install pre-commit
 
 # copy Ventilator repo to container
-COPY . /home/jenkins/Ventilator/
+COPY --chown=jenkins . /home/jenkins/Ventilator/

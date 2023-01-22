@@ -15,9 +15,9 @@
 FROM ubuntu:22.04
 
 # Install python and pre-commit
-RUN apt-get update && \
-    apt-get -y install python3-pip git
-RUN pip3 install pre-commit
+#RUN apt-get update && \
+#    apt-get -y install python3-pip git
+#RUN pip3 install pre-commit
 
 # copy Ventilator repo to container
 COPY . Ventilator/

@@ -52,14 +52,8 @@ docker build -t ${image_name} -f ${dockerfile} ../
 # Start instance
 docker run -t -d --name ${container_name} ${image_name}
 
-# PWD
-docker exec ${container_name} bash -e -x -c "pwd"
-
-# CD & LS
-docker exec ${container_name} bash -e -x -c "cd Ventilator && ls -l"
-
 # Run test
-#docker exec ${container_name} bash -e -x -c "cd Ventilator && ./ci/${container_script}"
+docker exec ${container_name} bash -e -x -c "cd Ventilator && ./ci/${container_script}"
 
 #post-cleanup
 cleanup

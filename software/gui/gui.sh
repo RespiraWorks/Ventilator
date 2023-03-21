@@ -17,6 +17,9 @@
 # This script is designed for local unix usage.
 # ./gui.sh --help
 
+# \todo: keep CONAN_VERSION updated, test thoroughly whenever you do, leave this "todo" here
+CONAN_VERSION=1.59
+
 # Fail if any command fails
 set -e
 set -o pipefail
@@ -120,7 +123,9 @@ install_linux() {
 
 configure_conan() {
   sudo pip3 install -U pip
-  sudo pip3 install conan gitpython
+  pip3 install gitpython
+  pip3 install conan==$CONAN_VERSION
+  conan --version
   #source ${HOME}/.profile
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default

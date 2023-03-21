@@ -92,7 +92,7 @@ suspend all audial alarms for 2 minutes, etc. (see `01_Alarms` in Valispace)
 
 **Additional alarms per ISO 80601-2-12:**
 (See [Slack thread](https://respiraworks.slack.com/archives/C011UMNUWGZ/p1591500042061800?thread_ts=1591207530.031400&cid=C011UMNUWGZ))
-![](https://i.imgur.com/DJqVFaL.png)
+![](images/alarms_table.png)
 
 ## Event logs (not in v0.2)
 

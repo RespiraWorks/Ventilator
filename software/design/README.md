@@ -3,7 +3,7 @@
 The RespiraWorks ventilator includes software running on two computers:
 an STM32 microcontroller and a Raspberry Pi.
 
-![Module diagram](module_diagram.png)
+![Module diagram](images/module_diagram.png)
 
 The microcontroller runs bare-metal and controls the sensors and
 actuators (valves and blower).  Its main loop runs every

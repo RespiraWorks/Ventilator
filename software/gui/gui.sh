@@ -126,7 +126,7 @@ configure_conan() {
   pip3 install gitpython
   pip3 install conan==$CONAN_VERSION
   conan --version
-  #source ${HOME}/.profile
+  . "${HOME}/.profile"
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
 }

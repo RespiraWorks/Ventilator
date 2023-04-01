@@ -58,9 +58,9 @@ Instructions for installing:
  * [Platformio IDE](https://docs.platformio.org/en/latest/integration/ide/pioide.html)
  * [CLion](https://docs.platformio.org/en/latest/integration/ide/clion.html)
 
-Note: To use with CLion, it seems to work best if you run `pio init --ide clion` in this directory before loading the CMake files.
+Note: To use with CLion, it seems to work best if you run `pio project init --ide clion` in this directory before loading the CMake files.
 
-Some issues may prevent specific versions of platformio from building or running unit tests. It is currently recommended that you use `v6.1.0` (latest version at the time of this writing).
+Some issues may prevent specific versions of platformio from building or running unit tests. It is currently recommended that you use `v6.1.6` (latest version at the time of this writing).
 
 ## Building and testing
 

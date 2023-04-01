@@ -1,8 +1,5 @@
 #############################  Display  #############################
 
-# Verbose program output
-verbose = false
-
 # Don't show interactive progress bar while checking links.
 no_progress = true
 

@@ -27,7 +27,7 @@ jobs:
           && ./docs.sh build
           && touch _build/html/.nojekyll
       - name: Link Checker
-        uses: lycheeverse/lychee-action@v1.5.1
+        uses: lycheeverse/lychee-action@v1.6.1
         with:
           fail: true
           # Check all markdown and html files
@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Deploy to Github Pages
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: JamesIves/github-pages-deploy-action@4.0.0
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages # The branch the action should deploy to.

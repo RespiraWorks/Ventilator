@@ -82,6 +82,7 @@ exclude = [
     '.*\.st.com\.*',
     '.*\.uflowvalve.com\.*',
     '.*\.valispace.com\.*',
+    '.*\wonsmart-motor.en.made-in-china.com\.*',
 ]
 
 # Exclude these filesystem paths from getting checked.

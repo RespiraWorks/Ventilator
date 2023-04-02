@@ -334,19 +334,24 @@ run_all_integration_tests() {
   # Ends with putting controller in idle loop.
 
   eval "$(deploy_integration_test blower 0.0f 1.0f)"
-  sleep $wait_time
+  echo "<<<<< Verify that blower power is ramping up and down >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test buzzer 0.0f 1.0f)"
-  sleep $wait_time
+  echo "<<<<< Verify that buzzer is cycling at a range of volumes >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test pinch_valve 0)"
-  sleep $wait_time
+  echo "<<<<< Verify that pinch valve 0 is cycling >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test pinch_valve 1)"
-  sleep $wait_time
+  echo "<<<<< Verify that pinch valve 1 is cycling >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test eeprom 0 85 10)"
-  sleep $wait_time
+  echo "<<<<< Buzzer should have briefly gone on and off to indicate successful EEPROM test >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test idle)"
 }

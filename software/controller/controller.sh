@@ -414,7 +414,7 @@ elif [ "$1" == "check" ]; then
 elif [ "$1" == "unit" ]; then
   clean_all
 
-f-z  if [ -n "$2" ]; then
+  if [ -n "$2" ]; then
     pio test -e native -f "$2"
   else
     pio test -e native

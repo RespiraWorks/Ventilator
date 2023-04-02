@@ -414,7 +414,7 @@ elif [ "$1" == "check" ]; then
 elif [ "$1" == "unit" ]; then
   clean_all
 
-  if [ -n "$2" ]; then
+f-z  if [ -n "$2" ]; then
     pio test -e native -f "$2"
   else
     pio test -e native
@@ -521,7 +521,11 @@ elif [ "$1" == "integrate" ]; then
   print_device_info
   if [ "$2" == "all" ]
   then
-    run_all_integration_tests "$3"
+   if [ -z "$3" ]; then
+     echo "No delay time provided"
+     exit $EXIT_FAILURE
+   fi
+   run_all_integration_tests "$3"
   else
     deploy_integration_test "${@:2}"
   fi

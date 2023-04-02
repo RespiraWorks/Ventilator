@@ -68,11 +68,9 @@ After installing platformio, you should be able to build and run test as follows
 
 ```shell
 ./controller.sh test
-# This will run a few commands, such as "platformio run" and
-# "platformio test -e native".
 ```
 
-This is the same script that runs on our continuous integration server (Travis CI).
+This is the same script that runs on our continuous integration server (Travis CI) and will also perform static checks with `cppcheck` and `clang-tidy`.
 Run it frequently during development to catch errors/style violations early.
 
 Sometimes PlatformIO can get into a bad state - e.g. if things don't build for you in `master`, try:
@@ -155,57 +153,8 @@ If you have the environment variable `SN` set to a registered device alias, then
 
 For more info about the debug interface and other manual testing utilities, see the [../utils](../utils) directory.
 
-## Common problems
+## Further details
 
-These should mostly be addressed by the controller script. But just in case...
-
-### USB permission problems
-
-If `pio device list` did not show the Nucleo as, for example, when attempting to deploy directly from the Raspberry Pi, you may have to give yourself rw permission on the USB device.
-
-Find the device ID with `lsusb`. Let us assume in this case, that it shows `Bus 001 Device 004: ID 0483:374b STMicroelectronics ST-LINK/V2.1`.
-
-Add a udev rule for that device that mounts it with 666 permission. For example, create a file `/etc/udev/rules.d/99-openocd.rules` with the following line:
-
-```
-ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"
-```
-
-After that, either you unplug and re-plug the USB for STM32 or you restart the pi, you should see something like this:
-
-```
-pi@raspberrypi:~ $ pio device list
-/dev/ttyACM0
-------------
-Hardware ID: USB VID:PID=0483:374B SER=0663FF303435554157115746 LOCATION=1-1.4:1.2
-Description: STM32 STLink - ST-Link VCP Ctrl
-/dev/ttyAMA0
-------------
-Hardware ID: fe201000.serial
-Description: ttyAMA0
-```
-
-### Other udev problems
-
-If you get the following error, it means platformio was unable to find a connected device.
-
-```
-# This means pio couldn't find a device to upload to.  Check that it's connected?
-Error: Please specify `upload_port` for environment or use global `--upload-port` option.
-```
-
-You may have to modify your `udev` rule to enable flashing of the controller as follows:
-
-```
-curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
-sudo service udev restart
-sudo usermod -a -G dialout $USER
-sudo usermod -a -G plugdev $USER
-```
-and then either re-login or restart machine.
-
-For more details on this, see the following articles:
-[platformio FAQ](https://docs.platformio.org/en/latest/faq.html#platformio-udev-rules)
-[community forums](https://community.platformio.org/t/stm32-vs-code-mbed-upload-issue-error-libusb-open-failed-with-libusb-error-access-error-open-failed/10650)
-
-Alternatively, you can upload the firmware.elf and firmware.bin files to the controller mounted as a USB storage device.
+Our automation scripts may not be up-to-date. If you encounter problems deploying to or connecting via debug interface, see the most up-to-date information here:
+* [platformio FAQ](https://docs.platformio.org/en/latest/faq.html#platformio-udev-rules)
+* [platformio community forums](https://community.platformio.org/t/stm32-vs-code-mbed-upload-issue-error-libusb-open-failed-with-libusb-error-access-error-open-failed/10650)

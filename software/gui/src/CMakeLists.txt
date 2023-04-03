@@ -7,8 +7,9 @@ find_package(Threads REQUIRED)
 set(this_target ${PROJECT_NAME}_backend)
 
 set(CMAKE_AUTOMOC ON)
-find_package(Qt5 COMPONENTS
-  SerialPort Quick Multimedia
+find_package(Qt6 COMPONENTS
+  SerialPort Quick
+#        Multimedia
   REQUIRED)
 
 set(${this_target}_sources
@@ -62,7 +63,7 @@ target_link_libraries(
   PUBLIC fmt::fmt
   PUBLIC spdlog::spdlog
   PUBLIC Threads::Threads
-  PUBLIC Qt5::SerialPort
-  PUBLIC Qt5::Quick
-  PUBLIC Qt5::Multimedia
+  PUBLIC Qt6::SerialPort
+  PUBLIC Qt6::Quick
+#  PUBLIC Qt6::Multimedia
 )

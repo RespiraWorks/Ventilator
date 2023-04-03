@@ -101,18 +101,18 @@ install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
   sudo apt-get install -y \
           cmake \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          qtmultimedia5-dev \
-          qtdeclarative5-dev \
-          qtdeclarative5-dev-tools \
+          qtbase6-dev \
+          qtbase6-dev-tools \
+          qtmultimedia6-dev \
+          qtdeclarative6-dev \
+          qtdeclarative6-dev-tools \
           qtquickcontrols2-5-dev \
-          libqt5serialport5 \
-          libqt5serialport5-dev \
-          libqt5multimedia5 \
-          libqt5multimedia5-plugins \
-          libqt5multimediaquick5 \
-          libqt5multimediawidgets5 \
+          libqt6serialport6 \
+          libqt6serialport6-dev \
+          libqt6multimedia6 \
+          libqt6multimedia6-plugins \
+          libqt6multimediaquick6 \
+          libqt6multimediawidgets6 \
           qml-module-qtcharts \
           qml-module-qtquick-controls \
           qml-module-qtquick-controls2 \

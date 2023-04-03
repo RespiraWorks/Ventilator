@@ -1,6 +1,6 @@
-import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
+import QtQuick 2.11
+import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.12
 import Respira 1.0
 import "modes"
 import "controls"

@@ -9,7 +9,7 @@ set(this_target ${PROJECT_NAME}_backend)
 set(CMAKE_AUTOMOC ON)
 find_package(Qt6 COMPONENTS
   SerialPort Quick
-#        Multimedia
+        Multimedia
   REQUIRED)
 
 set(${this_target}_sources
@@ -65,5 +65,5 @@ target_link_libraries(
   PUBLIC Threads::Threads
   PUBLIC Qt6::SerialPort
   PUBLIC Qt6::Quick
-#  PUBLIC Qt6::Multimedia
+  PUBLIC Qt6::Multimedia
 )

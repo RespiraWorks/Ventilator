@@ -98,25 +98,23 @@ create_clean_directory() {
 }
 
 install_linux() {
-  # Last tuned for Ubuntu 2021.04 Hirsute
+  # Last tuned for Ubuntu 2022.04
   sudo apt-get install -y \
           cmake \
-          qtbase6-dev \
-          qtbase6-dev-tools \
-          qtmultimedia6-dev \
-          qtdeclarative6-dev \
-          qtdeclarative6-dev-tools \
+          qt6-base-dev \
+          qt6-base-dev-tools \
+          qt6-multimedia-dev \
+          qt6-declarative-dev \
+          qt6-declarative-dev-tools \
           qtquickcontrols2-5-dev \
           libqt6serialport6 \
           libqt6serialport6-dev \
           libqt6multimedia6 \
-          libqt6multimedia6-plugins \
           libqt6multimediaquick6 \
           libqt6multimediawidgets6 \
-          qml-module-qtcharts \
-          qml-module-qtquick-controls \
-          qml-module-qtquick-controls2 \
-          qml-module-qtmultimedia \
+          qml6-module-qtcharts \
+          qml6-module-qtquick-controls \
+          qml6-module-qtmultimedia \
           pulseaudio \
           xvfb
 }

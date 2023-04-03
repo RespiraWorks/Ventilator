@@ -15,6 +15,7 @@ limitations under the License.
 
 #pragma once
 
+#include <array>
 #include <optional>
 
 #include "debug_types.h"
@@ -74,9 +75,10 @@ class Interface {
   // Minimum debug message size is 3 bytes: 1 byte gives the command (respectively
   // the error code for responses), and 2 bytes are used for checksum.
   static constexpr size_t MinFrameSize{3};
+  static constexpr size_t BufferSize{500};
 
   // Buffer into which request data is written in AwaitingCommand state
-  uint8_t request_[500] = {0};
+  std::array<uint8_t, BufferSize> request_ = {0};
   size_t request_size_{0};
   // Remember when we receive an escape char (in case the call happens in
   // between the escape char and the special char)
@@ -84,7 +86,7 @@ class Interface {
 
   // Buffer into which the command handler writes its response and which is then
   // sent in Responding state.
-  uint8_t response_[500] = {0};
+  std::array<uint8_t, BufferSize> response_ = {0};
   size_t response_size_{0};
   size_t response_bytes_sent_{0};
 

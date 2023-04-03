@@ -82,7 +82,7 @@ bool Interface::ReadNextByte() {
   if (escape_next_byte_) {
     escape_next_byte_ = false;
 
-    if (request_size_ < std::size(request_)) {
+    if (request_size_ < request_.size()) {
       request_[request_size_++] = byte;
     }
     return true;
@@ -102,7 +102,7 @@ bool Interface::ReadNextByte() {
   }
 
   // For other characters, just save them if there's space in the buffer
-  if (request_size_ < std::size(request_)) {
+  if (request_size_ < request_.size()) {
     request_[request_size_++] = byte;
   }
   return true;
@@ -127,9 +127,9 @@ bool Interface::SendNextByte() {
     uint8_t escaped_char[2];
     escaped_char[0] = static_cast<uint8_t>(SpecialChar::Escape);
     escaped_char[1] = next_byte;
-    [[maybe_unused]] size_t written = uart_->Write(escaped_char, 2);
+    [[maybe_unused]] const size_t written = uart_->Write(escaped_char, 2);
   } else {
-    [[maybe_unused]] size_t written = uart_->Write(&next_byte, 1);
+    [[maybe_unused]] const size_t written = uart_->Write(&next_byte, 1);
   }
 
   // If there's more response to send, return true
@@ -141,7 +141,7 @@ bool Interface::SendNextByte() {
   // termination character and start waiting on the next
   // command.
   uint8_t end_transfer = static_cast<uint8_t>(SpecialChar::EndTransfer);
-  [[maybe_unused]] size_t written = uart_->Write(&end_transfer, 1);
+  [[maybe_unused]] const size_t written = uart_->Write(&end_transfer, 1);
 
   state_ = State::AwaitingCommand;
   response_bytes_sent_ = 0;
@@ -162,7 +162,7 @@ void Interface::ProcessCommand() {
     return;
   }
 
-  uint16_t crc = ComputeCRC(request_, request_size_ - 2);
+  const uint16_t crc = ComputeCRC(request_.data(), request_size_ - 2);
 
   if (crc != u8_to_u16(&request_[request_size_ - 2])) {
     SendError(ErrorCode::CrcError);
@@ -187,7 +187,7 @@ void Interface::ProcessCommand() {
       .response_length = 0,
       .processed = &command_processed_,
   };
-  ErrorCode error = cmd_handler->Process(&context);
+  const ErrorCode error = cmd_handler->Process(&context);
 
   if (error != ErrorCode::None) {
     SendError(error);
@@ -204,7 +204,7 @@ void Interface::SendResponse(ErrorCode error, size_t response_length) {
 
   // Calculate the CRC on the data and error code returned
   // and append this to the end of the response
-  uint16_t crc = ComputeCRC(response_, response_length + 1);
+  const uint16_t crc = ComputeCRC(response_.data(), response_length + 1);
   u16_to_u8(crc, &response_[response_length + 1]);
   state_ = State::Responding;
   response_bytes_sent_ = 0;
@@ -227,7 +227,7 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
       uint16_t crc = byte;
 
       for (uint8_t bit_number = 0; bit_number < 8; bit_number++) {
-        bool lsb = (crc & 1) == 1;
+        const bool lsb = (crc & 1) == 1;
         crc = static_cast<uint16_t>(crc >> 1);
         if (lsb) {
           crc ^= CRC16POLY;
@@ -241,7 +241,7 @@ uint16_t Interface::ComputeCRC(const uint8_t *buffer, size_t length) {
   uint16_t crc = 0;
 
   for (uint32_t byte_number = 0; byte_number < length; byte_number++) {
-    uint16_t local_crc = CrcTable[0xFF & (buffer[byte_number] ^ crc)];
+    const uint16_t local_crc = CrcTable[0xFF & (buffer[byte_number] ^ crc)];
 
     crc = static_cast<uint16_t>(local_crc ^ (crc >> 8));
   }

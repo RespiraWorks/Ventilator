@@ -27,7 +27,7 @@
 # environment differences, so the approximation is not perfect. For
 
 # \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.0
+PIO_VERSION=6.1.6
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 

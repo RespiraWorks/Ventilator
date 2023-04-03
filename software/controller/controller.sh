@@ -33,7 +33,7 @@
 #   developers if they run via ./controller.sh test
 
 # \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.0
+PIO_VERSION=6.1.6
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 
@@ -334,19 +334,24 @@ run_all_integration_tests() {
   # Ends with putting controller in idle loop.
 
   eval "$(deploy_integration_test blower 0.0f 1.0f)"
-  sleep $wait_time
+  echo "<<<<< Verify that blower power is ramping up and down >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test buzzer 0.0f 1.0f)"
-  sleep $wait_time
+  echo "<<<<< Verify that buzzer is cycling at a range of volumes >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test pinch_valve 0)"
-  sleep $wait_time
+  echo "<<<<< Verify that pinch valve 0 is cycling >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test pinch_valve 1)"
-  sleep $wait_time
+  echo "<<<<< Verify that pinch valve 1 is cycling >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test eeprom 0 85 10)"
-  sleep $wait_time
+  echo "<<<<< Buzzer should have briefly gone on and off to indicate successful EEPROM test >>>>>"
+  sleep "$wait_time"
 
   eval "$(deploy_integration_test idle)"
 }
@@ -521,7 +526,11 @@ elif [ "$1" == "integrate" ]; then
   print_device_info
   if [ "$2" == "all" ]
   then
-    run_all_integration_tests "$3"
+   if [ -z "$3" ]; then
+     echo "No delay time provided"
+     exit $EXIT_FAILURE
+   fi
+   run_all_integration_tests "$3"
   else
     deploy_integration_test "${@:2}"
   fi

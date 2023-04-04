@@ -12,6 +12,7 @@ find_package(Qt5 COMPONENTS
   REQUIRED)
 
 set(${this_target}_sources
+  protocols/network_protocol.pb.cc
   alarm_manager.cpp
   breath_signals.cpp
   controller_history.cpp
@@ -24,6 +25,7 @@ set(${this_target}_sources
   )
 
 set(${this_target}_headers
+  protocols/network_protocol.pb.h
   alarm_manager.h
   breath_signals.h
   chrono.h
@@ -51,6 +53,7 @@ add_library(
 target_include_directories(
   ${this_target}
   PUBLIC ${PROJECT_SOURCE_DIR}/src
+  PUBLIC ${PROJECT_SOURCE_DIR}/src/protocols
   INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 

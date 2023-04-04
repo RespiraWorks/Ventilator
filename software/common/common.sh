@@ -134,7 +134,10 @@ generate_network_protocols() {
   mkdir -p "$PYTHON_LIB_PATH"
   mkdir -p "$GUI_LIB_PATH"
   #ensure old files are gone
-  rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
+  rm -f \
+    $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c \
+    $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* \
+    $PYTHON_LIB_PATH/*.py
 
   protoc \
   --plugin=$NANOPB_PATH/protoc-gen-nanopb \
@@ -144,6 +147,9 @@ generate_network_protocols() {
   --cpp_out=$GUI_LIB_PATH \
   --python_out=$PYTHON_LIB_PATH \
   network_protocol.proto
+
+  mv $GUI_LIB_PATH/network_protocol_pb.cc mv $GUI_LIB_PATH/network_protocol_pb.cpp
+  mv $GUI_LIB_PATH/network_protocol_pb.h mv $GUI_LIB_PATH/network_protocol_pb.hpp
 }
 
 run_checks() {

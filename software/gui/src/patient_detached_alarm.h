@@ -37,7 +37,8 @@ class PatientDetachedAlarm : public LatchingAlarm {
  private:
   std::optional<QString> IsActive(SteadyInstant /*now*/, const ControllerStatus &status,
                                   const BreathSignals & /*breath_signals*/) override {
-    VolumetricFlow flow_correction = ml_per_min(status.sensor_readings.flow_correction_ml_per_min);
+    VolumetricFlow flow_correction =
+        ml_per_min(status.sensor_readings().flow_correction_ml_per_min());
     if (flow_correction <= threshold_) {
       return {QString("Patient detached from device")};
     }

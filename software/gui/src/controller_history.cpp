@@ -38,7 +38,7 @@ std::vector<std::tuple<SteadyInstant, ControllerStatus>> ControllerHistory::GetH
 
 ControllerStatus ControllerHistory::GetLastStatus() const {
   if (history_.empty()) {
-    return ControllerStatus_init_zero;
+    return ControllerStatus();
   }
   return std::get<1>(history_.back());
 }

@@ -34,30 +34,33 @@ void GuiStateContainer::set_is_using_fake_data(bool value) { is_using_fake_data_
 SteadyInstant GuiStateContainer::GetStartupTime() { return startup_time_; }
 
 GuiStatus GuiStateContainer::GetGuiStatus() {
-  GuiStatus status = GuiStatus_init_zero;
-
-  status.uptime_ms = TimeAMinusB(SteadyClock::now(), startup_time_).count();
-  status.desired_params.mode = [&] {
+  auto mode = [&] {
     switch (commanded_mode_) {
       case VentilationMode::PRESSURE_CONTROL:
-        return VentMode::VentMode_PRESSURE_CONTROL;
+        return VentMode::PRESSURE_CONTROL;
       case VentilationMode::PRESSURE_ASSIST:
-        return VentMode::VentMode_PRESSURE_ASSIST;
+        return VentMode::PRESSURE_ASSIST;
       case VentilationMode::HIGH_FLOW_NASAL_CANNULA:
-        return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
+        return VentMode::HIGH_FLOW_NASAL_CANNULA;
       default:
         // Should never happen.
         CRIT("Unexpected commanded_mode: {}", commanded_mode_);
-        return VentMode::VentMode_PRESSURE_CONTROL;
+        return VentMode::PRESSURE_CONTROL;
     }
   }();
-  status.desired_params.peep_cm_h2o = commanded_peep_;
-  status.desired_params.breaths_per_min = commanded_rr_;
-  status.desired_params.pip_cm_h2o = commanded_pip_;
+
+  GuiStatus status = GuiStatus::default_instance();
+
+  status.set_uptime_ms(TimeAMinusB(SteadyClock::now(), startup_time_).count());
+  status.mutable_desired_params()->set_mode(mode);
+  status.mutable_desired_params()->set_peep_cm_h2o(commanded_peep_);
+  status.mutable_desired_params()->set_breaths_per_min(commanded_rr_);
+  status.mutable_desired_params()->set_pip_cm_h2o(commanded_pip_);
   float breath_duration_sec = 60.0 / commanded_rr_;
   float commanded_e_time = breath_duration_sec - commanded_i_time_;
-  status.desired_params.inspiratory_expiratory_ratio = commanded_i_time_ / commanded_e_time;
-  status.desired_params.fio2 = commanded_fio2_percent_ * 0.01;
+  status.mutable_desired_params()->set_inspiratory_expiratory_ratio(commanded_i_time_ /
+                                                                    commanded_e_time);
+  status.mutable_desired_params()->set_fio2(commanded_fio2_percent_ * 0.01);
 
   return status;
 }
@@ -120,12 +123,12 @@ void GuiStateContainer::UpdateGraphs() {
 
   for (const auto &[time, controller_status] : GetControllerStatusHistory()) {
     int neg_millis_ago = TimeAMinusB(time, now).count();
-    pressure_points.append(
-        QPointF(neg_millis_ago * 0.001, controller_status.sensor_readings.patient_pressure_cm_h2o));
+    auto readings = controller_status.sensor_readings();
+    pressure_points.append(QPointF(neg_millis_ago * 0.001, readings.patient_pressure_cm_h2o()));
     flow_points.append(QPointF(neg_millis_ago * 0.001,
                                // The graph should be in L/min, but the data is ml/min
-                               0.001 * controller_status.sensor_readings.flow_ml_per_min));
-    tv_points.append(QPointF(neg_millis_ago * 0.001, controller_status.sensor_readings.volume_ml));
+                               0.001 * readings.flow_ml_per_min()));
+    tv_points.append(QPointF(neg_millis_ago * 0.001, readings.volume_ml()));
   }
   SetPressureSeries(std::move(pressure_points));
   SetFlowSeries(std::move(flow_points));
@@ -140,14 +143,14 @@ int GuiStateContainer::get_battery_percentage() const {
 SimpleClock *GuiStateContainer::get_clock() const { return const_cast<SimpleClock *>(&clock_); }
 
 qreal GuiStateContainer::get_measured_pressure() const {
-  return history_.GetLastStatus().sensor_readings.patient_pressure_cm_h2o;
+  return history_.GetLastStatus().sensor_readings().patient_pressure_cm_h2o();
 }
 
 qreal GuiStateContainer::get_measured_flow() const {
-  return 0.001 * history_.GetLastStatus().sensor_readings.flow_ml_per_min;
+  return 0.001 * history_.GetLastStatus().sensor_readings().flow_ml_per_min();
 }
 qreal GuiStateContainer::get_measured_tv() const {
-  return history_.GetLastStatus().sensor_readings.volume_ml;
+  return history_.GetLastStatus().sensor_readings().volume_ml();
 }
 
 qreal GuiStateContainer::get_measured_rr() const {
@@ -171,5 +174,5 @@ qreal GuiStateContainer::get_measured_ier() const {
 }
 
 qreal GuiStateContainer::get_measured_fio2_percent() const {
-  return 100 * history_.GetLastStatus().sensor_readings.fio2;
+  return 100 * history_.GetLastStatus().sensor_readings().fio2();
 }

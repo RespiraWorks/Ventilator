@@ -16,18 +16,18 @@ limitations under the License.
 #include "breath_signals.h"
 
 void BreathSignals::Update(SteadyInstant now, const ControllerStatus &status) {
-  float pressure = status.sensor_readings.patient_pressure_cm_h2o;
-  uint64_t breath_id = status.sensor_readings.breath_id;
+  float new_pressure = status.sensor_readings().patient_pressure_cm_h2o();
+  uint64_t new_breath_id = status.sensor_readings().breath_id();
 
-  if (breath_id != latest_breath_id_) {
+  if (new_breath_id != latest_breath_id_) {
     ++num_breaths_;
-    latest_breath_id_ = status.sensor_readings.breath_id;
+    latest_breath_id_ = new_breath_id;
 
     latest_pip_ = current_pip_;
-    current_pip_ = pressure;
+    current_pip_ = new_pressure;
 
     latest_peep_ = current_peep_;
-    current_peep_ = pressure;
+    current_peep_ = new_pressure;
 
     recent_breath_starts_.push_back(now);
     if (recent_breath_starts_.size() > MaxRecentBreathStarts) {
@@ -36,8 +36,8 @@ void BreathSignals::Update(SteadyInstant now, const ControllerStatus &status) {
     return;
   }
 
-  current_pip_ = std::max(current_pip_.value_or(std::numeric_limits<float>::min()), pressure);
-  current_peep_ = std::min(current_peep_.value_or(std::numeric_limits<float>::max()), pressure);
+  current_pip_ = std::max(current_pip_.value_or(std::numeric_limits<float>::min()), new_pressure);
+  current_peep_ = std::min(current_peep_.value_or(std::numeric_limits<float>::max()), new_pressure);
 }
 
 uint32_t BreathSignals::num_breaths() const { return num_breaths_; }

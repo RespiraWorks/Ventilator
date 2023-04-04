@@ -21,7 +21,6 @@ set(${this_target}_sources
   periodic_closure.cpp
   respira_connected_device.cpp
   time_series_graph.cpp
-  time_series_graph_painter.cpp
   )
 
 set(${this_target}_headers
@@ -40,7 +39,6 @@ set(${this_target}_headers
   respira_connected_device.h
   simple_clock.h
   time_series_graph.h
-  time_series_graph_painter.h
   )
 
 add_library(

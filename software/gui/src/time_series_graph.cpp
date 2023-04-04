@@ -107,7 +107,6 @@ void TimeSeriesGraph::paint(QPainter *painter) {
   QPen pen(line_color_);
   pen.setWidthF(2.0f);
 
-  painter->setBrush(brush);
   painter->setPen(Qt::NoPen);
   painter->setRenderHint(QPainter::Antialiasing);
 

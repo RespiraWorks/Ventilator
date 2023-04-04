@@ -40,7 +40,7 @@ class TimeSeriesGraph : public QQuickPaintedItem {
       float baselineValue READ GetBaselineValue WRITE SetBaselineValue NOTIFY BaselineValueChanged)
 
  public:
-  TimeSeriesGraph(QQuickItem *parent);
+  TimeSeriesGraph(QQuickItem *parent = nullptr);
 
   void paint(QPainter *painter) override;
 

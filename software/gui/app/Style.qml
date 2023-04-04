@@ -59,9 +59,9 @@ QtObject {
             property var parameterBackgroundByPriority: function(p) {
               var c = Style.theme.color
               switch (p) {
-                  case AlarmPriority.HIGH: return c.alarmHighBright;
-                  case AlarmPriority.MEDIUM: return c.alarmMediumBright;
-                  case AlarmPriority.LOW: return c.alarmLowBright;
+                  case tAlarmPriority.HIGH: return c.alarmHighBright;
+                  case tAlarmPriority.MEDIUM: return c.alarmMediumBright;
+                  case tAlarmPriority.LOW: return c.alarmLowBright;
                   default: return "transparent";
               }
             }
@@ -70,18 +70,18 @@ QtObject {
               property var lineByPriority: function(p) {
                 var c = Style.theme.color
                 switch (p) {
-                    case AlarmPriority.HIGH: return c.alarmHighBright;
-                    case AlarmPriority.MEDIUM: return c.alarmMediumBright;
-                    case AlarmPriority.LOW: return c.alarmLowBright;
+                    case tAlarmPriority.HIGH: return c.alarmHighBright;
+                    case tAlarmPriority.MEDIUM: return c.alarmMediumBright;
+                    case tAlarmPriority.LOW: return c.alarmLowBright;
                     default: return c.normalGraphLine;
                 }
               }
               property var areaByPriority: function(p) {
                 var c = Style.theme.color
                 switch (p) {
-                    case AlarmPriority.HIGH: return c.alarmHighDim;
-                    case AlarmPriority.MEDIUM: return c.alarmMediumDim;
-                    case AlarmPriority.LOW: return c.alarmLowDim;
+                    case tAlarmPriority.HIGH: return c.alarmHighDim;
+                    case tAlarmPriority.MEDIUM: return c.alarmMediumDim;
+                    case tAlarmPriority.LOW: return c.alarmLowDim;
                     default: return c.normalGraphArea;
                 }
               }

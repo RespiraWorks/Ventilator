@@ -79,7 +79,7 @@ Control {
         }
         priority: {
           var alarm = GuiStateContainer.alarmManager.highestPrioritySilencedAlarm
-          return (alarm == null) ? AlarmPriority.NONE : alarm.nominalPriority
+          return (alarm == null) ? tAlarmPriority.NONE : alarm.nominalPriority
         }
         numAlarms: GuiStateContainer.alarmManager.numSilencedAlarms
         remainingSilenceMs: {

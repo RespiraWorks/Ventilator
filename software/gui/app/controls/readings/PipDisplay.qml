@@ -7,7 +7,7 @@ ParameterDisplay {
     parameterName: qsTr("PIP")
     parameterUnit: qsTr("cmH<sub>2</sub>O")
     parameterValue: GuiStateContainer.measured_pip.toString()
-    alarmPriority: Math.max(
+    tAlarmPriority: Math.max(
       GuiStateContainer.alarmManager.pipExceededAlarm.effectiveVisualPriority,
       GuiStateContainer.alarmManager.pipNotReachedAlarm.effectiveVisualPriority)
 }

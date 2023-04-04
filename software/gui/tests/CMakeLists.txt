@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5 COMPONENTS Test REQUIRED)
+find_package(Qt6 COMPONENTS Test REQUIRED)
 
 set(${this_target}_sources
   tst_main.cpp
@@ -45,7 +45,7 @@ target_include_directories(
 target_link_libraries(
   ${this_target}
   PRIVATE ${PROJECT_NAME}_backend
-  PRIVATE Qt5::Test
+  PRIVATE Qt6::Test
 )
 
 # Creates command dependent on existence of target

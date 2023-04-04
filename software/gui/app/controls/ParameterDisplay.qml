@@ -11,7 +11,7 @@ Rectangle {
     antialiasing: true
     radius: 8
 
-    property int alarmPriority: AlarmPriority.NONE
+    property int tAlarmPriority: tAlarmPriority.NONE
 
     // define parameter name, e.g. PIP
     property alias parameterName: parameterNameText.text

@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2023, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ void TimeSeriesGraph::SetMaxValue(float value) {
 }
 
 float TimeSeriesGraph::calculateRealX(float timeX) {
-  float result = width() * (1.0 + timeX / range_in_sec);
+  float result = width() * (1.0 + timeX / range_in_secs_);
   return result;
 }
 
@@ -103,44 +103,35 @@ float TimeSeriesGraph::calculateRealY(float value) {
 }
 
 void TimeSeriesGraph::paint(QPainter *painter) {
-  QBrush brush(area_color_);
-  QPen pen(line_color_);
-  pen.setWidthF(2.0f);
+  if (dataset_.size() < 2) return;
 
-  painter->setPen(Qt::NoPen);
-  painter->setRenderHint(QPainter::Antialiasing);
+  // Graph line
+  QPainterPath path;
+  for (const auto &p : dataset_) {
+    if (p == dataset_.front())
+      path.moveTo(calculateRealX(p.x()), calculateRealY(p.y()));
+    else
+      path.lineTo(calculateRealX(p.x()), calculateRealY(p.y()));
+  }
 
+  // Area under graph
+  auto path2 = path;
   float w = size().width();
   float h = size().height();
-
-  int size = dataset_.size();
-
-  if (size < 2) return;
-
-  QPainterPath path;
-  path.moveTo(calculateRealX(dataset_[0].x()), calculateRealY(dataset_[0].y()));
-  for (int i = 1; i < size; i++)
-    path.lineTo(calculateRealX(dataset_[i].x()), calculateRealY(dataset_[i].y()));
-
-  // Draw graph line
-  painter->setPen(pen);
-  painter->drawPath(path);
-
-  // Draw graph background area
-  auto path2 = path;
   path2.lineTo(w, h);
   path2.lineTo(calculateRealX(dataset_[0].x()), h);
-  painter->setBrush(brush);
-  painter->fillPath(path2, brush);
+
+  // Draw graph line and fill
+  painter->fillPath(path2, area_color_);
+  painter->setPen(QPen(line_color_, 2.0f));
+  painter->drawPath(path);
 
   // Draw baseline
   if (show_baseline_) {
     QPainterPath path3;
-    path3.moveTo(calculateRealX(dataset_[0].x()), calculateRealY(baseline_value_));
-    path3.lineTo(calculateRealX(dataset_[size - 1].x()), calculateRealY(baseline_value_));
-    pen.setWidthF(1.0f);
-    pen.setColor(baseline_color_);
-    painter->setPen(pen);
+    path3.moveTo(calculateRealX(dataset_.front().x()), calculateRealY(baseline_value_));
+    path3.lineTo(calculateRealX(dataset_.back().x()), calculateRealY(baseline_value_));
+    painter->setPen(QPen(baseline_color_, 1.0f));
     painter->drawPath(path3);
   }
 }

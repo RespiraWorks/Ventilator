@@ -1,4 +1,4 @@
-/* Copyright 2020-2021, RespiraWorks
+/* Copyright 2020-2023, RespiraWorks
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ class TimeSeriesGraph : public QQuickPaintedItem {
  public slots:
 
   void SetBaselineValue(float baseline);
+
   void SetRangeInSeconds(float rangeInSeconds);
 
   void SetLineColor(QColor color);
@@ -88,19 +89,20 @@ class TimeSeriesGraph : public QQuickPaintedItem {
   void BaselineValueChanged();
 
  private:
-  QVector<QPointF> dataset_;
-
+  // configuration
   QColor line_color_{QColor(255, 255, 255, 255)};
   QColor area_color_{QColor(255, 255, 255, 255)};
-  float max_value_{0};
-  float min_value_{0};
+  QColor baseline_color_{"#13345B"};
   float range_in_secs_{30.0};
   bool show_baseline_{true};
   float baseline_value_{0};
 
-  float range_in_sec{30};
-  QColor baseline_color_{"#13345B"};
+  // data
+  QVector<QPointF> dataset_;
+  float max_value_{0};
+  float min_value_{0};
 
+  // helper functions
   float calculateRealX(float timeX);
   float calculateRealY(float value);
 };

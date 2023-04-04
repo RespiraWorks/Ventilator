@@ -262,6 +262,7 @@ elif [ "$1" == "build" ]; then
   fi
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   config_type="Release"
@@ -324,6 +325,7 @@ elif [ "$1" == "test" ]; then
   fi
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   j_opt=""
@@ -376,6 +378,7 @@ elif [ "$1" == "run" ]; then
   fi
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   pushd build

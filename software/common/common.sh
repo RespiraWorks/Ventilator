@@ -179,7 +179,6 @@ upload_coverage_reports() {
   find $SRC_DIR -name '*.gcda' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
   find $SRC_DIR -name '*.gcno' -exec cp -t ${COVERAGE_OUTPUT_DIR}/ugly {} +
   find . \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.tpp" \) \
-      -not -path '*third_party*' \
       -not -path '*generated_libs*' \
       -not -path '*cmake*' \
       -exec gcov -pb -o ${COVERAGE_OUTPUT_DIR}/ugly -f {} \;
@@ -217,7 +216,6 @@ generate_coverage_reports() {
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
        "*_test_transport.c" \
        "*/protocols/*" \
-       "*/third_party/*" \
        "*output_export.c*" \
        "*test*" \
        "*.pio/libdeps/*" \

@@ -55,7 +55,7 @@ RespiraWorks Ventilator UI build & test utilities.
 
 The following options are available:
   install     One-time installation of build toolchain and dependencies
-  clean       Clean build directory and de-initialize git submodules
+  clean       Clean build directory
   build       Build the gui to /build, options:
       [--relase/--debug] - what it says (default=release)
       [-j]               - parallel build (auto select max-1 cores)
@@ -248,7 +248,6 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  git submodule deinit -f .
   exit $EXIT_SUCCESS
 
 #########
@@ -287,7 +286,6 @@ elif [ "$1" == "build" ]; then
     checks_opt="no"
   fi
 
-  git submodule update --init --recursive
   create_clean_directory build
 
   pushd build
@@ -340,7 +338,6 @@ elif [ "$1" == "test" ]; then
     j_opt="-j${NUM_CPUS}"
   fi
 
-  git submodule update --init --recursive
   create_clean_directory build
 
   pushd build

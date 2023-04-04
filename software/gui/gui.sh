@@ -377,10 +377,6 @@ elif [ "$1" == "run" ]; then
     exit $EXIT_FAILURE
   fi
 
-  # generate comms protocols
-  ../common/common.sh update
-  ../common/common.sh generate
-
   pushd build
   if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
     xvfb-run ./bin/ventilator_gui_app "${@:3}"

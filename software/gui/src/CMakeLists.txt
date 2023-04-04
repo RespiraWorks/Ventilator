@@ -43,10 +43,6 @@ set(${this_target}_headers
   time_series_graph_painter.h
   )
 
-# Mostly for qnanopainter \TODO make it an external lib
-set(QNANO_QUICK ON CACHE BOOL "Build QNanoPainter for QtQuick")
-add_subdirectory(third_party)
-
 add_library(
   ${this_target} STATIC
   ${${this_target}_resources}
@@ -68,7 +64,6 @@ target_link_libraries(
   PUBLIC fmt::fmt
   PUBLIC spdlog::spdlog
   PUBLIC Threads::Threads
-  PUBLIC QNanoPainter
   PUBLIC Qt5::SerialPort
   PUBLIC Qt5::Quick
   PUBLIC Qt5::Multimedia

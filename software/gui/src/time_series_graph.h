@@ -18,14 +18,13 @@ limitations under the License.
 #include <QColor>
 #include <QPointF>
 #include <QQuickItem>
+#include <QQuickPaintedItem>
 #include <QVector>
-
-#include "time_series_graph_painter.h"
 
 /**
  * @brief The TimeSeriesGraph is an QuickItem used to display a time series.
  */
-class TimeSeriesGraph : public QNanoQuickItem {
+class TimeSeriesGraph : public QQuickPaintedItem {
   Q_OBJECT
 
   Q_PROPERTY(QVector<QPointF> dataset READ GetDataset WRITE SetDataset NOTIFY DatasetChanged)
@@ -41,9 +40,9 @@ class TimeSeriesGraph : public QNanoQuickItem {
       float baselineValue READ GetBaselineValue WRITE SetBaselineValue NOTIFY BaselineValueChanged)
 
  public:
-  TimeSeriesGraph() = default;
+  TimeSeriesGraph(QQuickItem *parent);
 
-  QNanoQuickItemPainter *createItemPainter() const;
+  void paint(QPainter *painter) override;
 
   QVector<QPointF> GetDataset() const;
 
@@ -98,4 +97,10 @@ class TimeSeriesGraph : public QNanoQuickItem {
   float range_in_secs_{30.0};
   bool show_baseline_{true};
   float baseline_value_{0};
+
+  float range_in_sec{30};
+  QColor baseline_color_{"#13345B"};
+
+  float calculateRealX(float timeX);
+  float calculateRealY(float value);
 };

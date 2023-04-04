@@ -1,3 +1,0 @@
-[submodule "software/gui/src/third_party/qnanopainter"]
-	path = software/gui/src/third_party/qnanopainter
-	url = https://github.com/QUItCoding/qnanopainter

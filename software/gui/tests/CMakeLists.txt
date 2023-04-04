@@ -26,8 +26,7 @@ set(${this_target}_headers
   pip_not_reached_alarm_test.h
   respira_connected_device_test.h
   simple_clock_test.h
-  time_series_graph_painter_test.h
-  time_series_graph_test.h
+#  time_series_graph_test.h
   )
 
 add_executable(

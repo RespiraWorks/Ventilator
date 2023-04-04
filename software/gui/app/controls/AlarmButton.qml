@@ -10,7 +10,7 @@ HeaderButton {
 
     property int numAlarms: 0
     property int remainingSilenceMs: 0
-    property int priority: AlarmPriority.NONE
+    property int priority: tAlarmPriority.NONE
 
     property color alarm_button_fg: "white"
 
@@ -18,10 +18,10 @@ HeaderButton {
     height: 40
 
     state: switch(priority) {
-        case AlarmPriority.NONE: "";   break;
-        case AlarmPriority.LOW: "low"; break;
-        case AlarmPriority.MEDIUM: "medium"; break;
-        case AlarmPriority.HIGH: "high"; break;
+        case tAlarmPriority.NONE: "";   break;
+        case tAlarmPriority.LOW: "low"; break;
+        case tAlarmPriority.MEDIUM: "medium"; break;
+        case tAlarmPriority.HIGH: "high"; break;
     }
 
 
@@ -78,7 +78,7 @@ HeaderButton {
                 width: 20; height: 20
                 sourceSize: Qt.size(width, height)
                 fillMode: Image.PreserveAspectFit
-                source: root.priority != AlarmPriority.NONE ?
+                source: root.priority != tAlarmPriority.NONE ?
                             'qrc:/images/RW_alarm-off_24.svg' :
                             'qrc:/images/RW_alarm_24.svg'
                 layer.enabled: true

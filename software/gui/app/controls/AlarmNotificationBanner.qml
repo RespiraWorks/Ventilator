@@ -16,17 +16,17 @@ Item {
 
     property alias title: titleText.text
     property int numActiveAlarms: 0
-    property int priority: AlarmPriority.NONE
+    property int priority: tAlarmPriority.NONE
 
-    enabled: priority != AlarmPriority.NONE
+    enabled: priority != tAlarmPriority.NONE
 
     signal pauseAlarmClicked()
 
     state: switch(priority) {
-        case AlarmPriority.NONE: "";   break;
-        case AlarmPriority.LOW: "low"; break;
-        case AlarmPriority.MEDIUM: "medium"; break;
-        case AlarmPriority.HIGH: "high"; break;
+        case tAlarmPriority.NONE: "";   break;
+        case tAlarmPriority.LOW: "low"; break;
+        case tAlarmPriority.MEDIUM: "medium"; break;
+        case tAlarmPriority.HIGH: "high"; break;
     }
 
 

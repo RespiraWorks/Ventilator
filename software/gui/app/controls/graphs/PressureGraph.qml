@@ -12,7 +12,7 @@ ScopeView {
     yMin: 0
     yMax: 60
 
-    alarmPriority: Math.max(
+    tAlarmPriority: Math.max(
       GuiStateContainer.alarmManager.pipExceededAlarm.effectiveVisualPriority,
       GuiStateContainer.alarmManager.pipNotReachedAlarm.effectiveVisualPriority)
 }

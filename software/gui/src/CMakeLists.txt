@@ -8,8 +8,7 @@ set(this_target ${PROJECT_NAME}_backend)
 
 set(CMAKE_AUTOMOC ON)
 find_package(Qt6 COMPONENTS
-  SerialPort Quick
-        Multimedia
+  SerialPort Quick Multimedia
   REQUIRED)
 
 set(${this_target}_sources

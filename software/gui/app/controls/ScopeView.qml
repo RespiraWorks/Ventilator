@@ -11,7 +11,7 @@ Item {
     property double yMin: -1.5
     property double yMax: 1.5
     property double rangeInSeconds: 30
-    property int alarmPriority: AlarmPriority.NONE
+    property int tAlarmPriority: tAlarmPriority.NONE
 
     property alias name: nameLabel.text
     property alias unit: unitLabel.text

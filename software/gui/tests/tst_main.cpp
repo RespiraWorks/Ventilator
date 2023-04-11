@@ -28,7 +28,7 @@ limitations under the License.
 #include "pip_not_reached_alarm_test.h"
 #include "respira_connected_device_test.h"
 #include "simple_clock_test.h"
-// #include "time_series_graph_test.h"
+#include "time_series_graph_test.h"
 
 int main(int argc, char *argv[]) {
   QGuiApplication app(argc, argv);
@@ -95,15 +95,10 @@ int main(int argc, char *argv[]) {
     status += QTest::qExec(&tc, argc, argv);
   }
 
-  //  {
-  //    TimeSeriesGraphPainterTest tc;
-  //    status += QTest::qExec(&tc, argc, argv);
-  //  }
-
-  //  {
-  //    TimeSeriesGraphTest tc;
-  //    status += QTest::qExec(&tc, argc, argv);
-  //  }
+  {
+    TimeSeriesGraphTest tc;
+    status += QTest::qExec(&tc, argc, argv);
+  }
 
   return status;
 }

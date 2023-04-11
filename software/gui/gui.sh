@@ -55,7 +55,7 @@ RespiraWorks Ventilator UI build & test utilities.
 
 The following options are available:
   install     One-time installation of build toolchain and dependencies
-  clean       Clean build directory and de-initialize git submodules
+  clean       Clean build directory
   build       Build the gui to /build, options:
       [--relase/--debug] - what it says (default=release)
       [-j]               - parallel build (auto select max-1 cores)
@@ -125,7 +125,6 @@ configure_conan() {
   sudo pip3 install -U pip
   pip3 install gitpython
   pip3 install conan==$CONAN_VERSION
-  conan --version
   source "${HOME}/.profile"
   conan profile new --detect default
   conan profile update settings.compiler.libcxx=libstdc++11 default
@@ -135,9 +134,8 @@ run_cppcheck() {
   create_clean_directory  build/cppcheck
   cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
            -I ../common/generated_libs/protocols \
-           -I ../common/third_party/nanopb \
            -I ../common/libs/units \
-           -ibuild -icmake-build-stm32 -isrc/third_party -isrc/protocols \
+           -ibuild -icmake-build-stm32 -isrc/protocols \
            .
 
 #           --project=build/compile_commands.json \
@@ -159,7 +157,7 @@ run_clang_tidy() {
     CLANG_TIDY_EXEC="run-clang-tidy-${CLANG_TIDY_VERSION}.py"
   fi
   echo "running $CLANG_TIDY_EXEC"
-  find . -name '*.cpp' -not -path "*third_party*" -not -path "*build*" \
+  find . -name '*.cpp' -not -path "*build*" \
          -exec $CLANG_TIDY_EXEC -quiet $j_opt \
          -header-filter='^.*gui\/(src|app|tests)\/.*\.(hpp|cpp|h)$' \
          -p build {} \;
@@ -183,7 +181,6 @@ generate_coverage_reports() {
        --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
        "*/ventilator_gui_backend_autogen/*" \
-       "*/third_party/*" \
        "*/protocols/*" \
        "*/tests/*" \
        "*spdlog*" \
@@ -251,7 +248,6 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  git submodule deinit -f .
   exit $EXIT_SUCCESS
 
 #########
@@ -290,7 +286,6 @@ elif [ "$1" == "build" ]; then
     checks_opt="no"
   fi
 
-  git submodule update --init --recursive
   create_clean_directory build
 
   pushd build
@@ -343,7 +338,6 @@ elif [ "$1" == "test" ]; then
     j_opt="-j${NUM_CPUS}"
   fi
 
-  git submodule update --init --recursive
   create_clean_directory build
 
   pushd build

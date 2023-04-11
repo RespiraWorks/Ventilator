@@ -21,7 +21,6 @@ set(${this_target}_sources
   periodic_closure.cpp
   respira_connected_device.cpp
   time_series_graph.cpp
-  time_series_graph_painter.cpp
   )
 
 set(${this_target}_headers
@@ -40,12 +39,7 @@ set(${this_target}_headers
   respira_connected_device.h
   simple_clock.h
   time_series_graph.h
-  time_series_graph_painter.h
   )
-
-# Mostly for qnanopainter \TODO make it an external lib
-set(QNANO_QUICK ON CACHE BOOL "Build QNanoPainter for QtQuick")
-add_subdirectory(third_party)
 
 add_library(
   ${this_target} STATIC
@@ -68,7 +62,6 @@ target_link_libraries(
   PUBLIC fmt::fmt
   PUBLIC spdlog::spdlog
   PUBLIC Threads::Threads
-  PUBLIC QNanoPainter
   PUBLIC Qt5::SerialPort
   PUBLIC Qt5::Quick
   PUBLIC Qt5::Multimedia

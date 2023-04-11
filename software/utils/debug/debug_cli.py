@@ -664,17 +664,40 @@ named {self.scripts_directory} will be searched for the python script.
     def do_set(self, line):
         set_parser = CmdArgumentParser(description="set value(s) to debug variables")
         set_parser.add_argument("var", help="variable to set")
-        set_parser.add_argument("data", nargs="+", help="data to assign to variable")
+        set_parser.add_argument(
+            "data", nargs="*", help="data to assign to variable (if applicable)"
+        )
 
         cl = line.split()
         args = set_parser.parse_args(cl)
 
-        if args.var == "force_off":
-            self.interface.variables_force_off()
-            return
-        elif args.var == "force_open":
-            self.interface.variables_force_open()
-            return
+        convenience_macros = [
+            "force_off",
+            "force_open",
+        ]
+
+        if args.var in convenience_macros:
+            if len(args.data) != 0:
+                print(
+                    red(
+                        f"Unexpected data argument(s) {args.data} when using convenience macro {args.var}"
+                    )
+                )
+                print("Run 'help set' to see available functions and usage.")
+                return
+
+            if args.var == "force_off":
+                self.interface.variables_force_off()
+                return
+            elif args.var == "force_open":
+                self.interface.variables_force_open()
+                return
+
+        # All individual debug variables are supposed to be set to a numerical value or array passed into
+        # as a data argument, unless they are the aforementioned force_off or force_open convenience macros
+        if len(args.data) == 0:
+            print(red(f"Missing data argument to set variable {args.var}"))
+            print("Run 'help set' to see available functions and usage.")
 
         string_to_eval = "".join(args.data)
 
@@ -708,7 +731,10 @@ named {self.scripts_directory} will be searched for the python script.
 
     def help_set(self):
         print("usage: set [var] [value(s)]")
-        print("Sets value for a ventilator debug variable (or convenience macro):")
+        print("Sets value for a ventilator debug variable")
+        print(
+            "Also can be used to apply convenience macros without manually inputting values:"
+        )
         print("  force_off           - resets all forced actuator variables")
         print("  force_open          - forces all valves open and blower to maximum")
         print()

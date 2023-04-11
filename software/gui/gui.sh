@@ -262,6 +262,7 @@ elif [ "$1" == "build" ]; then
   fi
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   config_type="Release"
@@ -324,6 +325,7 @@ elif [ "$1" == "test" ]; then
   fi
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   j_opt=""
@@ -374,9 +376,6 @@ elif [ "$1" == "run" ]; then
     echo "Please do not run the app with root privileges!"
     exit $EXIT_FAILURE
   fi
-
-  # generate comms protocols
-  ../common/common.sh generate
 
   pushd build
   if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then

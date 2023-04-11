@@ -6,7 +6,6 @@ This is code common to both the cycle controller and the GUI software. Some beha
 
 * [libs](libs) - these are custom authored libraries that will be shared by both pieces of deployed software. They should all be tested.
 * [generated_libs/protocols](generated_libs/protocols) - communications protocol definitions for generating serialization code, used by both pieces of deployed software, but needs not be tested
-* [third_party](third_party) - third party code, also shared, but not unit tested
 * [test](test) - these are unit tests for the shared libraries
 * [test_libs](test_libs) - these are libraries only used for the purpose of testing, but are themselves not part of the deployed code
 * [common.sh](common.sh) - general utility script for running tests and reporting test coverage

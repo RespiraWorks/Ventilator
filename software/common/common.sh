@@ -111,7 +111,7 @@ install_linux() {
                clang-tidy \
                protobuf-compiler
   pip3 install -U pip
-  pip3 install codecov nanopb
+  pip3 install nanopb
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }

@@ -1,0 +1,46 @@
+connectors:
+  X1:
+    pn: ee-stepper-motor-NEMA17                         # RW part number from purchasing JSON file
+    pincount: 4                                         # number of pins in the connector
+    pinlabels: [A+, A-, B+, B-]                         # names for the signal on the connector
+    type: NEMA 17 Full D Shaft Stepper Motor            # connector type                                  # connector sub-type
+    mpn: 17hs19-2004s1                                  # manufacturer part number
+    manufacturer: Stepper Online                        # manufacturer
+
+  X2:
+    pn: ec-micro1x4
+    pincount: 4
+    pinlabels: [1, 2, 3, 4]
+    type: Molex Micro-Fit 3.0 1x4
+    subtype: female
+    mpn: 0436450408
+    manufacturer: Molex
+    additional_components:                              # defines additional components such as contacts
+      -
+        type: crimp                                     # additional component type
+        subtype:  Molex Micro-Fit 3.0 Female Crimp Contact 20-24awg  # additional component name
+        qty: 1
+        qty_multiplier: populated                       # this multiples by the number of connector instances for the BOM
+        manufacturer: Molex                             # additional component manufacturer
+        mpn: 43030-0002                                 # additional component part number
+        pn: ec-microfit-f-crimp-20-24awg                # RW part number
+
+
+cables:
+  W1:
+    pn: included-with-motor
+    wirecount: 4
+    type: Stepper Motor Built-in Pigtails
+    mpn: N/A
+    manufacturer: N/A
+    # more cable parameters:
+    length: 1000 mm
+    gauge: 20 AWG
+    show_equiv: true # auto-calculate AWG equivalent
+    colors: [BK, GN, RD, BU]
+
+connections:
+  -
+    - X1: [1,2,3,4]
+    - W1: [1,2,3,4]
+

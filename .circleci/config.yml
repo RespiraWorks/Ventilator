@@ -100,10 +100,13 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
+      - run: mkdir -p test-results
       - run:
           name: Run unit tests
           command: |
-            pytest software/utils/debug/unit_test.py -v
+            pytest --junitxml=test-results/junit.xml -o junit_family=legacy software/utils/debug/unit_test.py -v
+      - store_test_results:
+          path: test-results
 
 
 workflows:

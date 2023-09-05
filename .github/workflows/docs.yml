@@ -27,7 +27,7 @@ jobs:
           && ./docs.sh build
           && touch _build/html/.nojekyll
       - name: Link Checker
-        uses: lycheeverse/lychee-action@v1.6.1
+        uses: lycheeverse/lychee-action@v1.8.0
         with:
           fail: true
           # Check all markdown and html files

@@ -32,6 +32,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo rm -rf /var/lib/apt/lists/*
+            export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/common/common.sh install
       - run:
@@ -52,6 +53,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo rm -rf /var/lib/apt/lists/*
+            export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:
@@ -72,6 +74,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo rm -rf /var/lib/apt/lists/*
+            export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/gui/gui.sh install
       - run:
@@ -98,6 +101,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo rm -rf /var/lib/apt/lists/*
+            export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:

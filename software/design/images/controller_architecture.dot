@@ -1,0 +1,24 @@
+digraph G {
+  subgraph cluster_RPI {
+    label="GUI (Raspberry Pi)"
+    labelloc=b;
+    GUI [label="Qt app"]
+  }
+
+  subgraph cluster_CC {
+    label = "Cycle Controller (STM32)";
+    labelloc = b;
+    "Main loop" -> "Controller"
+    "Main loop" -> "Comms"
+
+    "Controller" -> "Sensors"
+    "Controller" -> "Actuators"
+    "Controller" -> "Breath FSM"
+
+    "Actuators" -> HAL
+    "Sensors" -> HAL
+  }
+
+  "Comms" -> GUI
+  GUI -> "Comms"
+}

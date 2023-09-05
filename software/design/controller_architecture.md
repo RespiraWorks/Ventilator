@@ -78,36 +78,7 @@ of code in this critical part of the system.
 
 The cycle controller follows a modular design, described below.
 
-<!-- See https://github.com/TLmaK0/gravizo -->
-![Graph of components in cycle controller](https://g.gravizo.com/source/cc_graph_mark?https%3A%2F%2Fraw.githubusercontent.com%2FRespiraWorks%2FVentilator%2Fmaster%2Fsoftware%2Fdesign%2Fcontroller_architecture.md)
-<!--
-cc_graph_mark
-digraph G {
-  subgraph cluster_RPI {
-    label="GUI (Raspberry Pi)"
-    labelloc=b;
-    GUI [label="Qt app"]
-  }
-
-  subgraph cluster_CC {
-    label = "Cycle Controller (STM32)";
-    labelloc = b;
-    "Main loop" -> "Controller"
-    "Main loop" -> "Comms"
-
-    "Controller" -> "Sensors"
-    "Controller" -> "Actuators"
-    "Controller" -> "Breath FSM"
-
-    "Actuators" -> HAL
-    "Sensors" -> HAL
-  }
-
-  "Comms" -> GUI
-  GUI -> "Comms"
-}
-cc_graph_mark
--->
+![Graph of components in cycle controller](images/controller_architecture.png)
 
 The main loop runs every 10ms and has the following responsibilities:
 

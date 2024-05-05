@@ -191,7 +191,7 @@ upload_coverage_reports() {
 
 #  echo "Uploading to codecov..."
 
-  codecovcli do-upload --flag common
+#  codecovcli do-upload --flag common
 }
 
 generate_coverage_reports() {

@@ -42,8 +42,7 @@ jobs:
             ./software/common/common.sh test --cov --no-checks
             ./software/common/common.sh cov_upload
       - codecov/upload:
-          file: './software/common/coverage_reports/coverage.info'
-          flags: common
+          flags: 'common'
 
   controller-tests:
     machine:

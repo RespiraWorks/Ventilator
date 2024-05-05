@@ -112,7 +112,8 @@ install_linux() {
                protobuf-compiler
   pip3 install -U pip
   pip3 install nanopb
-#  pip3 install codecov-cli
+  pip3 install coverage
+  pip3 install codecov-cli
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
@@ -190,7 +191,7 @@ upload_coverage_reports() {
 
 #  echo "Uploading to codecov..."
 
-#  codecovcli do-upload --flag common
+  codecovcli do-upload --flag common
 }
 
 generate_coverage_reports() {

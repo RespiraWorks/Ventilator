@@ -1,12 +1,13 @@
 [requires]
-fmt/9.1.0
-spdlog/1.11.0
+spdlog/1.13.0
+fmt/10.2.1
 
 [generators]
-cmake
-cmake_find_package
-virtualbuildenv
-virtualrunenv
+CMakeDeps
+CMakeToolchain
+
+[options]
+date/*:use_system_tz_db=True
 
 [imports]
 ., *.dylib* -> ./lib @ keep_path=False

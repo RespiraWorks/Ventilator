@@ -18,7 +18,7 @@
 # ./gui.sh --help
 
 # \todo: keep CONAN_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-CONAN_VERSION=1.59
+CONAN_VERSION=2.2.3
 
 # Fail if any command fails
 set -e
@@ -126,8 +126,7 @@ configure_conan() {
   pip3 install gitpython
   pip3 install conan==$CONAN_VERSION
   source "${HOME}/.profile"
-  conan profile new --detect default
-  conan profile update settings.compiler.libcxx=libstdc++11 default
+  conan profile detect
 }
 
 run_cppcheck() {
@@ -201,15 +200,6 @@ generate_coverage_reports() {
 
 launch_browser() {
   python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
-}
-
-upload_coverage_reports() {
-  echo "Uploading coverage reports to Codecov"
-
-  curl -Os https://uploader.codecov.io/latest/linux/codecov
-  chmod +x codecov
-  ./codecov -F gui
-  rm codecov
 }
 
 ########
@@ -359,10 +349,6 @@ elif [ "$1" == "test" ]; then
   if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ] \
    && [ "$4" != "--no-cov" ] && [ "$5" != "--no-cov" ]; then
     generate_coverage_reports
-    if [ "$2" == "--upload-cov" ] || [ "$3" == "--upload-cov" ] \
-     || [ "$4" == "--upload-cov" ] || [ "$5" == "--upload-cov" ]; then
-      upload_coverage_reports
-    fi
   fi
 
   exit $EXIT_SUCCESS

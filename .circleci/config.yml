@@ -94,7 +94,10 @@ jobs:
           name: Run tests & publish coverage
           command: |
             export FORCED_ROOT=1
-            ./software/gui/gui.sh test -j --upload-cov
+            ./software/gui/gui.sh test -j
+      - codecov/upload:
+          file: './software/gui/coverage_reports/coverage.info'
+          flags: 'gui'
 
   debug-tests:
     machine:

@@ -109,7 +109,8 @@ install_linux() {
                gcovr \
                lcov \
                clang-tidy \
-               protobuf-compiler
+               protobuf-compiler \
+               codecov-cli
   pip3 install -U pip
   pip3 install nanopb
   pip3 install platformio==${PIO_VERSION}
@@ -187,10 +188,7 @@ upload_coverage_reports() {
   rm $COVERAGE_OUTPUT_DIR/processed/test*
   rm $COVERAGE_OUTPUT_DIR/processed/.pio*
 
-  curl -Os https://uploader.codecov.io/latest/linux/codecov
-  chmod +x codecov
-  ./codecov -F common
-  rm codecov
+  codecovcli do-upload --flag common
 }
 
 generate_coverage_reports() {

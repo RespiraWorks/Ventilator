@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   pre-commit-checks:
     docker:
-      - image: cimg/python:3.10.4
+      - image: cimg/python:3.12.3
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     steps:

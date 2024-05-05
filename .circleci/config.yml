@@ -66,7 +66,7 @@ jobs:
             ./software/controller/controller.sh test --cov --no-checks
             ./software/controller/controller.sh cov_upload
       - codecov/upload:
-          file: './software/common/coverage_reports/coverage.info'
+          file: './software/controller/coverage_reports/coverage.info'
           flags: 'controller'
 
   gui-tests:

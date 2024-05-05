@@ -109,10 +109,10 @@ install_linux() {
                gcovr \
                lcov \
                clang-tidy \
-               protobuf-compiler \
-               codecov-cli
+               protobuf-compiler
   pip3 install -U pip
   pip3 install nanopb
+  pip3 install codecov-cli
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }

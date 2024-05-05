@@ -172,7 +172,7 @@ run_checks() {
 }
 
 upload_coverage_reports() {
-  echo "Uploading coverage reports to Codecov"
+#  echo "Uploading coverage reports to Codecov"
 
   echo "Generating test coverage reports for controller code..."
 
@@ -196,11 +196,11 @@ upload_coverage_reports() {
   rm $COVERAGE_OUTPUT_DIR/processed/test*
   rm $COVERAGE_OUTPUT_DIR/processed/.pio*
   rm $COVERAGE_OUTPUT_DIR/processed/*common*
-
-  curl -Os https://uploader.codecov.io/latest/linux/codecov
-  chmod +x codecov
-  ./codecov -F controller
-  rm codecov
+#
+#  curl -Os https://uploader.codecov.io/latest/linux/codecov
+#  chmod +x codecov
+#  ./codecov -F controller
+#  rm codecov
 }
 
 generate_coverage_reports() {

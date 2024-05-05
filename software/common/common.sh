@@ -112,7 +112,7 @@ install_linux() {
                protobuf-compiler
   pip3 install -U pip
   pip3 install nanopb
-  pip3 install codecov-cli
+#  pip3 install codecov-cli
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
@@ -165,9 +165,9 @@ run_checks() {
 }
 
 upload_coverage_reports() {
-  echo "Uploading coverage reports to Codecov"
+#  echo "Uploading coverage reports to Codecov"
 
-  echo "Generating test coverage reports for controller and common code..."
+  echo "Generating test coverage reports for common code..."
 
   SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
 
@@ -188,7 +188,9 @@ upload_coverage_reports() {
   rm $COVERAGE_OUTPUT_DIR/processed/test*
   rm $COVERAGE_OUTPUT_DIR/processed/.pio*
 
-  codecovcli do-upload --flag common
+#  echo "Uploading to codecov..."
+
+#  codecovcli do-upload --flag common
 }
 
 generate_coverage_reports() {

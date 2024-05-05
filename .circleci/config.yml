@@ -1,5 +1,6 @@
 version: 2.1
-
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   pre-commit-checks:
     docker:
@@ -40,6 +41,9 @@ jobs:
           command: |
             ./software/common/common.sh test --cov --no-checks
             ./software/common/common.sh cov_upload
+      - codecov/upload:
+          file: './software/common/coverage_reports/coverage.info'
+          flags: common
 
   controller-tests:
     machine:

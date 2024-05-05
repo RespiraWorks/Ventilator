@@ -174,7 +174,7 @@ run_checks() {
 upload_coverage_reports() {
   echo "Uploading coverage reports to Codecov"
 
-  echo "Generating test coverage reports for controller and common code..."
+  echo "Generating test coverage reports for controller code..."
 
   SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
 

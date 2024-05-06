@@ -97,7 +97,7 @@ The following options are available:
   integrate   Run integration tests
                 all [delay_time] - run all integration tests, pause for [delay_time] in between
                 <test_name> [parameters...] - run specific integration test with parameters
-  cov_upload  Upload coverage reports to Codecov server
+  cov_cleanup Prepare coverage reports for uploading to server
   help/-h     Display this help info
 
 Additionally, the following environment variables may be evaluated:
@@ -171,10 +171,8 @@ run_checks() {
     pio check -e native --fail-on-defect=high
 }
 
-upload_coverage_reports() {
-#  echo "Uploading coverage reports to Codecov"
-
-  echo "Generating test coverage reports for controller code..."
+cleanup_coverage_reports() {
+  echo "Cleaning up coverage reports for controller code..."
 
   SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
 
@@ -196,11 +194,6 @@ upload_coverage_reports() {
   rm $COVERAGE_OUTPUT_DIR/processed/test*
   rm $COVERAGE_OUTPUT_DIR/processed/.pio*
   rm $COVERAGE_OUTPUT_DIR/processed/*common*
-#
-#  curl -Os https://uploader.codecov.io/latest/linux/codecov
-#  chmod +x codecov
-#  ./codecov -F controller
-#  rm codecov
 }
 
 generate_coverage_reports() {
@@ -473,12 +466,11 @@ elif [ "$1" == "test" ]; then
 
   exit $EXIT_SUCCESS
 
-###################
-# UPLOAD COVERAGE #
-###################
-elif [ "$1" == "cov_upload" ]; then
-  upload_coverage_reports
-
+####################
+# CLEANUP COVERAGE #
+####################
+elif [ "$1" == "cov_cleanup" ]; then
+  cleanup_coverage_reports
   exit $EXIT_SUCCESS
 
 #######

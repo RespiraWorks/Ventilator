@@ -72,7 +72,7 @@ The following options are available:
   test        Builds and runs all unit tests, integration tests, static checks, generates coverage
                 [--no-checks] - do not run static checks (for CI)
                 [--cov]       - generate coverage reports
-  cov_upload  Upload coverage reports to Codecov server
+  cov_cleanup Prepare coverage reports for uploading to server
   unit        Builds and runs unit tests only (and generates coverage reports)
                   <name>  - run specific unit test, may include wildcards, i.e. '*checksum*'
                   [-o]    - open coverage report in browser when done
@@ -112,8 +112,6 @@ install_linux() {
                protobuf-compiler
   pip3 install -U pip
   pip3 install nanopb
-  pip3 install coverage
-  pip3 install codecov-cli
   pip3 install platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
@@ -165,10 +163,8 @@ run_checks() {
     pio check -e native --fail-on-defect=high
 }
 
-upload_coverage_reports() {
-#  echo "Uploading coverage reports to Codecov"
-
-  echo "Generating test coverage reports for common code..."
+cleanup_coverage_reports() {
+  echo "Cleaning up coverage reports for common code..."
 
   SRC_DIR=".pio/build/$COVERAGE_ENVIRONMENT"
 
@@ -188,10 +184,6 @@ upload_coverage_reports() {
   rm $COVERAGE_OUTPUT_DIR/processed/#usr*
   rm $COVERAGE_OUTPUT_DIR/processed/test*
   rm $COVERAGE_OUTPUT_DIR/processed/.pio*
-
-#  echo "Uploading to codecov..."
-
-#  codecovcli do-upload --flag common
 }
 
 generate_coverage_reports() {
@@ -332,12 +324,11 @@ elif [ "$1" == "test" ]; then
 
   exit $EXIT_SUCCESS
 
-###################
-# UPLOAD COVERAGE #
-###################
-elif [ "$1" == "cov_upload" ]; then
-  upload_coverage_reports
-
+####################
+# CLEANUP COVERAGE #
+####################
+elif [ "$1" == "cov_cleanup" ]; then
+  cleanup_coverage_reports
   exit $EXIT_SUCCESS
 
 ##############################

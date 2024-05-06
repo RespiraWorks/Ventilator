@@ -37,11 +37,12 @@ jobs:
             export FORCED_ROOT=1
             ./software/common/common.sh install
       - run:
-          name: Run tests & publish coverage
+          name: Run tests & generate coverage reports
           command: |
             ./software/common/common.sh test --cov --no-checks
             ./software/common/common.sh cov_upload
       - codecov/upload:
+          name: Upload coverage reports
           file: './software/common/coverage_reports/coverage.info'
           flags: 'common'
 
@@ -61,11 +62,12 @@ jobs:
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:
-          name: Run tests & publish coverage
+          name: Run tests & generate coverage reports
           command: |
             ./software/controller/controller.sh test --cov --no-checks
             ./software/controller/controller.sh cov_upload
       - codecov/upload:
+          name: Upload coverage reports
           file: './software/controller/coverage_reports/coverage.info'
           flags: 'controller'
 
@@ -91,11 +93,12 @@ jobs:
             ./software/gui/gui.sh build -j --no-checks
             ./software/gui/gui.sh run --startup-only
       - run:
-          name: Run tests & publish coverage
+          name: Run tests & generate coverage reports
           command: |
             export FORCED_ROOT=1
             ./software/gui/gui.sh test -j
       - codecov/upload:
+          name: Upload coverage reports
           file: './software/gui/coverage_reports/coverage.info'
           flags: 'gui'
 

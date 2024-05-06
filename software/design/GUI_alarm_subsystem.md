@@ -18,7 +18,7 @@ The following is out of scope:
 
 ## Concepts
 
-ISO-60601-8 ([here](https://drive.google.com/file/d/1wr9WwpoUfvIk1hiBeBqECrA6jUgHHmgL/view?usp=sharing)) defines some
+ISO-60601-8 ([here](https://www.iso.org/standard/41986.html)) defines some
 very useful terminology and principles for alarm management, which we will use and slightly extend. Terms below are in
 more informal language than in the standard.
 

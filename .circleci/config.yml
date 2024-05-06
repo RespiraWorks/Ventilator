@@ -1,9 +1,10 @@
 version: 2.1
-
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   pre-commit-checks:
     docker:
-      - image: cimg/python:3.10.4
+      - image: cimg/python:3.12.3
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     steps:
@@ -36,10 +37,13 @@ jobs:
             export FORCED_ROOT=1
             ./software/common/common.sh install
       - run:
-          name: Run tests & publish coverage
+          name: Run tests & generate coverage reports
           command: |
             ./software/common/common.sh test --cov --no-checks
-            ./software/common/common.sh cov_upload
+            ./software/common/common.sh cov_cleanup
+      - codecov/upload:
+          file: './software/common/coverage_reports/coverage.info'
+          flags: 'common'
 
   controller-tests:
     machine:
@@ -57,10 +61,13 @@ jobs:
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
       - run:
-          name: Run tests & publish coverage
+          name: Run tests & generate coverage reports
           command: |
             ./software/controller/controller.sh test --cov --no-checks
-            ./software/controller/controller.sh cov_upload
+            ./software/controller/controller.sh cov_cleanup
+      - codecov/upload:
+          file: './software/controller/coverage_reports/coverage.info'
+          flags: 'controller'
 
   gui-tests:
     machine:
@@ -84,10 +91,13 @@ jobs:
             ./software/gui/gui.sh build -j --no-checks
             ./software/gui/gui.sh run --startup-only
       - run:
-          name: Run tests & publish coverage
+          name: Run tests & generate coverage reports
           command: |
             export FORCED_ROOT=1
-            ./software/gui/gui.sh test -j --upload-cov
+            ./software/gui/gui.sh test -j
+      - codecov/upload:
+          file: './software/gui/coverage_reports/coverage.info'
+          flags: 'gui'
 
   debug-tests:
     machine:

@@ -4,7 +4,7 @@ _Information below only for posterity._
 
 ## How to use this page
 This is a high-level overview of what we want to achieve for v0.2 (a.k.a Covent) milestone. Up-to-date state of its implementation
-is [here](https://docs.google.com/document/d/1CHgz-y6wV6duTg66s1h8-wZZ6Tn22U1iL5WtjhSYQgk/edit#). Requirements are captured on Valispace.
+is [here](https://docs.google.com/document/d/1CHgz-y6wV6duTg66s1h8-wZZ6Tn22U1iL5WtjhSYQgk). Requirements are captured on Valispace.
 
 ## Date
 

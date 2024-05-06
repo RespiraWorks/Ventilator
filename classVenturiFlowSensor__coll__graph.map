@@ -1,0 +1,7 @@
+<map id="VenturiFlowSensor" name="VenturiFlowSensor">
+<area shape="rect" id="node1" title=" " alt="" coords="38,323,181,349"/>
+<area shape="rect" id="node2" href="$classFlowSensor.html" title=" " alt="" coords="61,247,158,273"/>
+<area shape="rect" id="node3" href="$classDebug_1_1Variable_1_1Float.html" title=" " alt="" coords="26,157,193,184"/>
+<area shape="rect" id="node4" href="$classDebug_1_1Variable_1_1Primitive32.html" title=" " alt="" coords="5,81,213,108"/>
+<area shape="rect" id="node5" href="$classDebug_1_1Variable_1_1Base.html" title="Abstract base class for debug variables." alt="" coords="27,5,192,32"/>
+</map>

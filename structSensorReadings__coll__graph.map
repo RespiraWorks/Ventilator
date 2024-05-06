@@ -1,0 +1,8 @@
+<map id="SensorReadings" name="SensorReadings">
+<area shape="rect" id="node1" title=" " alt="" coords="721,49,848,75"/>
+<area shape="rect" id="node2" href="$classPressure.html" title=" " alt="" coords="459,13,538,39"/>
+<area shape="rect" id="node3" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="205,5,380,47"/>
+<area shape="rect" id="node4" href="$classUnitsDetail_1_1Scalar.html" title=" " alt="" coords="5,39,148,80"/>
+<area shape="rect" id="node6" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="197,71,388,112"/>
+<area shape="rect" id="node5" href="$classVolumetricFlow.html" title=" " alt="" coords="437,82,560,109"/>
+</map>

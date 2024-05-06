@@ -1,0 +1,4 @@
+<map id="SoftRxBuffer&lt; RxBytesMax &gt;" name="SoftRxBuffer&lt; RxBytesMax &gt;">
+<area shape="rect" id="node1" title="This class is used for GUI but is also convenient for testing the FrameDetector class since bytes can..." alt="" coords="5,80,220,107"/>
+<area shape="rect" id="node2" href="$classRxBuffer.html" title="Abstract class for serial receiver buffers." alt="" coords="73,5,152,32"/>
+</map>

@@ -56,6 +56,7 @@ RespiraWorks Ventilator UI build & test utilities.
 The following options are available:
   install     One-time installation of build toolchain and dependencies
   clean       Clean build directory
+  check       Runs static checks only (must build first)
   build       Build the gui to /build, options:
       [--relase/--debug] - what it says (default=release)
       [-j]               - parallel build (auto select max-1 cores)
@@ -132,6 +133,7 @@ configure_conan() {
 run_cppcheck() {
   create_clean_directory  build/cppcheck
   cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
+           --enable=information --check-config \
            -I ../common/generated_libs/protocols \
            -I ../common/libs/units \
            -ibuild -icmake-build-stm32 -isrc/protocols \
@@ -149,11 +151,11 @@ run_clang_tidy() {
   j_opt=$1
 
   CLANG_TIDY_EXEC=""
-  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
+  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 1p)" | awk -F[" ".] '{print $5}')
   if [ "$CLANG_TIDY_VERSION" = "6" ]; then
     CLANG_TIDY_EXEC="run-clang-tidy-6.0.py"
   else
-    CLANG_TIDY_EXEC="run-clang-tidy-${CLANG_TIDY_VERSION}.py"
+    CLANG_TIDY_EXEC="run-clang-tidy"
   fi
   echo "running $CLANG_TIDY_EXEC"
   find . -name '*.cpp' -not -path "*build*" \

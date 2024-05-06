@@ -151,7 +151,7 @@ run_clang_tidy() {
   j_opt=$1
 
   CLANG_TIDY_EXEC=""
-  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 1p)" | awk -F[" ".] '{print $5}')
+  CLANG_TIDY_VERSION=$(echo "$(clang-tidy --version | sed -n 2p)" | awk -F[" ".] '{print $5}')
   if [ "$CLANG_TIDY_VERSION" = "6" ]; then
     CLANG_TIDY_EXEC="run-clang-tidy-6.0.py"
   else

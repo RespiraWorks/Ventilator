@@ -14,7 +14,7 @@
 
 This is a common repository for all hardware and software components of the RespiraWorks open source ventilator.
 
-**If you intend to contribute, please read our [wiki](https://github.com/RespiraWorks/Ventilator/wiki).**
+**If you intend to contribute, please read our [wiki](https://github.com/RespiraWorks/Ventilator/wiki) and [agreement](https://respiraworks.github.io/Ventilator/contributing/contributing.html).**
 
 [RespiraWorks](https://respira.works/) is a 501(c)(3) non-profit organization with over 200 contributors worldwide working to design a low-cost and [open-source](open_source.md) ventilator for communities underserved by the global supply chain. Our objective is to provide the know-how and technology to enable local enterprises to manufacture and service these systems.
 

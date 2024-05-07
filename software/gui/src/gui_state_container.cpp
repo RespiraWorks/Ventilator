@@ -47,7 +47,7 @@ GuiStatus GuiStateContainer::GetGuiStatus() {
         return VentMode::VentMode_HIGH_FLOW_NASAL_CANNULA;
       default:
         // Should never happen.
-        CRIT("Unexpected commanded_mode: {}", commanded_mode_);
+        CRIT("Unexpected commanded_mode: {}", fmt::underlying(commanded_mode_));
         return VentMode::VentMode_PRESSURE_CONTROL;
     }
   }();

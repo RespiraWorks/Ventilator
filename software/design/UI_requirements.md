@@ -105,7 +105,7 @@ The screen resolution is 1024x600.
 
 **Remote observation/control**
 * Things must be **visible from a distance of N meters**. The Covent reqs say from 1 meter, but per
-[notes](https://docs.google.com/document/d/1QFFcg2gL3PXXzyqgSBz3XZQm_oobZ2osFuErh492UEA/edit) drs often want to observe
+[notes](https://docs.google.com/document/d/1QFFcg2gL3PXXzyqgSBz3XZQm_oobZ2osFuErh492UEA) drs often want to observe
 the screen from outside the patient's room, to decrease exposure to infection.
 * Nice-to-have: remote control - also to decrease exposure.
 

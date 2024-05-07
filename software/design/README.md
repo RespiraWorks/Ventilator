@@ -95,11 +95,6 @@ change the protocol and potentially interoperate with other systems.
 
 ## Other documents
 
-For an overview of the software modules, see the Ventilator software architecture
-[document](https://docs.google.com/document/d/1FPB31V72r_keu1_xjUfYCUXGLxBC5hoyCT1naPNNNTA).
-
-**TODO:** Migrate contents of the above document to github.
-
 There is a document defining the [ventilation modes](ventilation_modes.md) we intend to support.
 
 ## Testing considerations

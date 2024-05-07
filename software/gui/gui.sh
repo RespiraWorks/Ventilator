@@ -18,7 +18,7 @@
 # ./gui.sh --help
 
 # \todo: keep CONAN_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-CONAN_VERSION=1.59
+CONAN_VERSION=2.2.3
 
 # Fail if any command fails
 set -e
@@ -56,6 +56,7 @@ RespiraWorks Ventilator UI build & test utilities.
 The following options are available:
   install     One-time installation of build toolchain and dependencies
   clean       Clean build directory
+  check       Runs static checks only (must build first)
   build       Build the gui to /build, options:
       [--relase/--debug] - what it says (default=release)
       [-j]               - parallel build (auto select max-1 cores)
@@ -126,13 +127,13 @@ configure_conan() {
   pip3 install gitpython
   pip3 install conan==$CONAN_VERSION
   source "${HOME}/.profile"
-  conan profile new --detect default
-  conan profile update settings.compiler.libcxx=libstdc++11 default
+  conan profile detect
 }
 
 run_cppcheck() {
   create_clean_directory  build/cppcheck
   cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
+           --enable=information --check-config \
            -I ../common/generated_libs/protocols \
            -I ../common/libs/units \
            -ibuild -icmake-build-stm32 -isrc/protocols \
@@ -154,7 +155,7 @@ run_clang_tidy() {
   if [ "$CLANG_TIDY_VERSION" = "6" ]; then
     CLANG_TIDY_EXEC="run-clang-tidy-6.0.py"
   else
-    CLANG_TIDY_EXEC="run-clang-tidy-${CLANG_TIDY_VERSION}.py"
+    CLANG_TIDY_EXEC="run-clang-tidy"
   fi
   echo "running $CLANG_TIDY_EXEC"
   find . -name '*.cpp' -not -path "*build*" \
@@ -201,15 +202,6 @@ generate_coverage_reports() {
 
 launch_browser() {
   python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
-}
-
-upload_coverage_reports() {
-  echo "Uploading coverage reports to Codecov"
-
-  curl -Os https://uploader.codecov.io/latest/linux/codecov
-  chmod +x codecov
-  ./codecov -F gui
-  rm codecov
 }
 
 ########
@@ -359,10 +351,6 @@ elif [ "$1" == "test" ]; then
   if [ "$2" != "--no-cov" ] && [ "$3" != "--no-cov" ] \
    && [ "$4" != "--no-cov" ] && [ "$5" != "--no-cov" ]; then
     generate_coverage_reports
-    if [ "$2" == "--upload-cov" ] || [ "$3" == "--upload-cov" ] \
-     || [ "$4" == "--upload-cov" ] || [ "$5" == "--upload-cov" ]; then
-      upload_coverage_reports
-    fi
   fi
 
   exit $EXIT_SUCCESS

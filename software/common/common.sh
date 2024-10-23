@@ -112,6 +112,7 @@ install_linux() {
                protobuf-compiler \
                python-is-python3 \
                python3-pip
+  pipx ensurepath
   pipx install --force nanopb
 #  pipx install --force setuptools
   pipx install --force platformio==${PIO_VERSION}
@@ -140,9 +141,10 @@ generate_network_protocols() {
   #ensure old files are gone
   rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
 
+#  -I $PROTO_INCLUDES \
+
   protoc \
   --plugin=$NANOPB_PLUGIN \
-  -I $PROTO_INCLUDES \
   -I $PROTOCOLS_DIR \
   --nanopb_out=$PROTOCOLS_DIR \
   --cpp_out=$GUI_LIB_PATH \

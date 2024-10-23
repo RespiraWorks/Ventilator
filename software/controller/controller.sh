@@ -125,6 +125,7 @@ clean_all() {
 
 install_debugger_deps() {
 #  \todo deprecated!
+  pipx ensurepath
   pipx install --force pyserial
   pipx install --force matplotlib
   pipx install --force pandas

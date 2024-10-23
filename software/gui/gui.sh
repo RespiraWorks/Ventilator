@@ -124,6 +124,7 @@ install_linux() {
 
 configure_conan() {
 #  pipx install --force gitpython
+  pipx ensurepath
   pipx install --force conan==$CONAN_VERSION
   source "${HOME}/.profile"
   conan profile detect

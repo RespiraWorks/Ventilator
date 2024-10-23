@@ -24,7 +24,7 @@ jobs:
 
   common-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     steps:
@@ -36,7 +36,6 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/common/common.sh install
-            lcov --version
       - run:
           name: Run tests & generate coverage reports
           command: |
@@ -61,7 +60,6 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
-            lcov --version
       - run:
           name: Run tests & generate coverage reports
           command: |
@@ -115,11 +113,11 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
-            ./software/controller/controller.sh install_debug_deps
+            ./software/debug/install.sh install
       - run:
           name: Run unit tests
           command: |
-            pytest software/utils/debug/unit_test.py -v
+            pytest software/debug/unit_test.py -v
 
 
 workflows:

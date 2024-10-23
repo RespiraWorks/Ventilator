@@ -32,8 +32,6 @@
 # - They have to have a very good chance of passing for other
 #   developers if they run via ./controller.sh test
 
-# \todo: make sure this is only defined in common.sh
-PIO_VERSION=6.1.16
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 
@@ -123,25 +121,6 @@ clean_all() {
   clean_dir ${COVERAGE_OUTPUT_DIR}
 }
 
-install_debugger_deps() {
-#  \todo deprecated!
-  sudo apt update
-  sudo apt install -y \
-           pipx \
-           python-is-python3 \
-           python3-pip
-
-  pipx ensurepath
-  pipx install --force pyserial
-  pipx install --force matplotlib
-  pipx install --force pandas
-  pipx install --force gitpython
-  pipx install --force numpy
-  pipx install --force pytest
-  pipx install --force platformio==${PIO_VERSION}
-  source ${HOME}/.profile
-}
-
 configure_platformio() {
   echo 'ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="666"' | sudo tee /etc/udev/rules.d/99-openocd.rules > /dev/null
   curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
@@ -150,12 +129,6 @@ configure_platformio() {
   sudo usermod -a -G plugdev "$USER"
 
   echo "Updated udev rules. You might have to restart your machine for changes to become effective."
-}
-
-update_platformio() {
-  pipx install --force platformio==${PIO_VERSION}
-  pio pkg uninstall -d .
-  pio pkg install -d .
 }
 
 patch_ocd_stlink() {
@@ -259,7 +232,7 @@ print_device_info() {
   if [ ! -z "$SN" ]
   then
     echo "SN has been defined in environment, will be deploying to the following device:"
-    ../utils/debug/debug.sh -c "device find $SN"
+    ../debug/debug.sh -c "device find $SN"
   fi
 }
 
@@ -267,7 +240,7 @@ print_device_info() {
 # prints ST-Link serial number by defined alias
 get_hla_serial() {
   device_alias="$1"
-  ../utils/debug/debug.sh -c "device find $device_alias h"
+  ../debug/debug.sh -c "device find $device_alias h"
 }
 
 # build <target_name>
@@ -381,7 +354,6 @@ elif [ "$1" == "install" ]; then
     echo "Please do not run install with root privileges!"
     exit $EXIT_FAILURE
   fi
-#  install_debugger_deps
   exit $EXIT_SUCCESS
 
 #########################
@@ -410,11 +382,7 @@ elif [ "$1" == "configure" ]; then
 # UPDATE #
 ##########
 elif [ "$1" == "update" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run update with root privileges!"
-    exit $EXIT_SUCCESS
-  fi
-  update_platformio
+  ../common/common.sh install
   exit $EXIT_SUCCESS
 
 #########
@@ -523,9 +491,9 @@ elif [ "$1" == "debug" ]; then
   shift
   if [ ! -z "$SN" ]
   then
-    ../utils/debug/debug.sh -d $SN "$@"
+    ../debug/debug.sh -d $SN "$@"
   else
-    ../utils/debug/debug.sh "$@"
+    ../debug/debug.sh "$@"
   fi
   exit $EXIT_SUCCESS
 
@@ -557,7 +525,7 @@ elif [ "$1" == "integrate" ]; then
 # DEVICES #
 ###########
 elif [ "$1" == "devices" ]; then
-  ../utils/debug/debug.sh -c "device list"
+  ../debug/debug.sh -c "device list"
   exit $EXIT_SUCCESS
 
 ################

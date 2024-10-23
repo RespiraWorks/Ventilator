@@ -10,6 +10,7 @@ These are utilities for bench testing with mechanical lung simulators only. It i
 * [design](design) - documents on software architecture and requirements
 * [common](common) - code common to both controller and GUI executables
 * [controller](controller) - code for pneumatic system controller (stm32)
+* [debug](debug) - controller debug client for examining and manipulating low level variables, calibration, and testing
 * [gui](gui) - code for the ventilator graphical interface (Qt)
 * [utils](utils) - scripts for debugging controller and mocking communications interface
 

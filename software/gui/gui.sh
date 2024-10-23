@@ -182,7 +182,6 @@ generate_coverage_reports() {
        --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
        "*/ventilator_gui_backend_autogen/*" \
-       "*/protocols/*" \
        "*/tests/*" \
        "*spdlog*" \
        "*fmt*" \

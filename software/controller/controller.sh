@@ -32,8 +32,8 @@
 # - They have to have a very good chance of passing for other
 #   developers if they run via ./controller.sh test
 
-# \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.6
+# \todo: make sure this is only defined in common.sh
+PIO_VERSION=6.1.16
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 
@@ -125,6 +125,11 @@ clean_all() {
 
 install_debugger_deps() {
 #  \todo deprecated!
+  sudo apt install -y \
+           pipx \
+           python-is-python3 \
+           python3-pip
+
   pipx ensurepath
   pipx install --force pyserial
   pipx install --force matplotlib
@@ -216,13 +221,16 @@ generate_coverage_reports() {
 
   # cannot use --exclude as v1.13 on CI doesn't support that param
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info"
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+       --ignore-errors mismatch
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
-  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info"  \
+       --ignore-errors unused \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
        "*_test_transport.c" \
+       "*/protocols/*" \
        "*output_export.c*" \
        "*common*" \
        "*test*" \

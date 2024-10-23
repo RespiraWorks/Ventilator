@@ -27,7 +27,7 @@
 # environment differences, so the approximation is not perfect. For
 
 # \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.6
+PIO_VERSION=6.1.16
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 
@@ -100,18 +100,18 @@ clean_all() {
 install_linux() {
   sudo apt update
   sudo apt install -y \
-               build-essential \
-               clang-tidy \
-               cppcheck \
-               curl \
-               gcovr \
-               git \
-               lcov \
-               libtinfo6 \
-               pipx \
-               protobuf-compiler \
-               python-is-python3 \
-               python3-pip
+           build-essential \
+           clang-tidy \
+           cppcheck \
+           curl \
+           gcovr \
+           git \
+           lcov \
+           libtinfo6 \
+           pipx \
+           protobuf-compiler \
+           python-is-python3 \
+           python3-pip
   pipx ensurepath
   pipx install --force nanopb
 #  pipx install --force setuptools
@@ -207,12 +207,14 @@ generate_coverage_reports() {
 
   # cannot use --exclude as v1.13 on CI doesn't support that param
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info"
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+       --ignore-errors mismatch
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
+       --ignore-errors unused \
        "*_test_transport.c" \
        "*/protocols/*" \
        "*output_export.c*" \

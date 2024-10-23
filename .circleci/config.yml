@@ -36,6 +36,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/common/common.sh install
+            lcov --version
       - run:
           name: Run tests & generate coverage reports
           command: |
@@ -60,6 +61,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/controller/controller.sh install
+            lcov --version
       - run:
           name: Run tests & generate coverage reports
           command: |

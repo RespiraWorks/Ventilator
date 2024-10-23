@@ -125,6 +125,7 @@ clean_all() {
 
 install_debugger_deps() {
 #  \todo deprecated!
+  sudo apt update
   sudo apt install -y \
            pipx \
            python-is-python3 \
@@ -227,8 +228,8 @@ generate_coverage_reports() {
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info"  \
-       --ignore-errors unused \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
+       --ignore-errors unused \
        "*_test_transport.c" \
        "*/protocols/*" \
        "*output_export.c*" \

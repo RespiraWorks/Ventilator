@@ -47,7 +47,7 @@ jobs:
 
   controller-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: large
@@ -71,7 +71,7 @@ jobs:
 
   gui-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     resource_class: large
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
@@ -101,7 +101,7 @@ jobs:
 
   debug-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: medium
@@ -113,7 +113,7 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
-            ./software/controller/controller.sh install
+            ./software/controller/controller.sh install_debug_deps
       - run:
           name: Run unit tests
           command: |

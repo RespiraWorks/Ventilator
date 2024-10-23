@@ -98,38 +98,41 @@ clean_all() {
 }
 
 install_linux() {
-  sudo apt-get update
-  sudo apt-get install -y \
+  sudo apt update
+  sudo apt install -y \
                build-essential \
-               python3-pip \
-               git \
-               curl \
-               libtinfo5 \
-               cppcheck \
-               gcovr \
-               lcov \
                clang-tidy \
-               protobuf-compiler
-  pip3 install -U pip
-  pip3 install nanopb
-  pip3 install setuptools
-  pip3 install platformio==${PIO_VERSION}
-  source ${HOME}/.profile
+               cppcheck \
+               curl \
+               gcovr \
+               git \
+               lcov \
+               libtinfo6 \
+               pipx \
+               protobuf-compiler \
+               python-is-python3 \
+               python3-pip
+  pipx install --force nanopb
+#  pipx install --force setuptools
+  pipx install --force platformio==${PIO_VERSION}
+  source "${HOME}/.profile"
 }
 
 update_platformio() {
-  python3 -m pip install --upgrade pip
-  pip3 install platformio==${PIO_VERSION}
+  pipx install --force platformio==${PIO_VERSION}
   pio pkg uninstall -d .
   pio pkg install -d .
-  exit $EXIT_SUCCESS
 }
 
 generate_network_protocols() {
   PROTOCOLS_DIR=generated_libs/protocols
   PYTHON_LIB_PATH=../utils/debug/protocols
   GUI_LIB_PATH=../gui/src/protocols
-  NANOPB_PATH=$(pip3 show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
+#  NANOPB_PATH=$(pipx show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
+#  NANOPB_PLUGIN=${NANOPB_PATH}/protoc-gen-nanopb
+  NANOPB_PLUGIN=${HOME}/.local/bin/protoc-gen-nanopb
+#  PROTO_INCLUDES=${NANOPB_PATH}/proto
+  PROTO_INCLUDES=${HOME}/proto
 
   # ensure paths exist
   mkdir -p "$PYTHON_LIB_PATH"
@@ -138,8 +141,8 @@ generate_network_protocols() {
   rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
 
   protoc \
-  --plugin=$NANOPB_PATH/protoc-gen-nanopb \
-  -I $NANOPB_PATH/proto \
+  --plugin=$NANOPB_PLUGIN \
+  -I $PROTO_INCLUDES \
   -I $PROTOCOLS_DIR \
   --nanopb_out=$PROTOCOLS_DIR \
   --cpp_out=$GUI_LIB_PATH \

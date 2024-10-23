@@ -123,9 +123,15 @@ clean_all() {
   clean_dir ${COVERAGE_OUTPUT_DIR}
 }
 
-install_linux() {
-  pip3 install pyserial matplotlib pandas gitpython numpy pytest
-  pip3 install platformio==${PIO_VERSION}
+install_debugger_deps() {
+#  \todo deprecated!
+  pipx install --force pyserial
+  pipx install --force matplotlib
+  pipx install --force pandas
+  pipx install --force gitpython
+  pipx install --force numpy
+  pipx install --force pytest
+  pipx install --force platformio==${PIO_VERSION}
   source ${HOME}/.profile
 }
 
@@ -140,11 +146,9 @@ configure_platformio() {
 }
 
 update_platformio() {
-  python3 -m pip install --upgrade pip
-  pip3 install platformio==${PIO_VERSION}
+  pipx install --force platformio==${PIO_VERSION}
   pio pkg uninstall -d .
   pio pkg install -d .
-  exit $EXIT_SUCCESS
 }
 
 patch_ocd_stlink() {
@@ -367,7 +371,18 @@ elif [ "$1" == "install" ]; then
     echo "Please do not run install with root privileges!"
     exit $EXIT_FAILURE
   fi
-  install_linux
+#  install_debugger_deps
+  exit $EXIT_SUCCESS
+
+#########################
+# INSTALL DEBUGGER DEPS #
+#########################
+elif [ "$1" == "install_debug_deps" ]; then
+  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
+    echo "Please do not run install with root privileges!"
+    exit $EXIT_FAILURE
+  fi
+  install_debugger_deps
   exit $EXIT_SUCCESS
 
 #############

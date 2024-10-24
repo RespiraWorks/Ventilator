@@ -113,11 +113,13 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
-            ./software/debug/install.sh install
+            ./software/common/common.sh install
       - run:
           name: Run unit tests
           command: |
-            pytest software/debug/unit_test.py -v
+            cd software/debug
+            poetry install
+            poetry run pytest -v
 
 
 workflows:

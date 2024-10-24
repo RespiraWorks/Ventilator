@@ -20,8 +20,8 @@ __license__ = """
 
 """
 
-from debug_lib.test_scenario import TestScenario
-from util.colors import red
+from debug.debug_lib.test_scenario import TestScenario
+from debug.util.colors import red
 import datetime
 import matplotlib.pyplot as plt
 import dateutil.parser

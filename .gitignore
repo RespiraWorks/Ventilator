@@ -3,7 +3,6 @@ software/common/generated_libs/protocols/*.c
 software/common/generated_libs/protocols/*.h
 software/gui/src/protocols/*.cc
 software/gui/src/protocols/*.h
-software/utils/debug/protocols/*
 
 build/
 build_autotests/
@@ -40,9 +39,7 @@ OldVersions/
 .clangd/
 .*.swp
 *.map
-__pycache__/
 last_graph.dat
-.pytype/
 
 coverage_reports
 

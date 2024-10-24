@@ -32,13 +32,17 @@ import traceback
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
-from util.colors import *
-from util.error import Error
-from util.serial_detect import DeviceScanner
-from debug_lib.controller_debug import ControllerDebugInterface, MODE_BOOT
-from debug_lib.var_info import VAR_ACCESS_READ_ONLY, VAR_ACCESS_WRITE, VAR_FLOAT_ARRAY
-import debug_lib.test_data
-import debug_funcs
+from debug.util.colors import *
+from debug.util.error import Error
+from debug.util.serial_detect import DeviceScanner
+from debug.debug_lib.controller_debug import ControllerDebugInterface, MODE_BOOT
+from debug.debug_lib.var_info import (
+    VAR_ACCESS_READ_ONLY,
+    VAR_ACCESS_WRITE,
+    VAR_FLOAT_ARRAY,
+)
+import debug.debug_lib.test_data as test_data
+import debug.debug_funcs as debug_funcs
 
 MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
 LOCAL_DATA_PATH = "../../../local_data"

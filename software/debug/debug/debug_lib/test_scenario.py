@@ -22,7 +22,7 @@ __license__ = """
 
 """
 
-from util.colors import Color, blue
+from debug.util.colors import Color, blue
 from typing import Dict
 from pathlib import Path
 import pandas

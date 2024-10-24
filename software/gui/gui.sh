@@ -100,32 +100,32 @@ create_clean_directory() {
 
 install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
-  sudo apt-get install -y \
-          cmake \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          qtmultimedia5-dev \
-          qtdeclarative5-dev \
-          qtdeclarative5-dev-tools \
-          qtquickcontrols2-5-dev \
-          libqt5serialport5 \
-          libqt5serialport5-dev \
-          libqt5multimedia5 \
-          libqt5multimedia5-plugins \
-          libqt5multimediaquick5 \
-          libqt5multimediawidgets5 \
-          qml-module-qtcharts \
-          qml-module-qtquick-controls \
-          qml-module-qtquick-controls2 \
-          qml-module-qtmultimedia \
-          pulseaudio \
-          xvfb
+  sudo apt install -y \
+           cmake \
+           qtbase5-dev \
+           qtbase5-dev-tools \
+           qtmultimedia5-dev \
+           qtdeclarative5-dev \
+           qtdeclarative5-dev-tools \
+           qtquickcontrols2-5-dev \
+           libqt5serialport5 \
+           libqt5serialport5-dev \
+           libqt5multimedia5 \
+           libqt5multimedia5-plugins \
+           libqt5multimediaquick5 \
+           libqt5multimediawidgets5 \
+           qml-module-qtcharts \
+           qml-module-qtquick-controls \
+           qml-module-qtquick-controls2 \
+           qml-module-qtmultimedia \
+           pulseaudio \
+           xvfb
 }
 
 configure_conan() {
-  sudo pip3 install -U pip
-  pip3 install gitpython
-  pip3 install conan==$CONAN_VERSION
+#  pipx install --force gitpython
+  pipx ensurepath
+  pipx install --force conan==$CONAN_VERSION
   source "${HOME}/.profile"
   conan profile detect
 }
@@ -182,7 +182,6 @@ generate_coverage_reports() {
        --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
        "*/ventilator_gui_backend_autogen/*" \
-       "*/protocols/*" \
        "*/tests/*" \
        "*spdlog*" \
        "*fmt*" \

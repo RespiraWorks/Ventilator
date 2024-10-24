@@ -27,7 +27,7 @@
 # environment differences, so the approximation is not perfect. For
 
 # \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.6
+PIO_VERSION=6.1.16
 COVERAGE_ENVIRONMENT=native
 COVERAGE_OUTPUT_DIR=coverage_reports
 
@@ -98,38 +98,43 @@ clean_all() {
 }
 
 install_linux() {
-  sudo apt-get update
-  sudo apt-get install -y \
-               build-essential \
-               python3-pip \
-               git \
-               curl \
-               libtinfo5 \
-               cppcheck \
-               gcovr \
-               lcov \
-               clang-tidy \
-               protobuf-compiler
-  pip3 install -U pip
-  pip3 install nanopb
-  pip3 install setuptools
-  pip3 install platformio==${PIO_VERSION}
-  source ${HOME}/.profile
+  sudo apt update
+  sudo apt install -y \
+           build-essential \
+           clang-tidy \
+           cppcheck \
+           curl \
+           gcovr \
+           git \
+           lcov \
+           libtinfo6 \
+           pipx \
+           protobuf-compiler \
+           python-is-python3 \
+           python3-pip
+  pipx ensurepath
+  pipx install --force nanopb
+  pipx install --force poetry
+#  pipx install --force setuptools
+  pipx install --force platformio==${PIO_VERSION}
+  source "${HOME}/.profile"
 }
 
 update_platformio() {
-  python3 -m pip install --upgrade pip
-  pip3 install platformio==${PIO_VERSION}
+  pipx install --force platformio==${PIO_VERSION}
   pio pkg uninstall -d .
   pio pkg install -d .
-  exit $EXIT_SUCCESS
 }
 
 generate_network_protocols() {
   PROTOCOLS_DIR=generated_libs/protocols
-  PYTHON_LIB_PATH=../utils/debug/protocols
+  PYTHON_LIB_PATH=../debug/protocols
   GUI_LIB_PATH=../gui/src/protocols
-  NANOPB_PATH=$(pip3 show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
+#  NANOPB_PATH=$(pipx show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
+#  NANOPB_PLUGIN=${NANOPB_PATH}/protoc-gen-nanopb
+  NANOPB_PLUGIN=${HOME}/.local/bin/protoc-gen-nanopb
+#  PROTO_INCLUDES=${NANOPB_PATH}/proto
+  PROTO_INCLUDES=${HOME}/proto
 
   # ensure paths exist
   mkdir -p "$PYTHON_LIB_PATH"
@@ -137,9 +142,10 @@ generate_network_protocols() {
   #ensure old files are gone
   rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
 
+#  -I $PROTO_INCLUDES \
+
   protoc \
-  --plugin=$NANOPB_PATH/protoc-gen-nanopb \
-  -I $NANOPB_PATH/proto \
+  --plugin=$NANOPB_PLUGIN \
   -I $PROTOCOLS_DIR \
   --nanopb_out=$PROTOCOLS_DIR \
   --cpp_out=$GUI_LIB_PATH \
@@ -202,12 +208,14 @@ generate_coverage_reports() {
 
   # cannot use --exclude as v1.13 on CI doesn't support that param
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info"
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+       --ignore-errors mismatch
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
+       --ignore-errors unused \
        "*_test_transport.c" \
        "*/protocols/*" \
        "*output_export.c*" \

@@ -1,6 +1,6 @@
 # Debug serial interface
 
-The controller debug interface should be run using [debug.sh](debug.sh) wrapper of from the common controller utilities script at [software/controller/controller.sh](../../controller/controller.sh)
+The controller debug interface should be run using [debug.sh](debug.sh) wrapper or from the common controller utilities script at [software/controller/controller.sh](../../controller/controller.sh)
 
 This Python script can be used to interface with the controller via the virtual serial port that is created when you plug a USB cable into the controller's debug port. The command line interface allows you to examine and directly manipulate a number of low level variables, as well as run calibration routines and automated performance tests.
 

@@ -1,0 +1,90 @@
+[tool.poetry]
+name = "debug"
+version = "0.1.0"
+description = "RespiraWorks ventilator debug interface"
+authors = ["Martin Shetty <1972005+martukas@users.noreply.github.com>"]
+readme = "README.md"
+packages = [
+    {include = "debug"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pyserial = "^3.5"
+matplotlib = "^3.9.2"
+pandas = "^2.2.3"
+gitpython = "^3.1.43"
+platformio = "^6.1.16"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+ruff = "^0.7.0"
+mypy = "^1.13.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+debug = "debug.debug_cli:main"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+
+# See ruff configuration docs at https://docs.astral.sh/ruff/configuration/
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    ".venv",
+    "extern"
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "C901",  # too complex
+]
+extend-select = [
+    "UP",  # pyupgrade
+]
+fixable = ["ALL"]
+unfixable = ["B"] # Avoid trying to fix flake8-bugbear (`B`) violations.
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+extra-standard-library = ["typing"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+known-first-party = []
+
+[tool.ruff.format]
+quote-style = "double"  # Like Black, use double quotes for strings.
+indent-style = "space"  # Like Black, indent with spaces, rather than tabs.
+skip-magic-trailing-comma = false # Like Black, respect magic trailing commas.
+line-ending = "auto" # Like Black, automatically detect the appropriate line ending.
+docstring-code-format = false  # Will be opt-out in the future
+docstring-code-line-length = "dynamic"
+
+[tool.mypy]
+disallow_untyped_defs = "True"
+disallow_any_unimported = "True"
+no_implicit_optional = "True"
+check_untyped_defs = "True"
+warn_return_any = "True"
+warn_unused_ignores = "True"
+show_error_codes = "True"

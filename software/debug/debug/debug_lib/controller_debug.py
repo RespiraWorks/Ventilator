@@ -20,12 +20,12 @@ __license__ = """
 
 """
 
-import debug_lib.debug_types as debug_types
-import debug_lib.var_info as var_info
-from debug_lib.test_scenario import TestScenario
-from debug_lib.test_data import *
-from util.error import Error
-from util.colors import red, orange
+import debug.debug_lib.debug_types as debug_types
+import debug.debug_lib.var_info as var_info
+from debug.debug_lib.test_scenario import TestScenario
+from debug.debug_lib.test_data import *
+from debug.util.error import Error
+from debug.util.colors import red, orange
 import serial
 import threading
 import time

@@ -1,5 +1,5 @@
-import debug_funcs
-from debug_cli import CmdLine
+import debug.debug_funcs as debug_funcs
+from debug.debug_cli import CmdLine
 import numpy as np
 import pytest
 

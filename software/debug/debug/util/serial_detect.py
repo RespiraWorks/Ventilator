@@ -22,7 +22,7 @@ __license__ = """
 
 """
 
-from util.colors import green, red, gray
+from debug.util.colors import green, red, gray
 import json
 import pandas
 import subprocess

@@ -114,6 +114,7 @@ install_linux() {
            python3-pip
   pipx ensurepath
   pipx install --force nanopb
+  pipx install --force poetry
 #  pipx install --force setuptools
   pipx install --force platformio==${PIO_VERSION}
   source "${HOME}/.profile"

@@ -75,7 +75,6 @@ install_linux() {
            make \
            doxygen \
            pipx \
-           graphviz \
            python-is-python3 \
            python3-pip
   pipx ensurepath
@@ -86,10 +85,10 @@ install_linux() {
 
 build_all() {
   source "${HOME}/.profile"
-
-  ./wiring/make_wiring.sh
-  ./purchasing/make_parts.sh
-  make html
+  poetry install
+  poetry run wiring -d ./wiring
+  poetry run parts -f ./purchasing/parts.json
+  poetry run make html
 }
 
 launch_browser() {
@@ -127,9 +126,9 @@ elif [ "$1" == "clean" ]; then
   clean_all
   exit $EXIT_SUCCESS
 
-########
-# MAKE #
-########
+#########
+# BUILD #
+#########
 elif [ "$1" == "build" ]; then
   if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
     echo "Please do not run build with root privileges!"

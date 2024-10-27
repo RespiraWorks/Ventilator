@@ -22,20 +22,20 @@ __license__ = """
 
 """
 
+import argparse
 import json
 from pathlib import Path
 
 
-def from_json(file_name):
+def from_json(file_name: Path):
     ret = {}
-    with open(file_name, "r") as json_file:
-        j = json.load(json_file)
-        for tsd in j:
-            ret[tsd["pn"]] = tsd
+    j = json.loads(file_name.read_text())
+    for tsd in j:
+        ret[tsd["pn"]] = tsd
     return ret
 
 
-def make_table_line(supplier_data, unit):
+def make_table_line(supplier_data, unit) -> str:
     price = supplier_data["price"]
     price_units = supplier_data["price_units"]
     price_string = f"{price}"
@@ -49,7 +49,7 @@ def make_table_line(supplier_data, unit):
     return ret
 
 
-def make_table(supplier_data, unit):
+def make_table(supplier_data, unit) -> str:
     ret = ""
     ret += ".. list-table::\n"
     ret += "   :widths: 20 30 10 10\n"
@@ -67,7 +67,7 @@ def make_table(supplier_data, unit):
     return ret
 
 
-def make_rst(part_data):
+def make_rst(part_data) -> str:
     pn = part_data.get("pn", None)
     notes = part_data.get("notes", None)
     manufacturer = part_data.get("manufacturer", None)
@@ -94,14 +94,8 @@ def make_rst(part_data):
     return ret
 
 
-def main():
-
-    in_file = Path("parts.json")
+def generate_parts_rst(in_file: Path, out_file: Path) -> None:
     parts = from_json(in_file)
-
-    out_file = Path("parts.rst")
-    print(f"Generating {out_file}:")
-
     with open(out_file, "w") as f:
         f.write("Parts\n")
         f.write("-----\n")
@@ -109,6 +103,35 @@ def main():
         for key in sorted(parts.keys()):
             print(f"  {key}")
             f.write(make_rst(parts[key]))
+
+
+def json_arg(path: str) -> Path:
+    ret = Path(path)
+    if ret.suffix != ".json":
+        raise argparse.ArgumentTypeError(f"Not a json file: {ret}")
+    if not ret.is_file():
+        raise argparse.ArgumentTypeError(f"File not found: {ret}")
+    return ret
+
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-f",
+        "--file",
+        type=json_arg,
+        help="File to process",
+        required=True,
+    )
+
+    args = parser.parse_args()
+
+    in_file = args.file
+    out_file = in_file.with_suffix(".rst")
+
+    print(f"Generating {in_file} -> {out_file}:")
+    generate_parts_rst(in_file, out_file)
 
 
 if __name__ == "__main__":

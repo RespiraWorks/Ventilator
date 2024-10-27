@@ -28,7 +28,8 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-wiring = "scripts.make_wiring:main" # TODO change this
+wiring = "scripts.make_wiring:main"
+parts = "scripts.make_parts:main"
 
 # See ruff configuration docs at https://docs.astral.sh/ruff/configuration/
 [tool.ruff]

@@ -75,6 +75,7 @@ install_linux() {
            make \
            doxygen \
            pipx \
+           graphviz \
            python-is-python3 \
            python3-pip
   pipx ensurepath

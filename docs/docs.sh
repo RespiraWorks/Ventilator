@@ -70,20 +70,23 @@ clean_dir() {
 }
 
 install_linux() {
-  sudo apt-get update
-  sudo apt-get install -y \
-               make \
-               doxygen \
-               graphviz \
-               python3-pip
-  pip3 install -U pip
-  pip3 install sphinx-rtd-theme breathe sphinx-sitemap mlx.traceability wireviz pandas
-  source ${HOME}/.profile
+  sudo apt update
+  sudo apt install -y \
+           make \
+           doxygen \
+           pipx \
+           graphviz \
+           python-is-python3 \
+           python3-pip
+  pipx ensurepath
+  pipx install --force poetry
+  source "${HOME}/.profile"
   echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
 }
 
 build_all() {
-  source ${HOME}/.profile
+  source "${HOME}/.profile"
+
   ./wiring/make_wiring.sh
   ./purchasing/make_parts.sh
   make html

@@ -14,29 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OUTPUT_DIR=_build
-
-# Fail if any command fails
-set -e
-set -o pipefail
-
-# Print each command as it executes
-if [ -n "$VERBOSE" ]; then
-  set -o xtrace
-fi
-
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
-EXIT_FAILURE=1
-EXIT_SUCCESS=0
+. ../software/common/base.sh
 
-# Check if Linux
-PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Linux" ]; then
-  echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit $EXIT_FAILURE
-fi
+ensure_linux
+
+OUTPUT_DIR=_build
 
 print_help() {
     cat <<EOF
@@ -57,30 +42,13 @@ clean_all() {
   # \todo clean intermediate files from wiring and parts
 }
 
-clean_dir() {
-  dir_name=$1
-  if [ -d "$dir_name" ]; then
-    echo "Removing $dir_name"
-    rm -rf "$dir_name"
-    return $EXIT_SUCCESS
-  elif [ -f "$dir_name" ]; then
-    echo "File with this name already exists, not a directory."
-    return $EXIT_FAILURE
-  fi
-}
-
 install_linux() {
+  install_py
   sudo apt update
   sudo apt install -y \
            make \
            doxygen \
-           pipx \
-           graphviz \
-           python-is-python3 \
-           python3-pip
-  pipx ensurepath
-  pipx install --force poetry
-  source "${HOME}/.profile"
+           graphviz
   echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
 }
 
@@ -107,58 +75,46 @@ check_links() {
 
 if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
-  exit $EXIT_SUCCESS
+  exit_good
 
 ###########
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run install with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
   install_linux
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CLEAN #
 #########
 elif [ "$1" == "clean" ]; then
   clean_all
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # BUILD #
 #########
 elif [ "$1" == "build" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run build with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
   build_all
-  exit $EXIT_SUCCESS
+  exit_good
 
 ########
 # VIEW #
 ########
 elif [ "$1" == "view" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run view with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
   launch_browser
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CHECK #
 #########
 elif [ "$1" == "check" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run view with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
   check_links
-  exit $EXIT_SUCCESS
+  exit_good
 
 ################
 # ERROR & HELP #
@@ -167,5 +123,5 @@ else
   echo "ERROR: Bad command or insufficient parameters!"
   echo
   print_help
-  exit $EXIT_FAILURE
+  exit_fail
 fi

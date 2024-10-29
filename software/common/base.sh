@@ -80,6 +80,18 @@ function clean_dir() {
   fi
 }
 
+function create_clean_dir() {
+  dir_name=$1
+  clean_dir "$dir_name"
+  if mkdir "$dir_name"; then
+    echo "Clean directory created: $dir_name"
+    return "$EXIT_SUCCESS"
+  else
+    echo "Creating directory failed: $dir_name"
+    return "$EXIT_FAILURE"
+  fi
+}
+
 function install_py() {
   sudo apt update
   sudo apt install -y \

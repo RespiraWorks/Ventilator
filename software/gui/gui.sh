@@ -84,7 +84,7 @@ configure_conan() {
 }
 
 run_cppcheck() {
-  clean_dir  build/cppcheck
+  create_clean_dir  build/cppcheck
   cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
            --enable=information --check-config \
            -I ../common/generated_libs/protocols \
@@ -220,7 +220,7 @@ elif [ "$1" == "build" ]; then
     checks_opt="no"
   fi
 
-  clean_dir build
+  create_clean_dir build
 
   pushd build
   if [ "$checks_opt" == "yes" ]; then
@@ -268,7 +268,7 @@ elif [ "$1" == "test" ]; then
     j_opt="-j${NUM_CPUS}"
   fi
 
-  clean_dir build
+  create_clean_dir build
 
   pushd build
   cmake -DCMAKE_BUILD_TYPE=Debug -DCOV=1 ..

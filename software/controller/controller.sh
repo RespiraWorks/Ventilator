@@ -180,12 +180,16 @@ generate_coverage_reports() {
 
 }
 
+function run_debug() {
+  ../debug/debug.sh "$@"
+}
+
 # prints info from device manifest, if SN is defined in environment
 print_device_info() {
   if [ -n "$SN" ]
   then
     echo "SN has been defined in environment, will be deploying to the following device:"
-    ../debug/debug.sh -c "device find $SN"
+    run_debug -c "device find $SN"
   fi
 }
 
@@ -193,7 +197,7 @@ print_device_info() {
 # prints ST-Link serial number by defined alias
 get_hla_serial() {
   device_alias="$1"
-  ../debug/debug.sh -c "device find $device_alias h"
+  run_debug -c "device find $device_alias h"
 }
 
 # build <target_name>
@@ -408,9 +412,9 @@ elif [ "$1" == "debug" ]; then
   shift
   if [ -n "$SN" ]
   then
-    ../debug/debug.sh -d "$SN" "$@"
+    run_debug -d "$SN" "$@"
   else
-    ../debug/debug.sh "$@"
+    run_debug "$@"
   fi
   exit_good
 
@@ -442,7 +446,7 @@ elif [ "$1" == "integrate" ]; then
 # DEVICES #
 ###########
 elif [ "$1" == "devices" ]; then
-  ../debug/debug.sh -c "device list"
+  run_debug -c "device list"
   exit_good
 
 ################

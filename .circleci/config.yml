@@ -118,7 +118,7 @@ jobs:
           name: Run unit tests
           command: |
             cd software/debug
-            poetry install
+            poetry install --no-interaction
             poetry run pytest -v
 
 

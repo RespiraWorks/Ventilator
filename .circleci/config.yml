@@ -59,7 +59,7 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
-            ./software/controller/controller.sh install
+            ./software/common/common.sh install
       - run:
           name: Run tests & generate coverage reports
           command: |

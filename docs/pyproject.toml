@@ -18,6 +18,9 @@ sphinx-sitemap = "^2.6.0"
 mlx-traceability = "^11.6.0"
 pandas = "^2.2.3"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -16,6 +16,9 @@ pandas = "^2.2.3"
 gitpython = "^3.1.43"
 platformio = "^6.1.16"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

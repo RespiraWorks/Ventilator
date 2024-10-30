@@ -45,7 +45,7 @@ import debug.debug_lib.test_data as test_data
 import debug.debug_funcs as debug_funcs
 
 MANIFEST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRduOfterWmAy_xrc356rRhjz4QDLgOScgG1VPx2-KNeH8zYEe29SCw_DKOJG-5hqSO6BXmG1BumUul/pub?gid=0&single=true&output=tsv"
-LOCAL_DATA_PATH = "../../../local_data"
+LOCAL_DATA_PATH = "../../local_data"
 
 
 class ArgparseShowHelpError(Exception):
@@ -88,10 +88,10 @@ class CmdLine(cmd.Cmd):
     test_data_dir: Path
 
     def __init__(self, connect_to):
-        super(CmdLine, self).__init__()
+        super().__init__()
         script_path = Path(__file__).parent.resolve()
         self.scripts_directory = "scripts"
-        self.test_scenarios_dir = (script_path / "test_scenarios").resolve()
+        self.test_scenarios_dir = (script_path.parent / "scenarios").resolve()
         self.local_data_dir = (script_path / LOCAL_DATA_PATH).resolve(strict=False)
         self.test_data_dir = (self.local_data_dir / "test_data").resolve(strict=False)
         self.device_finder = DeviceScanner(self.local_data_dir / "device_manifest.tsv")

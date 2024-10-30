@@ -67,7 +67,7 @@ Make sure the PEM nuts `[A2]` are installed properly into the support frame `[A1
 The Raspberry Pi serves as the user interface computer for the ventilator. It should be installed onto the PCB **before** attaching the PCB to the support frame.
 
 * install a heat sinks `[A6]` onto the Raspberry Pi `[A5]`
-* set up the memory card `[A7]` with the appropriate operating system and software as described in the [software deployment instructions](../../../software/utils/rpi_config).
+* set up the memory card `[A7]` with the appropriate operating system and software as described in the [software deployment instructions](../../../software/bootstrap).
 * install memory card into the RaspberryPi
 * Install the 22mm spacers `[A10]` onto the PCB `[A3]` at the location where the Raspberry Pi should be mounted.
 * Install the Raspberry Pi `[A5]` onto the PCB `[A3]` using bolts and washers `[A11-12]`.

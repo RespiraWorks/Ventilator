@@ -1,6 +1,5 @@
 import serial  # pip install pySerial
-import struct
-from debug.lib.protocols import network_protocol_pb2
+from protocols import network_protocol_pb2
 import time
 
 p = serial.Serial("/dev/ttyACM0", 115200)

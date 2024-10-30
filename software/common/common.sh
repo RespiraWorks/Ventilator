@@ -70,7 +70,7 @@ update_platformio() {
 
 generate_network_protocols() {
   PROTOCOLS_DIR=generated_libs/protocols
-  PYTHON_LIB_PATH=../debug/protocols
+  PYTHON_LIB_PATH=../tools/protocols
   GUI_LIB_PATH=../gui/src/protocols
   NANOPB_PLUGIN=${HOME}/.local/bin/protoc-gen-nanopb
 
@@ -184,14 +184,6 @@ if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
 elif [ "$1" == "install" ]; then
   ensure_not_root
   install_common_tooling
-  exit_good
-
-###########
-# INSTALL #
-###########
-elif [ "$1" == "install" ]; then
-  ensure_not_root
-  install_linux
   exit_good
 
 ##########

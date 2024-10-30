@@ -24,11 +24,10 @@ if [ -n "$VERBOSE" ]; then
 fi
 
 EXIT_FAILURE=1
-EXIT_SUCCESS=0
 
 # Check if Linux
 PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Linux" ]; then
+if [ "$PLATFORM" != "Linux" ]; then
   echo "Error: This script only supports 'Linux'. You have $PLATFORM."
   exit $EXIT_FAILURE
 fi
@@ -56,7 +55,7 @@ if [ -z "$VERBOSE" ]; then
   echo " THIS WILL MESS WITH YOUR SYSTEM CONFIGURATION."
   echo " THIS IS FOR RASPBERRY-PI ONLY!"
   echo " "
-  read -n1 -s -r -p $'Press any key to continue...\n' key
+  read -n1 -s -r -p $'Press any key to continue...\n' _
 fi
 
 ### Install git-lfs and update the system
@@ -73,7 +72,7 @@ sudo raspi-config nonint do_blanking    1  # disable screen blanking
 sudo raspi-config nonint do_boot_splash 1  # disable splash screen
 
 ### Clone repository without LFS and go in
-cd ${HOME}
+cd "${HOME}"
 GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/RespiraWorks/Ventilator.git ventilator
 cd ventilator
 
@@ -89,24 +88,24 @@ cd ventilator
 git lfs pull -I "software/**"
 
 ### Desktop shortcuts
-/bin/cp -rf software/utils/rpi_config/user/Desktop/* ${HOME}/Desktop
+/bin/cp -rf software/bootstrap/user/Desktop/* "${HOME}/Desktop"
 
 ### On-screen keyboard, in case its needed
-sudo cp -f software/utils/rpi_config/keyboard.xml /usr/share/matchbox-keyboard/
+sudo cp -f software/bootstrap/keyboard.xml /usr/share/matchbox-keyboard/
 
 ### Execute desktop shortcuts without bitching
-mkdir -p ${HOME}/.config/libfm && cp -f software/utils/rpi_config/user/.config/libfm.conf ${HOME}/.config/libfm
+mkdir -p "${HOME}/.config/libfm" && cp -f software/bootstrap/user/.config/libfm.conf "${HOME}/.config/libfm"
 
 # Install dependencies and do initial configuration for build toolchains
 ./software/gui/gui.sh install
-./software/controller/controller.sh install
+./software/common/common.sh install
 ./software/controller/controller.sh configure
 
 if [ -z "$VERBOSE" ]; then
   echo "Installation complete. Please check that this terminated with no errors."
   echo "Upon restart, please run the 'Update' app from your desktop to complete deployment."
   echo " "
-  read -n1 -s -r -p $'Press any key to restart the machine\n' key
+  read -n1 -s -r -p $'Press any key to restart the machine\n' _
 
   sudo shutdown -r now
 fi

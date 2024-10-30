@@ -1,15 +1,19 @@
 # Debug serial interface
 
-The controller debug interface should be run using [debug.sh](debug.sh) wrapper or from the common controller utilities script at [software/controller/controller.sh](../../controller/controller.sh)
+The controller debug interface should be run using [debug.sh](debug.sh) wrapper or from the common controller utilities script at [software/controller/controller.sh](../controller/controller.sh)
 
 This Python script can be used to interface with the controller via the virtual serial port that is created when you plug a USB cable into the controller's debug port. The command line interface allows you to examine and directly manipulate a number of low level variables, as well as run calibration routines and automated performance tests.
 
-To use this debug tool you will need to have Python 3.x installed on your development computer, as well as a number of python packages. Necessary dependencies will be installed by the [controller.sh](../../controller/controller.sh) script.
+To use this debug tool you will need to have Python 3.x installed on your development computer, as well as a number of python packages. Necessary dependencies will be installed by the [controller.sh](../controller/controller.sh) script.
 
 The debug tool was developed and tested using Linux, but it should be possible to use it with other operating systems. The command line interface will allow you to discover available commands using `help`. Some commands provide an "autocomplete" feature you can access with `TAB`. To get help on a specific command, enter help _command name_.  For example, to get a description of the `get` command:
 ```
 [sn:v03e2] help get
 ```
+
+## Regenerating python proto bindings
+
+Use the [common.sh](../common/common.sh) with the `generate` command.
 
 ## Connecting
 
@@ -120,18 +124,18 @@ To retrieve save data and view it, you may type:
 test read 2021-08-15-23-23-23_john_test.json --plot
 ```
 
-Test scenarios are defined in `json` files in the [test_scenarios](test_scenarios) directory. All files in that directory should be loaded when the script starts. You may also see additional commands provided by this interface with `help test`.
+Test scenarios are defined in `json` files in the [scenarios](scenarios) directory. All files in that directory should be loaded when the script starts. You may also see additional commands provided by this interface with `help test`.
 
 ### run
 This command takes the name of a python script and executes it in the same environment that the debug program runs in.  This allows the script to use functions defined in the debug tool to do things like get or set variables. The debug tool will search for scripts in the [scripts](scripts) subdirectory. These scripts may take additional parameters.
 
 ## Unit Tests
 ### Local Setup
-The unit tests for the debug interface were created using pytest. Necessary dependencies will be installed by the [controller.sh](../../controller/controller.sh) script.
+The unit tests for the debug interface were created using pytest. Necessary dependencies will be installed by the [controller.sh](../controller/controller.sh) script.
 
 ### Running Unit Tests Locally
-To run the unit tests, run the following command in Bash (not in the debug interface) within this working directory (`Ventilator/software/utils/debug`):
+To run the unit tests, run the following command in Bash (not in the debug interface) within this working directory (`Ventilator/software/tools`):
 ```bash
-python3 -m pytest --verbose unit_test.py
+poetry run pytest --verbose
 ```
 Omit the verbose flag if you only need to see failed tests.

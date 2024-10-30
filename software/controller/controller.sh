@@ -181,7 +181,7 @@ generate_coverage_reports() {
 }
 
 function run_debug() {
-  ../debug/debug.sh "$@"
+  ../tools/debug.sh "$@"
 }
 
 # prints info from device manifest, if SN is defined in environment

@@ -114,10 +114,11 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
             ./software/common/common.sh install
+            ./software/common/common.sh generate
       - run:
           name: Run unit tests
           command: |
-            cd software/debug
+            cd software/tools
             poetry install --no-interaction
             poetry run pytest -v
 

@@ -12,8 +12,7 @@
 # and specify the other one for ventillator GUI
 
 import serial
-import struct
-from debug.lib.protocols import network_protocol_pb2
+from protocols import network_protocol_pb2
 import time
 import argparse
 import math

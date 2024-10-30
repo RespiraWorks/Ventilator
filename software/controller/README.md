@@ -4,7 +4,7 @@ Here resides the code for the ventilator controller.
 
 Please also see the [Software design pages](../design/controller_architecture.md) for more information on controller architecture.
 
-If you are not actively working on the controller code but simply need it for prototype testing, you will probably want to use the [automated deployment scripts](../utils/rpi_config).
+If you are not actively working on the controller code but simply need it for prototype testing, you will probably want to use the [automated deployment scripts](../bootstrap).
 
 ## Rationale and structure
 
@@ -29,7 +29,7 @@ The controller shares the [common code](../common) with the GUI. The part of the
   * building and uploading/deployment of controller firmware
   * running unit tests, static checks, integration tests
   * generating test coverage reports locally
-  * shortcut to [debug interface](../utils/debug)
+  * shortcut to [debug interface](../tools)
   * self-documented if you run it without parameters or with `--help`
 * [platfomio.ini](platformio.ini) - the equivalent of a "make file" which governs how platformio builds targets
 * [.ycm_extra_conf.py](.ycm_extra_conf.py) - configuration for [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe) (for some IDEs)

@@ -36,7 +36,7 @@ Whether by `ssh` or attached keyboard, copy and paste this command into a termin
 
 <!-- \TODO change command to point to master before merging!!! -->
 ```shell
-bash <(wget -qO- https://github.com/RespiraWorks/Ventilator/raw/master/software/utils/rpi_config/bootstrap.sh)
+bash <(wget -qO- https://github.com/RespiraWorks/Ventilator/raw/master/software/bootstrap/bootstrap.sh)
 ```
 
 Follow the onscreen directions. When the initial installation is complete, the system will reboot.
@@ -51,7 +51,7 @@ This is a good time to:
 When the machine boots, you should see an icon that says `Ventilator update` on the desktop. Either double-click or use the touch screen to run this shortcut.
 This will build the graphical interface and controller software, and deploy the latter to the STM32.
 
-**NOTE:** You may also want to check that audio is set to be piped to `HDMI` rather than the `AV Jack` by right clicking on the volume icon in the task bar.
+**NOTE:** You may also want to check that audio is set to be piped to `HDMI` rather than the `AV Jack` by right-clicking on the volume icon in the task bar.
 
 ## What you have available
 

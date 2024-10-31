@@ -102,7 +102,7 @@ If this is the only device connected, you can deploy with
 ```
 
 If you have multiple devices connected to your development machine, you should:
-* run `./controller.sh patch_ocd` to patch ST-Link scripts
+* run `./controller.sh patch-ocd` to patch ST-Link scripts
 * add your devices to manifest spreadsheet on Google Drive in [this directory](https://drive.google.com/drive/folders/1EBQReayx557hWeHTPxkbUI4eeUq-1AWw?usp=sharing) (you will need team write access).
 * run `./controller.sh debug -c "device update"` which will fetch you a copy of that manifest
 

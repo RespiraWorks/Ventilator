@@ -10,7 +10,7 @@ In order to deploy to multiple STM32 devices on the same system, a file in your 
 `$HOME/.platformio/packages/tool-openocd/scripts/interface/stlink.cfg`
 must be replaced with the [`stlink.cfg`](stlink.cfg) provided here.
 
-This patching is now handled by running `controller.sh patch_ocd`.
+This patching is now handled by running `controller.sh patch-ocd`.
 
 This solution is based on a post on the platformio forums
 [here](https://community.platformio.org/t/choosing-stlink-v2-programmer/10716).

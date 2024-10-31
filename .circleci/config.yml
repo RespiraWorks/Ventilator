@@ -40,7 +40,7 @@ jobs:
           name: Run tests & generate coverage reports
           command: |
             ./software/common/common.sh test --cov --no-checks
-            ./software/common/common.sh cov_cleanup
+            ./software/common/common.sh cov-cleanup
       - codecov/upload:
           file: './software/common/coverage_reports/coverage.info'
           flags: 'common'
@@ -64,7 +64,7 @@ jobs:
           name: Run tests & generate coverage reports
           command: |
             ./software/controller/controller.sh test --cov --no-checks
-            ./software/controller/controller.sh cov_cleanup
+            ./software/controller/controller.sh cov-cleanup
       - codecov/upload:
           file: './software/controller/coverage_reports/coverage.info'
           flags: 'controller'

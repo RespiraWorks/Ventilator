@@ -49,7 +49,7 @@ The following options are available:
   test          Builds and runs all unit tests, integration tests, static checks, generates coverage
                   [--no-checks] - do not run static checks (for CI)
                   [--cov]       - generate coverage reports
-  cov_cleanup   Prepare coverage reports for uploading to server
+  cov-cleanup   Prepare coverage reports for uploading to server
   unit          Builds and runs unit tests only (and generates coverage reports)
                   <name>  - run specific unit test, may include wildcards, i.e. '*checksum*'
                   [-o]    - open coverage report in browser when done
@@ -261,7 +261,7 @@ elif [ "$1" == "test" ]; then
 ####################
 # CLEANUP COVERAGE #
 ####################
-elif [ "$1" == "cov_cleanup" ]; then
+elif [ "$1" == "cov-cleanup" ]; then
   cleanup_coverage_reports
   exit_good
 

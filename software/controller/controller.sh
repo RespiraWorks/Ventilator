@@ -48,7 +48,7 @@ Utility script for the RespiraWorks Ventilator controller.
 
 The following options are available:
   configure   One-time configuring of udev rules for deployment to controller
-  patch_ocd   One-time patching of OCD script for ST-Link for multi-device deployment environments
+  patch-ocd   One-time patching of OCD script for ST-Link for multi-device deployment environments
   devices     List all devices available for deploying to
   check       Runs static checks only
   clean       Clean build directories
@@ -64,7 +64,7 @@ The following options are available:
   integrate   Run integration tests
                 all [delay_time] - run all integration tests, pause for [delay_time] in between
                 <test_name> [parameters...] - run specific integration test with parameters
-  cov_cleanup Prepare coverage reports for uploading to server
+  cov-cleanup Prepare coverage reports for uploading to server
   help/-h     Display this help info
 
 Additionally, the following environment variables may be evaluated:
@@ -386,7 +386,7 @@ elif [ "$1" == "test" ]; then
 ####################
 # CLEANUP COVERAGE #
 ####################
-elif [ "$1" == "cov_cleanup" ]; then
+elif [ "$1" == "cov-cleanup" ]; then
   cleanup_coverage_reports
   exit_good
 

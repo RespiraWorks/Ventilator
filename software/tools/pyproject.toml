@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "debug"
 version = "0.1.0"
-description = "RespiraWorks ventilator debug interface"
+description = "RespiraWorks ventilator debug tools"
 authors = ["Martin Shetty <1972005+martukas@users.noreply.github.com>"]
 readme = "README.md"
 packages = [
@@ -17,6 +17,7 @@ matplotlib = "^3.9.2"
 pandas = "^2.2.3"
 gitpython = "^3.1.43"
 platformio = "^6.1.16"
+protobuf = "^5.28.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
@@ -27,6 +28,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 debug = "debug.debug_cli:main"
+decode = "miscellaneous.decoder:main"
+mock_controller = "miscellaneous.mock_cycle_controller:main"
 
 [tool.pytest.ini_options]
 testpaths = [

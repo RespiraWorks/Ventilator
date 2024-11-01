@@ -14,31 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This script should work no matter where you call it from.
+pushd "$(dirname "$0")" > /dev/null || exit_fail
 
-# Fail if any command fails
-set -e
-set -o pipefail
+. ../common/base.sh
 
-# Print each command as it executes
-if [ -n "$VERBOSE" ]; then
-  set -o xtrace
-fi
-
-EXIT_FAILURE=1
-EXIT_SUCCESS=0
-
-# Check if Linux
-PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Linux" ]; then
-  echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit $EXIT_FAILURE
-fi
-
-# Make sure we are not in sudo
-if [ "$EUID" -eq 0 ] && [ "$2" != "-f" ]; then
-  echo "Please do not run this script with root privileges!"
-  exit $EXIT_FAILURE
-fi
+ensure_linux
+ensure_not_root
 
 message="RespiraWorks Ventilator update utility
 
@@ -58,27 +40,27 @@ if zenity --question --no-wrap --title="Ventilator update" \
 then
   echo "Continuing with update..."
 else
-  exit $EXIT_FAILURE
+  exit_fail
 fi
 
 # This script should run from repo/software dir
-cd "$(dirname "$0")"/../..
+pushd "$(dirname "$0")"/../.. || exit_fail
 
 ### Will not switch branch to master!
 git pull
 
 ### Set RW background - must be done in Desktop mode, thus not in boostrap.sh
-pcmanfm --set-wallpaper ${HOME}/ventilator/software/bootstrap/desktop_background.jpg
+pcmanfm --set-wallpaper "${HOME}/ventilator/software/bootstrap/desktop_background.jpg"
 
 ### Update Desktop shortcuts
-/bin/cp -rf ${HOME}/ventilator/software/bootstrap/user/Desktop/* ${HOME}/Desktop
+/bin/cp -rf "${HOME}/ventilator/software/bootstrap/user/Desktop/*" "${HOME}/Desktop"
 
 if zenity --question --no-wrap --title="PIO Update" \
           --text "<span size=\"large\">Update PlatformIO and libraries?</span>"
 then
   ### Clean and update PIO
   echo "Updating PlatformIO and libraries..."
-  ./controller/controller.sh update
+  ./common/common.sh update
 fi
 
 if zenity --question --no-wrap --title="Controller Build" \
@@ -107,4 +89,3 @@ then
 fi
 
 zenity --info --no-wrap --title="Success" --text "Ventilator update executed successfully!"
-exit $EXIT_SUCCESS

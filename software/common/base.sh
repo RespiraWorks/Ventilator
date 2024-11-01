@@ -51,13 +51,13 @@ function ensure_linux() {
   fi
 }
 
-# Silent pushd
 function pushd() {
+  # Silent pushd
   command pushd "$@" > /dev/null
 }
 
-# Silent popd
 function popd() {
+  # Silent popd
   command popd > /dev/null
 }
 

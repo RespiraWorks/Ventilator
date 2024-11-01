@@ -1,9 +1,20 @@
 #############################  Display  #############################
 
+# Verbose program output
+# Accepts log level: "error", "warn", "info", "debug", "trace"
+#verbose = "info"
+
 # Don't show interactive progress bar while checking links.
 no_progress = true
 
+# Path to summary output file.
+#output = ".config.dummy.report.md"
+
 #############################  Runtime  #############################
+
+# Number of threads to utilize.
+# Defaults to number of cores available to the system if omitted.
+threads = 2
 
 # Maximum number of allowed redirects.
 max_redirects = 5
@@ -47,7 +58,7 @@ headers = []
 # HTTP basic auth support. This will be the username and password passed to the
 # authorization HTTP header. See
 # <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization>
-basic_auth = "user:pwd"
+#basic_auth = "user:pwd"
 
 #############################  Exclusions  ##########################
 

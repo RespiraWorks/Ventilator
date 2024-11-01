@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # This script should work no matter where you call it from.
-cd "$(dirname "$0")"
+pushd "$(dirname "$0")" > /dev/null || exit_fail
 
 . ../software/common/base.sh
 
@@ -47,8 +47,10 @@ install_linux() {
   sudo apt update
   sudo apt install -y \
            make \
+           docker.io \
            doxygen \
            graphviz
+  docker pull lycheeverse/lychee
   echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
 }
 
@@ -58,6 +60,7 @@ build_all() {
   poetry run wiring -d ./wiring
   poetry run parts -f ./purchasing/parts.json
   poetry run make html
+  touch ./_build/html/.nojekyll
 }
 
 launch_browser() {
@@ -66,7 +69,8 @@ launch_browser() {
 
 check_links() {
   echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
-  lychee ..
+  docker run --init -it --rm -w /input -v $(pwd)/..:/input lycheeverse/lychee -c ./docs/lychee.toml .
+#  lychee ..
 }
 
 ########

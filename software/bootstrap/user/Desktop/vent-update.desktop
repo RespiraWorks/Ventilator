@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Update
+Path=/home/admin/ventilator/software/bootstrap
+Exec=lxterminal -t "Ventilator update" --working-directory=/home/admin/ventilator/software/bootstrap -e "source ~/.profile && ./update.sh"
+Icon=/home/admin/ventilator/software/bootstrap/icons/rw_inhale.png
+Terminal=true
+Type=Application
+Categories=Application

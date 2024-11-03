@@ -192,10 +192,6 @@ elif [ "$1" == "clean" ]; then
 # BUILD #
 #########
 elif [ "$1" == "build" ]; then
-  ensure_not_root
-
-  # generate comms protocols
-  ../common/common.sh generate
 
   config_type="Release"
   if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
@@ -219,7 +215,12 @@ elif [ "$1" == "build" ]; then
     checks_opt="no"
   fi
 
+  ensure_not_root
+
   create_clean_dir build
+
+  # generate comms protocols
+  ../common/common.sh generate
 
   pushd build
   if [ "$checks_opt" == "yes" ]; then
@@ -249,10 +250,6 @@ elif [ "$1" == "check" ]; then
 # TEST #
 ########
 elif [ "$1" == "test" ]; then
-  ensure_not_root
-
-  # generate comms protocols
-  ../common/common.sh generate
 
   j_opt=""
   if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ] || [ "$5" == "-j" ]; then
@@ -266,7 +263,12 @@ elif [ "$1" == "test" ]; then
     j_opt="-j${NUM_CPUS}"
   fi
 
+  ensure_not_root
+
   create_clean_dir build
+
+  # generate comms protocols
+  ../common/common.sh generate
 
   pushd build
   cmake -DCMAKE_BUILD_TYPE=Debug -DCOV=1 ..

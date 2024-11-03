@@ -87,6 +87,8 @@ generate_network_protocols() {
   --cpp_out=$GUI_LIB_PATH \
   --python_out=$PYTHON_LIB_PATH \
   network_protocol.proto
+
+  pio pkg install -d .
 }
 
 run_checks() {

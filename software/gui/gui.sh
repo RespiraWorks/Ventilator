@@ -220,6 +220,7 @@ elif [ "$1" == "build" ]; then
   create_clean_dir build
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   pushd build
@@ -268,6 +269,7 @@ elif [ "$1" == "test" ]; then
   create_clean_dir build
 
   # generate comms protocols
+  ../common/common.sh update
   ../common/common.sh generate
 
   pushd build

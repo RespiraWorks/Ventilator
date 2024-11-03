@@ -78,7 +78,7 @@ generate_network_protocols() {
   mkdir -p "$PYTHON_LIB_PATH"
   mkdir -p "$GUI_LIB_PATH"
   #ensure old files are gone
-  rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
+  rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*_pb2.py
 
   protoc \
   --plugin="$NANOPB_PLUGIN" \

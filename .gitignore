@@ -1,21 +1,23 @@
-build/
-build_autotests/
-.pio/
+!.gitignore
+
+# OS
 install
-source/config/*
+.DS_Store
 *.app
 *.desktop
 *.user
 *.log
-!.gitignore
 
-#IDE
-software/controller/CMakeLists*
-software/common/CMakeLists*
-cmake-build-*/
-.idea/
+# IDE: VSCode
+.vscode
+
+# IDE: JetBrains
 .idea
-.vscode/
+.idea/
+CMakeLists.txt.user
+cmake-build-*/
+
+# IDE: other
 .ctags
 ctags
 tags
@@ -23,35 +25,13 @@ tags
 cscope.out
 *~
 
-#CAD/Inventor
-*.lck
-OldVersions/
-
-.DS_Store
 .clangd/
 .*.swp
 *.map
 last_graph.dat
 
-coverage_reports
-
-# KiCAD backups
-*.sch-bak
-*.kicad_pcb-bak
-*.bak
-# KiCAD temp/unneeded cache files
-_autosave-*
-*.000
-fp-info-cache
-# (project symbol cache library not needed as all symbols kept in RespiraWorks libraries)
-*-cache.lib
-
 #performance test data
 local_data/
-test_data/
-
-#Conan created files
-CMakeUserPresets.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

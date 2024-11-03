@@ -46,10 +46,14 @@ install_linux() {
   install_py
   sudo apt update
   sudo apt --yes install \
-           make \
-           doxygen \
-           graphviz
-  sudo apt --yes install apt-transport-https ca-certificates curl software-properties-common
+       make \
+       doxygen \
+       graphviz
+  sudo apt --yes install \
+       apt-transport-https \
+       ca-certificates \
+       curl \
+       software-properties-common
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
     | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
@@ -86,7 +90,7 @@ launch_browser() {
 
 check_links() {
   echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
-  docker run --init --rm -w /input -v "$(pwd)/..":/input lycheeverse/lychee -c ./docs/lychee.toml .
+  docker run --init --rm -w /input -v "$(pwd)/..":/input lycheeverse/lychee -c ./docs/lychee.toml --no-ignore .
 #  lychee ..
 }
 

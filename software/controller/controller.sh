@@ -329,6 +329,9 @@ elif [ "$1" == "check" ]; then
 elif [ "$1" == "unit" ]; then
   clean_all
 
+  # generate comms protocols
+  ../common/common.sh generate
+
   if [ -n "$2" ]; then
     pio test -e native -f "$2"
   else

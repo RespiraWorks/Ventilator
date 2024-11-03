@@ -1,3 +1,8 @@
 #network protocol output files
 src/protocols/*.cc
 src/protocols/*.h
+build/
+coverage_reports/
+
+#Conan created files
+CMakeUserPresets.json

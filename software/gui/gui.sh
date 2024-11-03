@@ -195,7 +195,6 @@ elif [ "$1" == "build" ]; then
   ensure_not_root
 
   # generate comms protocols
-  ../common/common.sh update
   ../common/common.sh generate
 
   config_type="Release"
@@ -253,7 +252,6 @@ elif [ "$1" == "test" ]; then
   ensure_not_root
 
   # generate comms protocols
-  ../common/common.sh update
   ../common/common.sh generate
 
   j_opt=""

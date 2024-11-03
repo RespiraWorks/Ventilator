@@ -1,3 +1,5 @@
 #network protocol output files
 generated_libs/protocols/*.c
 generated_libs/protocols/*.h
+.pio/
+coverage_reports/

@@ -118,11 +118,9 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "-f",
-        "--file",
+        "file",
         type=json_arg,
         help="File to process",
-        required=True,
     )
 
     args = parser.parse_args()

@@ -25,19 +25,10 @@ from pathlib import Path
 import pandas
 
 
-def yaml_arg(path: str) -> Path:
+def path_arg(path: str) -> Path:
     ret = Path(path)
-    if ret.suffix not in (".yml", ".yaml"):
-        raise argparse.ArgumentTypeError(f"Not a YAML file: {ret}")
-    if not ret.is_file():
-        raise argparse.ArgumentTypeError(f"File not found: {ret}")
-    return ret
-
-
-def dir_arg(path: str) -> Path:
-    ret = Path(path)
-    if not ret.is_dir():
-        raise argparse.ArgumentTypeError(f"Not a directory: {ret}")
+    if not ret.exists():
+        raise argparse.ArgumentTypeError(f"Path does not exist: {ret}")
     return ret
 
 
@@ -62,34 +53,29 @@ def generate_wiring_diagram(yaml_file: Path) -> None:
     print(f"Generating wiring diagram for {yaml_file}")
     wireviz.parse(yaml_file, output_formats=("gv", "html", "png", "svg", "tsv"))
     tsv_file = yaml_file.parent / (yaml_file.stem + ".bom.tsv")
-    print(f"Will modify {tsv_file}")
+    print(f"Injecting purchasing xrefs into {tsv_file}")
     decorate_table(tsv_file)
 
 
 def main():
     parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group(required=True)
 
-    group.add_argument(
-        "-f",
-        "--file",
-        type=yaml_arg,
-        help="File to process",
-    )
-    group.add_argument(
-        "-d",
-        "--directory",
-        type=dir_arg,
-        help="Directory to process",
+    parser.add_argument(
+        "path",
+        type=path_arg,
+        help="File or directory to process",
     )
 
     args = parser.parse_args()
 
-    if args.file:
-        generate_wiring_diagram(args.file)
-    elif args.directory:
-        for file in args.directory.rglob("**/*.yml"):
+    if args.path.is_dir():
+        print(f"Processing all files in {args.path}")
+        for file in args.path.rglob("**/*.yml"):
             generate_wiring_diagram(file)
+    elif args.path.is_file():
+        if args.path.suffix not in (".yml", ".yaml"):
+            raise argparse.ArgumentTypeError(f"Not a YAML file: {args.path}")
+        generate_wiring_diagram(args.path)
 
 
 if __name__ == "__main__":

@@ -28,12 +28,13 @@ print_help() {
 Utility script for generating Ventilator documentation.
 
 The following options are available:
-  install     One-time installation of build toolchain and dependencies
-  clean       Clean build directories
-  build       Generate documentation
-  view        Open generated documentation in browser
-  check       Check for broken links
-  help/-h     Display this help info
+  install      One-time installation of build toolchain and dependencies
+  clean        Clean build directories
+  build        Generate documentation
+  wire <path>  Render wiring harness diagrams for specified path, which may be a file or a directory
+  view         Open generated documentation in browser
+  check        Check for broken links
+  help/-h      Display this help info
 EOF
 }
 
@@ -72,16 +73,20 @@ install_linux() {
   sudo apt --yes install docker-ce
 
   docker pull lycheeverse/lychee
-  echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
+}
+
+process_wiring() {
+  source "${HOME}/.profile"
+  poetry install --no-root --quiet
+  poetry run wiring "$1"
 }
 
 build_all() {
   source "${HOME}/.profile"
-  poetry install
-  poetry run wiring -d ./wiring
-  poetry run parts -f ./purchasing/parts.json
+  poetry install --no-root --quiet
+  poetry run wiring ./wiring
+  poetry run parts ./purchasing/parts.json
   poetry run make html
-  touch ./_build/html/.nojekyll
 }
 
 launch_browser() {
@@ -89,9 +94,8 @@ launch_browser() {
 }
 
 check_links() {
-  echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
+  touch ./_build/html/.nojekyll
   docker run --init --rm -w /input -v "$(pwd)/..":/input lycheeverse/lychee -c ./docs/lychee.toml --no-ignore .
-#  lychee ..
 }
 
 ########
@@ -123,6 +127,14 @@ elif [ "$1" == "clean" ]; then
 elif [ "$1" == "build" ]; then
   ensure_not_root
   build_all
+  exit_good
+
+#########
+# BUILD #
+#########
+elif [ "$1" == "wire" ]; then
+  ensure_not_root
+  process_wiring "$2"
   exit_good
 
 ########

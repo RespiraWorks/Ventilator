@@ -86,7 +86,7 @@ launch_browser() {
 
 check_links() {
   echo "If you wish to use \`./docs.sh check\` to check validity of links locally, please follow installation instructions at https://github.com/lycheeverse/lychee"
-  docker run --init -it --rm -w /input -v "$(pwd)/..":/input lycheeverse/lychee -c ./docs/lychee.toml .
+  docker run --init --rm -w /input -v "$(pwd)/..":/input lycheeverse/lychee -c ./docs/lychee.toml .
 #  lychee ..
 }
 

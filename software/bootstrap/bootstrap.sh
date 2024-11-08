@@ -79,7 +79,7 @@ cd ventilator
 ###############################################################################
 ### TODO: Uncomment this section only when tweaking this script in a branch ###
 ###############################################################################
-#git checkout issue_1277_deploy_with_graphics
+git checkout maintain_ubuntu24
 ###############################################################################
 ### TODO: Comment out above before merging to master!!!                     ###
 ###############################################################################

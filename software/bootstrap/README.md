@@ -36,7 +36,7 @@ Whether by `ssh` or attached keyboard, copy and paste this command into a termin
 
 <!-- \TODO change command to point to master before merging!!! -->
 ```shell
-bash <(wget -qO- https://github.com/RespiraWorks/Ventilator/raw/master/software/bootstrap/bootstrap.sh)
+bash <(wget -qO- https://github.com/RespiraWorks/Ventilator/raw/maintain_ubuntu24/software/bootstrap/bootstrap.sh)
 ```
 
 Follow the onscreen directions. When the initial installation is complete, the system will reboot.

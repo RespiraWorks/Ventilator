@@ -61,6 +61,7 @@ then
   ### Clean and update PIO
   echo "Updating PlatformIO and libraries..."
   ./software/common/common.sh update
+  ./software/controller/controller.sh patch-ocd
 fi
 
 if zenity --question --no-wrap --title="Controller Build" \

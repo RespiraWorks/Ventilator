@@ -44,7 +44,7 @@ else
 fi
 
 # This script should run from repo/software dir
-pushd "$(dirname "$0")"/../.. || exit_fail
+pushd ../.. || exit_fail
 
 ### Will not switch branch to master!
 git pull

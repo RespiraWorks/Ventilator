@@ -53,7 +53,7 @@ git pull
 pcmanfm --set-wallpaper "${HOME}/ventilator/software/bootstrap/desktop_background.jpg"
 
 ### Update Desktop shortcuts
-/bin/cp -rf "${HOME}/ventilator/software/bootstrap/user/Desktop/*" "${HOME}/Desktop"
+/bin/cp -rf software/bootstrap/user/Desktop/* "${HOME}/Desktop"
 
 if zenity --question --no-wrap --title="PIO Update" \
           --text "<span size=\"large\">Update PlatformIO and libraries?</span>"

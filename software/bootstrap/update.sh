@@ -60,7 +60,7 @@ if zenity --question --no-wrap --title="PIO Update" \
 then
   ### Clean and update PIO
   echo "Updating PlatformIO and libraries..."
-  ./common/common.sh update
+  ./software/common/common.sh update
 fi
 
 if zenity --question --no-wrap --title="Controller Build" \
@@ -68,8 +68,8 @@ if zenity --question --no-wrap --title="Controller Build" \
 then
   echo "Building and deploying cycle controller..."
   ### Update controller and deploy
-  ./controller/controller.sh clean
-  ./controller/controller.sh run
+  ./software/controller/controller.sh clean
+  ./software/controller/controller.sh run
 fi
 
 ans=$(zenity --list --radiolist --title "GUI Build" \
@@ -79,13 +79,13 @@ ans=$(zenity --list --radiolist --title "GUI Build" \
 if [[ $ans = "Release" ]]
 then
   echo "Building Release"
-  ./gui/gui.sh clean
-  ./gui/gui.sh build --release --no-checks;
+  ./software/gui/gui.sh clean
+  ./software/gui/gui.sh build --release --no-checks;
 elif [[ $ans = "Debug" ]]
 then
   echo "Building Debug"
-  ./gui/gui.sh clean
-  ./gui/gui.sh build --debug --no-checks
+  ./software/gui/gui.sh clean
+  ./software/gui/gui.sh build --debug --no-checks
 fi
 
 zenity --info --no-wrap --title="Success" --text "Ventilator update executed successfully!"

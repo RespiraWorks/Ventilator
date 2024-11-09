@@ -23,7 +23,7 @@ MY_PATH="$(dirname "$0")"
 
 pushd $MY_PATH
 
-poetry install --no-root --quiet
+poetry install
 poetry run debug "${@:1}"
 
 popd

@@ -89,7 +89,7 @@ configure_platformio() {
 }
 
 patch_ocd_stlink() {
-  cp -fr platformio/stlink.cfg "${HOME}/.platformio/packages/tool-openocd/scripts/interface"
+  cp -fr platformio/stlink.cfg "${HOME}/.platformio/packages/tool-openocd/openocd/scripts/interface"
 }
 
 run_checks() {

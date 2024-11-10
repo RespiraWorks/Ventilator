@@ -7,7 +7,7 @@ production system. **#TODO** How?
 The Python CLI interface can be accessed via the common controller utilities script at
 [software/controller/controller.sh](../../controller.sh)
 
-There is also a [brief tutorial](../../../utils/debug) on how to use it.
+There is also a [brief tutorial](../../../tools) on how to use it.
 
 ## Controller side architecture
 [![Debug Interface Architecture diagram](images/architecture.png)](https://docs.google.com/drawings/d/18oN96yqyU3Ky_Kb82zGym1iXULxy9IW3KtIfMk-IDdI/edit?usp=sharing)

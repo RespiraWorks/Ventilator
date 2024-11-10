@@ -18,7 +18,7 @@ To deploy it as intended for the ventilator you will need:
 A more complete list of hardware components is on the
 [Electronics sub-assembly page](../../manufacturing/internals/electronics).
 
-If you are not actively working on the code for this application but simply need it for prototype testing, you will probably want to use the [automated deployment scripts](../utils/rpi_config).
+If you are not actively working on the code for this application but simply need it for prototype testing, you will probably want to use the [automated deployment scripts](../bootstrap).
 
 ## Building the GUI
 

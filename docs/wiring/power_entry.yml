@@ -26,7 +26,6 @@ connectors:
   F1:
     pn: ec-qctf
     style: simple
-    autogenerate: true
     type: 4.7mm QC Term Female
     subtype: 14-16awg
     mpn: 3-520276-2
@@ -35,7 +34,6 @@ connectors:
   F2:
     pn: ec-ring
     style: simple
-    autogenerate: true
     type: M4 Ring Term
     subtype: 14-16awg
     mpn: 0193230008
@@ -80,7 +78,7 @@ connections:
     - W1: [1-2]
     - X2: [1-2]
   -
-    - F1
+    - F1.
     - W2: [1-2]
     - X2: [3-4]
   -

@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "docs"
+version = "0.1.0"
+description = "Respiraworks docs generation script"
+authors = ["Martin Shetty <1972005+martukas@users.noreply.github.com>"]
+readme = "README.md"
+packages = [
+    {include = "scripts"}
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+graphviz = "^0.20.3"
+wireviz = "^0.4.1"
+sphinx-rtd-theme = "^3.0.1"
+breathe = "^4.35.0"
+sphinx-sitemap = "^2.6.0"
+mlx-traceability = "^11.6.0"
+pandas = "^2.2.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+wiring = "scripts.make_wiring:main"
+parts = "scripts.make_parts:main"

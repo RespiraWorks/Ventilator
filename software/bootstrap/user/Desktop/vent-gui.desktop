@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Ventilator GUI
+Path=/home/admin/ventilator/software/gui
+Exec=lxterminal -t "Ventilator GUI" --working-directory=/home/admin/ventilator/software/gui -e "./gui.sh run --serial-port /dev/ttyS0"
+Icon=/home/admin/ventilator/software/bootstrap/icons/rw_logo_transparent.png
+Terminal=true
+Type=Application
+Categories=Application

@@ -27,6 +27,8 @@ Where
 
 ## Scripts
 
-[decorate_table.py](decorate_table.py) - takes a `*.bom.tsv` file and modifies it so that each entry in the `P/N` column is wrapped in RST link-to-reference syntax. Thus, when a the table is embedded in an RST file, the part numbers are rendered as links to the purchasing/parts page
+To render the wiring documentation, use [docs/docs.sh](../docs.sh) script as follows:
 
-[make_wiring.sh](make_wiring.sh) - runs wireviz to generate BOM and diagram, then runs `decorate_table.py` to add links to BOM
+```shell
+./docs.sh wire ./path/to/dir/or/file.yml
+```

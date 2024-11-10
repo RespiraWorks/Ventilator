@@ -1,16 +1,16 @@
 # Documentation
 
-The documentation created here is written in reStructuredTexT and generated using [Sphinx](https://www.sphinx-doc.org/en/master/) via a Github action.
+The documentation created here is written in reStructuredTexT and generated using [Sphinx](https://www.sphinx-doc.org/en/master/) via a GitHub action.
 
 ## reStructuredText
 
-reStructured text is similar to Markdown in that it is ASCII formatted text that is mostly human readable and contains directives that specify how the text should be rendered in HTML, and other output formats.
+reStructured text is similar to Markdown in that it is ASCII formatted text that is mostly human-readable and contains directives that specify how the text should be rendered in HTML, and other output formats.
 
 reStructuredText is more complex than Markdown and allows for much greater flexibility in formatting as well as additional features such as *directives* that act like variables/macros that are defined once and expanded in place.
 
 ## Document Generation
 
-The Github action rules can be found in `.github/workflows/docs.yml`
+The GitHub action rules can be found in `.github/workflows/docs.yml`
 
 C++ API documentation is generated using [Doxygen](https://github.com/doxygen/doxygen)
 
@@ -34,7 +34,13 @@ To generate the documentation, run:
 ./docs.sh build
 ```
 
-If the directories are polluted and you want a clean slate:
+To render wiring harnesses only:
+
+```shell
+./docs.sh wire ./path/to/dir/or/file.yml
+```
+
+If the directories are polluted, and you want a clean slate:
 ```shell
 ./docs.sh clean
 ```

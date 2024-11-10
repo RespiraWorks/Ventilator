@@ -26,70 +26,35 @@
 # CircleCI runs this script (via .circleci/config.yml), but might have some
 # environment differences, so the approximation is not perfect. For
 
-# \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.6
-COVERAGE_ENVIRONMENT=native
-COVERAGE_OUTPUT_DIR=coverage_reports
-
-# a more exact test run, please build the tests_Dockerfile.
-
-# Fail if any command fails
-set -e
-set -o pipefail
-
-# Print each command as it executes
-if [ -n "$VERBOSE" ]; then
-  set -o xtrace
-fi
-
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
-EXIT_FAILURE=1
-EXIT_SUCCESS=0
+. ./base.sh
 
-# Check if Linux
-PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Linux" ]; then
-  echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit $EXIT_FAILURE
-fi
+ensure_linux
 
-#########
-# UTILS #
-#########
+COVERAGE_ENVIRONMENT=native
+COVERAGE_OUTPUT_DIR=coverage_reports
 
 print_help() {
     cat <<EOF
 Utility script for the RespiraWorks Ventilator common code testing.
 
 The following options are available:
-  install     One-time installation of build toolchain and dependencies
-  generate    Generates network protocols via Nanopb and protobuf
-  update      Updates platformio and required libraries
-  check       Runs static checks only
-  clean       Clean build directories
-  test        Builds and runs all unit tests, integration tests, static checks, generates coverage
-                [--no-checks] - do not run static checks (for CI)
-                [--cov]       - generate coverage reports
-  cov_cleanup Prepare coverage reports for uploading to server
-  unit        Builds and runs unit tests only (and generates coverage reports)
+  install       One-time installation of build toolchain and dependencies
+  generate      Generates network protocols via Nanopb and protobuf
+  update        Updates platformio and required libraries
+  check         Runs static checks only
+  clean         Clean build directories
+  test          Builds and runs all unit tests, integration tests, static checks, generates coverage
+                  [--no-checks] - do not run static checks (for CI)
+                  [--cov]       - generate coverage reports
+  cov-cleanup   Prepare coverage reports for uploading to server
+  unit          Builds and runs unit tests only (and generates coverage reports)
                   <name>  - run specific unit test, may include wildcards, i.e. '*checksum*'
                   [-o]    - open coverage report in browser when done
-  help/-h     Display this help info
+  help/-h       Display this help info
 EOF
-}
-
-clean_dir() {
-  dir_name=$1
-  if [ -d "$dir_name" ]; then
-    echo "Removing $dir_name"
-    rm -rf "$dir_name"
-    return 0
-  elif [ -f "$dir_name" ]; then
-    echo "File with this name already exists, not a directory."
-    return 1
-  fi
 }
 
 clean_all() {
@@ -97,49 +62,26 @@ clean_all() {
   clean_dir ${COVERAGE_OUTPUT_DIR}
 }
 
-install_linux() {
-  sudo apt-get update
-  sudo apt-get install -y \
-               build-essential \
-               python3-pip \
-               git \
-               curl \
-               libtinfo5 \
-               cppcheck \
-               gcovr \
-               lcov \
-               clang-tidy \
-               protobuf-compiler
-  pip3 install -U pip
-  pip3 install nanopb
-  pip3 install setuptools
-  pip3 install platformio==${PIO_VERSION}
-  source ${HOME}/.profile
-}
-
 update_platformio() {
-  python3 -m pip install --upgrade pip
-  pip3 install platformio==${PIO_VERSION}
+  pipx install --force platformio=="${PIO_VERSION}"
   pio pkg uninstall -d .
   pio pkg install -d .
-  exit $EXIT_SUCCESS
 }
 
 generate_network_protocols() {
   PROTOCOLS_DIR=generated_libs/protocols
-  PYTHON_LIB_PATH=../utils/debug/protocols
+  PYTHON_LIB_PATH=../tools/protocols
   GUI_LIB_PATH=../gui/src/protocols
-  NANOPB_PATH=$(pip3 show nanopb | awk '{ if($1 == "Location:") print $2}')/nanopb/generator
+  NANOPB_PLUGIN=${HOME}/.local/bin/protoc-gen-nanopb
 
   # ensure paths exist
   mkdir -p "$PYTHON_LIB_PATH"
   mkdir -p "$GUI_LIB_PATH"
   #ensure old files are gone
-  rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*.py
+  rm -f $PROTOCOLS_DIR/*.h $PROTOCOLS_DIR/*.c $GUI_LIB_PATH/*.c* $GUI_LIB_PATH/*.h* $PYTHON_LIB_PATH/*_pb2.py
 
   protoc \
-  --plugin=$NANOPB_PATH/protoc-gen-nanopb \
-  -I $NANOPB_PATH/proto \
+  --plugin="$NANOPB_PLUGIN" \
   -I $PROTOCOLS_DIR \
   --nanopb_out=$PROTOCOLS_DIR \
   --cpp_out=$GUI_LIB_PATH \
@@ -202,12 +144,14 @@ generate_coverage_reports() {
 
   # cannot use --exclude as v1.13 on CI doesn't support that param
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info"
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+       --ignore-errors mismatch
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
   lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
+       --ignore-errors unused \
        "*_test_transport.c" \
        "*/protocols/*" \
        "*output_export.c*" \
@@ -227,46 +171,35 @@ generate_coverage_reports() {
 
 }
 
-launch_browser() {
-  python3 -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
-}
-
 ########
 # HELP #
 ########
-
 if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
-  exit $EXIT_SUCCESS
+  exit_good
 
 ###########
 # INSTALL #
 ###########
 elif [ "$1" == "install" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run install with root privileges!"
-    exit $EXIT_FAILURE
-  fi
-  install_linux
-  exit $EXIT_SUCCESS
+  ensure_not_root
+  install_common_tooling
+  exit_good
 
 ##########
 # UPDATE #
 ##########
 elif [ "$1" == "update" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run update with root privileges!"
-    exit $EXIT_SUCCESS
-  fi
+  ensure_not_root
   update_platformio
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CLEAN #
 #########
 elif [ "$1" == "clean" ]; then
   clean_all
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CHECK #
@@ -274,7 +207,7 @@ elif [ "$1" == "clean" ]; then
 elif [ "$1" == "check" ]; then
   generate_network_protocols
   run_checks
-  exit $EXIT_SUCCESS
+  exit_good
 
 #############
 # UNIT TEST #
@@ -292,10 +225,10 @@ elif [ "$1" == "unit" ]; then
   generate_coverage_reports
 
   if [ "$2" == "-o" ] || [ "$3" == "-o" ]; then
-    launch_browser
+    launch_browser "${COVERAGE_OUTPUT_DIR}/index.html"
   fi
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 ############
 # TEST ALL #
@@ -323,22 +256,21 @@ elif [ "$1" == "test" ]; then
     echo "Skipping static checks."
   fi
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 ####################
 # CLEANUP COVERAGE #
 ####################
-elif [ "$1" == "cov_cleanup" ]; then
+elif [ "$1" == "cov-cleanup" ]; then
   cleanup_coverage_reports
-  exit $EXIT_SUCCESS
+  exit_good
 
 ##############################
 # GENERATE NETWORK PROTOCOLS #
 ##############################
 elif [ "$1" == "generate" ]; then
   generate_network_protocols
-
-  exit $EXIT_SUCCESS
+  exit_good
 
 ################
 # ERROR & HELP #
@@ -347,5 +279,5 @@ else
   echo "ERROR: Bad command or insufficient parameters!"
   echo
   print_help
-  exit $EXIT_FAILURE
+  exit_fail
 fi

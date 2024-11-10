@@ -23,17 +23,17 @@ jobs:
       - name: Pull in relevant images only
         run: git lfs pull -I "docs/wiring/images/*.png"
       - name: Build docs
-        run: cd docs
-          && ./docs.sh build
-          && touch _build/html/.nojekyll
-      - name: Link Checker
-        uses: lycheeverse/lychee-action@v1.8.0
-        with:
-          fail: true
-          # Check all markdown and html files
-          args: -c docs/lychee.toml .
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: ./docs/docs.sh build
+      - name: Check links
+        run: ./docs/docs.sh check
+#      - name: Link Checker
+#        uses: lycheeverse/lychee-action@v1.8.0
+#        with:
+#          fail: true
+#          # Check all markdown and html files
+#          args: -c docs/lychee.toml .
+#        env:
+#          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Deploy to Github Pages
         if: ${{ github.ref == 'refs/heads/master' }}
         uses: JamesIves/github-pages-deploy-action@v4

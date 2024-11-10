@@ -38,6 +38,4 @@ The syntax/semantics for a part definition are as follows:
 
 ## Scripts
 
-[make_parts.py](make_parts.py) - reads [parts.json](parts.json) and from it generates `parts.rst`,with tables and link nodes which can then be rendered by sphinx
-
-[make_parts.sh](make_parts.sh) - wrapper script that ensures correct operating system and runs the python script from within this directory
+The `parts.rst` file, with tables and link nodes will be generated as when you run [docs/docs.sh build](../docs.sh).

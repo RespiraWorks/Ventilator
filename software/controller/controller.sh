@@ -32,57 +32,24 @@
 # - They have to have a very good chance of passing for other
 #   developers if they run via ./controller.sh test
 
-# \todo: keep PIO_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-PIO_VERSION=6.1.6
-COVERAGE_ENVIRONMENT=native
-COVERAGE_OUTPUT_DIR=coverage_reports
-
-# Fail if any command fails
-set -e
-set -o pipefail
-
-# Print each command as it executes
-if [ -n "$VERBOSE" ]; then
-  set -o xtrace
-fi
-
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
-EXIT_FAILURE=1
-EXIT_SUCCESS=0
+. ../common/base.sh
 
-# Check if Linux
-PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Linux" ]; then
-  echo "Error: This script only supports 'Linux'. You have $PLATFORM."
-  exit $EXIT_FAILURE
-fi
+ensure_linux
 
-# Silent pushd
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-# Silent popd
-popd () {
-    command popd > /dev/null
-}
-
-#########
-# UTILS #
-#########
+COVERAGE_ENVIRONMENT=native
+COVERAGE_OUTPUT_DIR=coverage_reports
 
 print_help() {
     cat <<EOF
 Utility script for the RespiraWorks Ventilator controller.
 
 The following options are available:
-  install     One-time installation of build toolchain and dependencies
   configure   One-time configuring of udev rules for deployment to controller
-  patch_ocd   One-time patching of OCD script for ST-Link for multi-device deployment environments
+  patch-ocd   One-time patching of OCD script for ST-Link for multi-device deployment environments
   devices     List all devices available for deploying to
-  update      Updates platformio and required libraries
   check       Runs static checks only
   clean       Clean build directories
   debug       Run debugger CLI (Python utility) to communicate with controller remotely
@@ -97,7 +64,7 @@ The following options are available:
   integrate   Run integration tests
                 all [delay_time] - run all integration tests, pause for [delay_time] in between
                 <test_name> [parameters...] - run specific integration test with parameters
-  cov_cleanup Prepare coverage reports for uploading to server
+  cov-cleanup Prepare coverage reports for uploading to server
   help/-h     Display this help info
 
 Additionally, the following environment variables may be evaluated:
@@ -106,27 +73,9 @@ Additionally, the following environment variables may be evaluated:
 EOF
 }
 
-clean_dir() {
-  dir_name=$1
-  if [ -d "$dir_name" ]; then
-    echo "Removing $dir_name"
-    rm -rf "$dir_name"
-    return 0
-  elif [ -f "$dir_name" ]; then
-    echo "File with this name already exists, not a directory."
-    return 1
-  fi
-}
-
 clean_all() {
   clean_dir .pio
   clean_dir ${COVERAGE_OUTPUT_DIR}
-}
-
-install_linux() {
-  pip3 install pyserial matplotlib pandas gitpython numpy pytest
-  pip3 install platformio==${PIO_VERSION}
-  source ${HOME}/.profile
 }
 
 configure_platformio() {
@@ -139,16 +88,8 @@ configure_platformio() {
   echo "Updated udev rules. You might have to restart your machine for changes to become effective."
 }
 
-update_platformio() {
-  python3 -m pip install --upgrade pip
-  pip3 install platformio==${PIO_VERSION}
-  pio pkg uninstall -d .
-  pio pkg install -d .
-  exit $EXIT_SUCCESS
-}
-
 patch_ocd_stlink() {
-  cp -fr platformio/stlink.cfg ${HOME}/.platformio/packages/tool-openocd/scripts/interface
+  cp -fr platformio/stlink.cfg "${HOME}/.platformio/packages/tool-openocd/openocd/scripts/interface"
 }
 
 run_checks() {
@@ -211,13 +152,16 @@ generate_coverage_reports() {
 
   # cannot use --exclude as v1.13 on CI doesn't support that param
   lcov ${QUIET} --directory "$SRC_DIR" --capture \
-       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info"
+       --output-file "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+       --ignore-errors mismatch
 
   # the file "output_export.cpp" causes an lcov error,
   # but it doesn't appear to be part of our source, so we're excluding it
-  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info" \
+  lcov ${QUIET} --remove "${COVERAGE_OUTPUT_DIR}/coverage.info"  \
        --output-file "${COVERAGE_OUTPUT_DIR}/coverage_trimmed.info" \
+       --ignore-errors unused \
        "*_test_transport.c" \
+       "*/protocols/*" \
        "*output_export.c*" \
        "*common*" \
        "*test*" \
@@ -236,16 +180,16 @@ generate_coverage_reports() {
 
 }
 
-launch_browser() {
-  python3 -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
+function run_debug() {
+  ../tools/debug.sh "$@"
 }
 
 # prints info from device manifest, if SN is defined in environment
 print_device_info() {
-  if [ ! -z "$SN" ]
+  if [ -n "$SN" ]
   then
     echo "SN has been defined in environment, will be deploying to the following device:"
-    ../utils/debug/debug.sh -c "device find $SN"
+    run_debug -c "device find $SN"
   fi
 }
 
@@ -253,7 +197,7 @@ print_device_info() {
 # prints ST-Link serial number by defined alias
 get_hla_serial() {
   device_alias="$1"
-  ../utils/debug/debug.sh -c "device find $device_alias h"
+  run_debug -c "device find $device_alias h"
 }
 
 # build <target_name>
@@ -270,7 +214,7 @@ build() {
 deploy() {
   env_name="$1"
 
-  if [ ! -z "$SN" ]
+  if [ -n "$SN" ]
   then
     echo "CUSTOM_HLA_SERIAL=$(get_hla_serial ${SN}) $(build ${env_name}) -t upload"
   else
@@ -353,64 +297,40 @@ run_all_integration_tests() {
 ########
 # HELP #
 ########
-
 if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
-  exit $EXIT_SUCCESS
-
-###########
-# INSTALL #
-###########
-elif [ "$1" == "install" ]; then
-  ../common/common.sh install
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run install with root privileges!"
-    exit $EXIT_FAILURE
-  fi
-  install_linux
-  exit $EXIT_SUCCESS
+  exit_good
 
 #############
 # CONFIGURE #
 #############
 elif [ "$1" == "configure" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run configure with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
   configure_platformio
-  exit $EXIT_SUCCESS
-
-##########
-# UPDATE #
-##########
-elif [ "$1" == "update" ]; then
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run update with root privileges!"
-    exit $EXIT_SUCCESS
-  fi
-  update_platformio
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CLEAN #
 #########
 elif [ "$1" == "clean" ]; then
   clean_all
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CHECK #
 #########
 elif [ "$1" == "check" ]; then
   run_checks
-  exit $EXIT_SUCCESS
+  exit_good
 
 #############
 # UNIT TEST #
 #############
 elif [ "$1" == "unit" ]; then
   clean_all
+
+  # generate comms protocols
+  ../common/common.sh generate
 
   if [ -n "$2" ]; then
     pio test -e native -f "$2"
@@ -421,10 +341,10 @@ elif [ "$1" == "unit" ]; then
   generate_coverage_reports
 
   if [ "$2" == "-o" ] || [ "$3" == "-o" ]; then
-    launch_browser
+    launch_browser "${COVERAGE_OUTPUT_DIR}/index.html"
   fi
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 ############
 # TEST ALL #
@@ -464,24 +384,21 @@ elif [ "$1" == "test" ]; then
     echo "Skipping static checks."
   fi
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 ####################
 # CLEANUP COVERAGE #
 ####################
-elif [ "$1" == "cov_cleanup" ]; then
+elif [ "$1" == "cov-cleanup" ]; then
   cleanup_coverage_reports
-  exit $EXIT_SUCCESS
+  exit_good
 
 #######
 # RUN #
 #######
 elif [ "$1" == "run" ]; then
 
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not deploy with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
 
   # generate comms protocols
   ../common/common.sh generate
@@ -489,27 +406,27 @@ elif [ "$1" == "run" ]; then
   print_device_info
   eval "$(deploy stm32)"
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # DEBUG #
 #########
 elif [ "$1" == "debug" ]; then
   shift
-  if [ ! -z "$SN" ]
+  if [ -n "$SN" ]
   then
-    ../utils/debug/debug.sh -d $SN "$@"
+    run_debug -d "$SN" "$@"
   else
-    ../utils/debug/debug.sh "$@"
+    run_debug "$@"
   fi
-  exit $EXIT_SUCCESS
+  exit_good
 
 #############
 # PATCH OCD #
 #############
 elif [ "$1" == "patch-ocd" ]; then
   patch_ocd_stlink
-  exit $EXIT_SUCCESS
+  exit_good
 
 #############
 # INTEGRATE #
@@ -520,20 +437,20 @@ elif [ "$1" == "integrate" ]; then
   then
    if [ -z "$3" ]; then
      echo "No delay time provided"
-     exit $EXIT_FAILURE
+     exit_fail
    fi
    run_all_integration_tests "$3"
   else
     deploy_integration_test "${@:2}"
   fi
-  exit $EXIT_SUCCESS
+  exit_good
 
 ###########
 # DEVICES #
 ###########
 elif [ "$1" == "devices" ]; then
-  ../utils/debug/debug.sh -c "device list"
-  exit $EXIT_SUCCESS
+  run_debug -c "device list"
+  exit_good
 
 ################
 # ERROR & HELP #
@@ -542,5 +459,5 @@ else
   echo "ERROR: Bad command or insufficient parameters!"
   echo
   print_help
-  exit $EXIT_FAILURE
+  exit_fail
 fi

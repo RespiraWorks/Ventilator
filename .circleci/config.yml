@@ -24,7 +24,7 @@ jobs:
 
   common-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     steps:
@@ -40,14 +40,14 @@ jobs:
           name: Run tests & generate coverage reports
           command: |
             ./software/common/common.sh test --cov --no-checks
-            ./software/common/common.sh cov_cleanup
+            ./software/common/common.sh cov-cleanup
       - codecov/upload:
           file: './software/common/coverage_reports/coverage.info'
           flags: 'common'
 
   controller-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: large
@@ -59,19 +59,19 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
-            ./software/controller/controller.sh install
+            ./software/common/common.sh install
       - run:
           name: Run tests & generate coverage reports
           command: |
             ./software/controller/controller.sh test --cov --no-checks
-            ./software/controller/controller.sh cov_cleanup
+            ./software/controller/controller.sh cov-cleanup
       - codecov/upload:
           file: './software/controller/coverage_reports/coverage.info'
           flags: 'controller'
 
   gui-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     resource_class: large
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
@@ -101,7 +101,7 @@ jobs:
 
   debug-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       GIT_LFS_SKIP_SMUDGE: 1
     resource_class: medium
@@ -113,11 +113,14 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/*
             export DEBIAN_FRONTEND=noninteractive
             export FORCED_ROOT=1
-            ./software/controller/controller.sh install
+            ./software/common/common.sh install
+            ./software/common/common.sh generate
       - run:
           name: Run unit tests
           command: |
-            pytest software/utils/debug/unit_test.py -v
+            cd software/tools
+            poetry install --no-interaction
+            poetry run pytest -v
 
 
 workflows:

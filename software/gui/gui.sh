@@ -17,37 +17,15 @@
 # This script is designed for local unix usage.
 # ./gui.sh --help
 
-# \todo: keep CONAN_VERSION updated, test thoroughly whenever you do, leave this "todo" here
-CONAN_VERSION=2.2.3
-
-# Fail if any command fails
-set -e
-set -o pipefail
-
-# Print each command as it executes
-if [ -n "$VERBOSE" ]; then
-  set -o xtrace
-fi
-
 # This script should work no matter where you call it from.
 cd "$(dirname "$0")"
 
-EXIT_FAILURE=1
-EXIT_SUCCESS=0
+. ../common/base.sh
 
-# Check if Darwin or Linux
-PLATFORM="$(uname -s)"
-if [ $PLATFORM != "Darwin" ] && [ $PLATFORM != "Linux" ]; then
-  echo "Error: This script only supports 'Darwin' or 'Linux'. You have $PLATFORM."
-  exit $EXIT_FAILURE
-fi
+ensure_linux
 
 COVERAGE_INPUT_DIR=build
 COVERAGE_OUTPUT_DIR=coverage_reports
-
-#########
-# UTILS #
-#########
 
 print_help() {
     cat <<EOF
@@ -74,64 +52,39 @@ The following options are available:
 EOF
 }
 
-clean_dir() {
-  dir_name=$1
-  if [ -d "$dir_name" ]; then
-    echo "Removing $dir_name"
-    rm -rf "$dir_name"
-    return $EXIT_SUCCESS
-  elif [ -f "$dir_name" ]; then
-    echo "File with this name already exists, not a directory."
-    return $EXIT_FAILURE
-  fi
-}
-
-create_clean_directory() {
-  dir_name=$1
-  clean_dir "$dir_name"
-  if mkdir "$dir_name"; then
-    echo "Clean directory created: $dir_name"
-    return $EXIT_SUCCESS
-  else
-    echo "Creating directory failed: $dir_name"
-    return $EXIT_FAILURE
-  fi
-}
-
 install_linux() {
   # Last tuned for Ubuntu 2021.04 Hirsute
-  sudo apt-get install -y \
-          cmake \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          qtmultimedia5-dev \
-          qtdeclarative5-dev \
-          qtdeclarative5-dev-tools \
-          qtquickcontrols2-5-dev \
-          libqt5serialport5 \
-          libqt5serialport5-dev \
-          libqt5multimedia5 \
-          libqt5multimedia5-plugins \
-          libqt5multimediaquick5 \
-          libqt5multimediawidgets5 \
-          qml-module-qtcharts \
-          qml-module-qtquick-controls \
-          qml-module-qtquick-controls2 \
-          qml-module-qtmultimedia \
-          pulseaudio \
-          xvfb
+  sudo apt install -y \
+           cmake \
+           qtbase5-dev \
+           qtbase5-dev-tools \
+           qtmultimedia5-dev \
+           qtdeclarative5-dev \
+           qtdeclarative5-dev-tools \
+           qtquickcontrols2-5-dev \
+           libqt5serialport5 \
+           libqt5serialport5-dev \
+           libqt5multimedia5 \
+           libqt5multimedia5-plugins \
+           libqt5multimediaquick5 \
+           libqt5multimediawidgets5 \
+           qml-module-qtcharts \
+           qml-module-qtquick-controls \
+           qml-module-qtquick-controls2 \
+           qml-module-qtmultimedia \
+           pulseaudio \
+           xvfb
 }
 
 configure_conan() {
-  sudo pip3 install -U pip
-  pip3 install gitpython
-  pip3 install conan==$CONAN_VERSION
+  pipx ensurepath
+  pipx install --force conan=="$CONAN_VERSION"
   source "${HOME}/.profile"
   conan profile detect
 }
 
 run_cppcheck() {
-  create_clean_directory  build/cppcheck
+  create_clean_dir  build/cppcheck
   cppcheck --enable=all --std=c++17 --inconclusive --force --inline-suppr --quiet \
            --enable=information --check-config \
            -I ../common/generated_libs/protocols \
@@ -182,7 +135,6 @@ generate_coverage_reports() {
        --output-file "$COVERAGE_OUTPUT_DIR/coverage_trimmed.info" \
        "*/common/*" \
        "*/ventilator_gui_backend_autogen/*" \
-       "*/protocols/*" \
        "*/tests/*" \
        "*spdlog*" \
        "*fmt*" \
@@ -197,11 +149,7 @@ generate_coverage_reports() {
   echo "Coverage reports generated at '$COVERAGE_OUTPUT_DIR/index.html'"
   echo "   You may open it in browser with 'python3 -m webbrowser ${COVERAGE_OUTPUT_DIR}/index.html'"
 
-  #launch_browser
-}
-
-launch_browser() {
-  python -m webbrowser "${COVERAGE_OUTPUT_DIR}/index.html"
+  #launch_browser "${COVERAGE_OUTPUT_DIR}/index.html"
 }
 
 ########
@@ -210,7 +158,7 @@ launch_browser() {
 
 if [ "$1" == "help" ] || [ "$1" == "-h" ]; then
   print_help
-  exit $EXIT_SUCCESS
+  exit_good
 
 ###########
 # INSTALL #
@@ -220,18 +168,16 @@ elif [ "$1" == "install" ]; then
   if [ "$PLATFORM" == "Darwin" ]; then
     brew install qt5
     configure_conan
-    exit $EXIT_SUCCESS
+    exit_good
   elif [ "$PLATFORM" == "Linux" ]; then
-    if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-      echo "Please do not run install with root privileges!"
-      exit $EXIT_FAILURE
-    fi
+    ensure_not_root
+    install_common_tooling
     install_linux
     configure_conan
-    exit $EXIT_SUCCESS
+    exit_good
   else
     echo "Unsupported platform: ${PLATFORM}"
-    exit $EXIT_FAILURE
+    exit_fail
   fi
 
 #########
@@ -240,22 +186,12 @@ elif [ "$1" == "install" ]; then
 elif [ "$1" == "clean" ]; then
   clean_dir build
   clean_dir "$COVERAGE_OUTPUT_DIR"
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # BUILD #
 #########
 elif [ "$1" == "build" ]; then
-
-  #TODO: what if it's one of the later params?
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run build with root privileges!"
-    exit $EXIT_FAILURE
-  fi
-
-  # generate comms protocols
-  ../common/common.sh update
-  ../common/common.sh generate
 
   config_type="Release"
   if [ "$2" == "--debug" ] || [ "$3" == "--debug" ] || [ "$4" == "--debug" ]; then
@@ -279,7 +215,13 @@ elif [ "$1" == "build" ]; then
     checks_opt="no"
   fi
 
-  create_clean_directory build
+  ensure_not_root
+
+  create_clean_dir build
+
+  # generate comms protocols
+  ../common/common.sh update
+  ../common/common.sh generate
 
   pushd build
   if [ "$checks_opt" == "yes" ]; then
@@ -296,7 +238,7 @@ elif [ "$1" == "build" ]; then
     run_cppcheck
   fi
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 #########
 # CHECK #
@@ -310,16 +252,6 @@ elif [ "$1" == "check" ]; then
 ########
 elif [ "$1" == "test" ]; then
 
-  #TODO: what if it's one of the later params?
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run tests with root privileges!"
-    exit $EXIT_FAILURE
-  fi
-
-  # generate comms protocols
-  ../common/common.sh update
-  ../common/common.sh generate
-
   j_opt=""
   if [ "$2" == "-j" ] || [ "$3" == "-j" ] || [ "$4" == "-j" ] || [ "$5" == "-j" ]; then
     # build with 1 less than total number of CPUS, minimum 1
@@ -332,7 +264,13 @@ elif [ "$1" == "test" ]; then
     j_opt="-j${NUM_CPUS}"
   fi
 
-  create_clean_directory build
+  ensure_not_root
+
+  create_clean_dir build
+
+  # generate comms protocols
+  ../common/common.sh update
+  ../common/common.sh generate
 
   pushd build
   cmake -DCMAKE_BUILD_TYPE=Debug -DCOV=1 ..
@@ -353,17 +291,13 @@ elif [ "$1" == "test" ]; then
     generate_coverage_reports
   fi
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 #######
 # RUN #
 #######
 elif [ "$1" == "run" ]; then
-
-  if [ "$EUID" -eq 0 ] && [ -z "$FORCED_ROOT" ]; then
-    echo "Please do not run the app with root privileges!"
-    exit $EXIT_FAILURE
-  fi
+  ensure_not_root
 
   pushd build
   if [ "$2" == "-x" ] || [ "$3" == "-x" ] || [ "$4" == "-x" ]; then
@@ -373,7 +307,7 @@ elif [ "$1" == "run" ]; then
   fi
   popd
 
-  exit $EXIT_SUCCESS
+  exit_good
 
 ################
 # ERROR & HELP #
@@ -381,5 +315,5 @@ elif [ "$1" == "run" ]; then
 else
   echo No valid options provided :\(
   print_help
-  exit $EXIT_FAILURE
+  exit_fail
 fi

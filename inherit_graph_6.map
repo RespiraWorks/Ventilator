@@ -1,0 +1,24 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,411,80,437"/>
+<area shape="rect" id="node2" href="$classAlarmManager.html" title=" " alt="" coords="174,5,293,32"/>
+<area shape="rect" id="node3" href="$classAlarmManagerTest.html" title=" " alt="" coords="161,56,305,83"/>
+<area shape="rect" id="node4" href="$classBreathSignalsTest.html" title=" " alt="" coords="164,107,303,133"/>
+<area shape="rect" id="node5" href="$classControllerHistoryTest.html" title=" " alt="" coords="154,157,313,184"/>
+<area shape="rect" id="node6" href="$classGuiStateContainer.html" title=" " alt="" coords="163,208,304,235"/>
+<area shape="rect" id="node7" href="$classGuiStateContainerTest.html" title=" " alt="" coords="150,259,317,285"/>
+<area shape="rect" id="node8" href="$classLatchingAlarm.html" title=" " alt="" coords="175,309,291,336"/>
+<area shape="rect" id="node13" href="$classLatchingAlarmTest.html" title=" " alt="" coords="162,360,305,387"/>
+<area shape="rect" id="node14" href="$classLoggerTest.html" title=" " alt="" coords="187,411,279,437"/>
+<area shape="rect" id="node15" href="$classPatientDetachedAlarmTest.html" title=" " alt="" coords="136,461,331,488"/>
+<area shape="rect" id="node16" href="$classPeriodicClosureTest.html" title=" " alt="" coords="159,512,308,539"/>
+<area shape="rect" id="node17" href="$classPipExceededAlarmTest.html" title=" " alt="" coords="148,563,319,589"/>
+<area shape="rect" id="node18" href="$classPipNotReachedAlarmTest.html" title=" " alt="" coords="140,613,327,640"/>
+<area shape="rect" id="node19" href="$classRespiraConnectedDeviceTest.html" title=" " alt="" coords="128,664,339,691"/>
+<area shape="rect" id="node20" href="$classSimpleClock.html" title="Clock class that emit current datetime in a given interval." alt="" coords="182,715,285,741"/>
+<area shape="rect" id="node21" href="$classSimpleClockTest.html" title=" " alt="" coords="169,765,298,792"/>
+<area shape="rect" id="node22" href="$classTimeSeriesGraphTest.html" title=" " alt="" coords="153,816,313,843"/>
+<area shape="rect" id="node9" href="$classMaxPressureAlarm.html" title=" " alt="" coords="398,233,543,260"/>
+<area shape="rect" id="node10" href="$classPatientDetachedAlarm.html" title=" " alt="" coords="387,284,555,311"/>
+<area shape="rect" id="node11" href="$classPipExceededAlarm.html" title=" " alt="" coords="399,335,543,361"/>
+<area shape="rect" id="node12" href="$classPipNotReachedAlarm.html" title=" " alt="" coords="391,385,551,412"/>
+</map>

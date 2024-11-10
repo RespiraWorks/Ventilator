@@ -1,0 +1,341 @@
+Parts
+-----
+
+ec-dinf4
+""""""""
+
+| **4-PIN DIN Power input port**
+| Kycon: KPJX-PM-4S
+| Price: ~3.13 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `2092-KPJX-PM-4S-ND <https://www.digikey.com/en/products/detail/kycon-inc/KPJX-PM-4S/9990081>`_
+     - 3.13
+     - 1 
+
+ec-kk-f-crimp
+"""""""""""""
+
+| **Molex KK 2.54 Female Crimp Contact 22-30awg**
+| Molex: 08-55-0102
+| Price: ~0.1 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - Mouser
+     - `538-08-55-0102 <https://www.mouser.com/ProductDetail/Molex/08-55-0102>`_
+     - 0.1
+     - 1 
+
+ec-kk-f-wire-3
+""""""""""""""
+
+| **Molex KK 2.54 Female Wire Housing 3 pos**
+| Molex: 22-01-3037
+| Price: ~0.12 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - Mouser
+     - `538-22-01-3037 <https://www.mouser.com/ProductDetail/Molex/22-01-3037>`_
+     - 0.12
+     - 1 
+
+ec-mega2x1
+""""""""""
+
+| **Mega-Fit 2x1**
+| Molex: 1716920102
+| Price: ~0.47 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `WM10385-ND <https://www.digikey.com/en/products/detail/molex/1716920102/4515271>`_
+     - 0.47
+     - 1 
+
+ec-mega4
+""""""""
+
+| **Mega-Fit 2x2**
+| Molex: 1716920104
+| Price: ~0.74 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `WM10386-ND <https://www.digikey.com/en/products/detail/molex/1716920104/4515272>`_
+     - 0.74
+     - 1 
+
+ec-micro1x4
+"""""""""""
+
+| **Micro-Fit 1x4**
+| Molex: 0436450408
+| Price: ~0.62 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `WM13985-ND <https://www.digikey.com/en/products/detail/molex/0436450408/4481616>`_
+     - 0.62
+     - 1 
+
+ec-microfit-f-crimp-20-24awg
+""""""""""""""""""""""""""""
+
+| **Molex Micro-Fit 3.0 Female Crimp Contact 20-24awg**
+| Molex: 43030-0002
+| Price: ~0.09 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `WM1125CT-ND <https://www.digikey.com/en/products/detail/molex/0430300002/467797>`_
+     - 0.09
+     - 1 
+
+ec-microfit-f-wire-1x3
+""""""""""""""""""""""
+
+| **Micro-Fit 3.0 Female Wire Housing 1x3**
+| Molex: 0436450300
+| Price: ~0.49 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - Digikey
+     - `WM1846-ND <https://www.digikey.com/en/products/detail/molex/0436450300/268975>`_
+     - 0.49
+     - 1 
+
+ec-qctf
+"""""""
+
+| **4.7mm QC Female Terminal for 14-16awg**
+| TE Connectivity: 3-520276-2
+| Price: ~0.26 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `A99878CT-ND <https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/3-520276-2/2060928>`_
+     - 0.26
+     - 1 
+
+ec-ring
+"""""""
+
+| **M4 Ring Terminal for 14-16awg**
+| Molex: 0193230008
+| Price: ~0.45 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `WM9628-ND <https://www.digikey.com/en/products/detail/molex/0193230008/3884489>`_
+     - 0.45
+     - 1 
+
+ee-blower-tkfan
+"""""""""""""""
+
+| **TKFAN Blower 12V**
+| TKFAN: BA7050H12B
+| Price: ~35.0 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - TKFAN
+     - `BA7050H12B <https://www.alibaba.com/product-detail/BA7050H12B-12V-high-pressure-and-high_1600308159014.html>`_
+     - 35.0
+     - 1 
+
+ew-24awg-kit
+""""""""""""
+
+| **10-color 24awg Wire Kit**
+| Remington: 24UL1007STRKIT10COLOR100
+| Price: ~3.5 USD/m
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / m
+   * - Digikey
+     - `2328-24UL1007STRKIT10COLOR100-ND <https://www.digikey.com/en/products/detail/remington-industries/24UL1007STRKIT10COLOR100/11614276>`_
+     - 106.64
+     - 30 m
+
+ew-awg16
+""""""""
+
+| **16 AWG wire**
+| Any: N/A
+| Price: ~4.1 USD/m
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / m
+   * - Amazon
+     - `B00N51OJJ4 <https://www.amazon.com/gp/product/B00N51OJJ4>`_
+     - 31.26
+     - 7.62 m
+
+ew-pre2
+"""""""
+
+| **Molex Pre-crimped Mega-Fit**
+| Molex: 0797582038
+| Price: ~1.33 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - DigiKey
+     - `WM16040-ND <https://www.digikey.com/en/products/detail/molex/0797582038/6607214>`_
+     - 1.33
+     - 1 
+
+ew-shrink3
+""""""""""
+
+| **Shrink tubing, black, 3mm diameter**
+| Price: ~2.46 USD/m
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / m
+   * - Amazon
+     - `B0919GN3SX <https://www.amazon.com/Inch-XHF-Waterproof-Insulation-Wear-Resistant/dp/B0919GN3SX>`_
+     - 10.0
+     - 6.1 m
+
+ew-shrink5
+""""""""""
+
+| **Shrink tubing, black, 5mm diameter**
+| Price: ~2.46 USD/m
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / m
+   * - Amazon
+     - `B0919F4YFZ <https://www.amazon.com/Inch-XHF-Waterproof-Insulation-Wear-Resistant/dp/B0919F4YFZ>`_
+     - 10.0
+     - 6.1 m
+
+te-microfit-crimper
+"""""""""""""""""""
+
+| **Micro-Fit 3.0 contact crimp tool**
+| Molex: 0638190000
+| Price: ~409.26 USD
+
+.. list-table::
+   :widths: 20 30 10 10
+   :header-rows: 1
+
+   * - Supplier
+     - Supplier P/N
+     - Price (USD)
+     - / units
+   * - Digikey
+     - `WM9022-ND <https://www.digikey.com/en/products/detail/molex/0638190000/1873800>`_
+     - 409.26
+     - 1 
+

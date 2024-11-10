@@ -1,0 +1,4 @@
+<map id="SimpleClock" name="SimpleClock">
+<area shape="rect" id="node1" title="Clock class that emit current datetime in a given interval." alt="" coords="5,80,108,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="19,5,94,32"/>
+</map>

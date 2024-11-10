@@ -1,0 +1,12 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classDebug_1_1Variable_1_1Base.html" title="Abstract base class for debug variables." alt="" coords="5,85,171,112"/>
+<area shape="rect" id="node2" href="$classDebug_1_1Variable_1_1FloatArray.html" title=" " alt="" coords="219,56,460,83"/>
+<area shape="rect" id="node4" href="$classDebug_1_1Variable_1_1FnVar32.html" title=" " alt="" coords="246,107,433,149"/>
+<area shape="rect" id="node5" href="$classDebug_1_1Variable_1_1Primitive32.html" title=" " alt="" coords="235,224,443,251"/>
+<area shape="rect" id="node9" href="$classDebug_1_1Variable_1_1String.html" title=" " alt="" coords="234,5,445,32"/>
+<area shape="rect" id="node3" href="$classDebug_1_1Variable_1_1NVFloatArray.html" title=" " alt="" coords="508,78,693,119"/>
+<area shape="rect" id="node6" href="$classDebug_1_1Variable_1_1Float.html" title=" " alt="" coords="517,224,684,251"/>
+<area shape="rect" id="node7" href="$classDebug_1_1Variable_1_1Int32.html" title=" " alt="" coords="517,275,684,301"/>
+<area shape="rect" id="node8" href="$classDebug_1_1Variable_1_1UInt32.html" title=" " alt="" coords="513,173,689,200"/>
+<area shape="rect" id="node10" href="$classDebug_1_1Variable_1_1NonVolatile.html" title=" " alt="" coords="235,173,443,200"/>
+</map>

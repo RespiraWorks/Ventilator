@@ -1,0 +1,6 @@
+<map id="UART::DMAChannel" name="UART::DMAChannel">
+<area shape="rect" id="node1" title=" " alt="" coords="34,171,182,197"/>
+<area shape="rect" id="node2" href="$classUART_1_1Channel.html" title=" " alt="" coords="49,95,167,121"/>
+<area shape="rect" id="node3" href="$classTxListener.html" title=" " alt="" coords="5,5,96,32"/>
+<area shape="rect" id="node4" href="$classRxListener.html" title=" " alt="" coords="120,5,211,32"/>
+</map>

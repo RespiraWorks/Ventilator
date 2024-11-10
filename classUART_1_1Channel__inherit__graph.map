@@ -1,0 +1,6 @@
+<map id="UART::Channel" name="UART::Channel">
+<area shape="rect" id="node1" title=" " alt="" coords="105,5,222,32"/>
+<area shape="rect" id="node2" href="$classUART_1_1DMAChannel.html" title=" " alt="" coords="5,80,153,107"/>
+<area shape="rect" id="node3" href="$classUART_1_1SoftChannel.html" title=" " alt="" coords="177,80,320,107"/>
+<area shape="rect" id="node4" href="$classUART_1_1MockChannel.html" title=" " alt="" coords="173,155,325,181"/>
+</map>

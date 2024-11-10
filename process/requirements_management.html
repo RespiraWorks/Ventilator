@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Managing Requirements &mdash; RespiraWorks Ventilator  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/aexmachina/jquery-bonsai/master/jquery.bonsai.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.rawgit.com/aexmachina/jquery-bonsai/master/jquery.bonsai.js"></script>
+      <script src="../_static/traceability-11.6.0.min.js?v=8c8bbf8b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributing" href="../contributing/contributing.html" />
+    <link rel="prev" title="Process Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RespiraWorks Ventilator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../system/index.html">System Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wiring/index.html">Wiring Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../purchasing/index.html">Purchasing documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software/index.html">Software Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Process Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Managing Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#are-the-requirements-up-to-date">Are the requirements up to date?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#is-everything-in-github">Is everything in Github?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#where-did-the-requirements-come-from">Where did the requirements come from?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#i-have-a-general-question-about-managing-requirements">I have a general question about managing requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#i-need-to-clarify-an-existing-requirement">I need to clarify an existing requirement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#i-need-to-add-a-new-requirement">I need to add a new requirement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#which-requirements-are-higher-priority">Which requirements are higher-priority?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cross-cutting-todos">Cross-cutting TODOs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#legacy-requirements-management">Legacy Requirements Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-valispace">Using Valispace</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-get-access">How to get access</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RespiraWorks Ventilator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Process Documentation</a></li>
+      <li class="breadcrumb-item active">Managing Requirements</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/process/requirements_management.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <blockquote>
+<div></div></blockquote>
+<section id="managing-requirements">
+<h1>Managing Requirements<a class="headerlink" href="#managing-requirements" title="Link to this heading"></a></h1>
+<p>We formally manage our product requirements in <a class="reference external" href="https://github.com/RespiraWorks/Ventilator/tree/master/docs">Github</a></p>
+<p>The are presented on the <a class="reference external" href="https://respiraworks.github.io/Ventilator/">project documents pages</a></p>
+<p>This is a living document, the entry point for learning how we manage requirements and how to help with that. If you
+learn something useful, or if you think this page could be structured better, <strong>please edit this page</strong>.</p>
+<p>As usual, where appropriate, <strong>cross-link with other resources</strong>: e.g. Slack threads where a decision was made (or names
+of people who made a decision), Github issues tracking certain work etc.</p>
+<section id="are-the-requirements-up-to-date">
+<h2>Are the requirements up to date?<a class="headerlink" href="#are-the-requirements-up-to-date" title="Link to this heading"></a></h2>
+<p>Not yet, but we’re trying to get there: many of them need clarification, many are missing, some may be vague or
+redundant. If something looks off, it probably is - please do your part to clarify it and edit the requirement - see
+below how.</p>
+</section>
+<section id="is-everything-in-github">
+<h2>Is everything in Github?<a class="headerlink" href="#is-everything-in-github" title="Link to this heading"></a></h2>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Have electrical / PCB requirements been transferred?</p>
+</div>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Some additional artifacts are highly related to requirements or should be cross-linked with them, but are currently not managed in Github:</p>
+</div>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Failure Modes and Effects Analysis (FMEA)** - currently managed in <a class="reference external" href="https://docs.google.com/spreadsheets/d/1qlTV5HqxnhlJXuhbSsEIfU-YwnN6PzgASv9_2dc5-cM/edit#gid=929514620">this spreadsheet</a></p>
+</div>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>How do we manage cross-linking between FMEA and the requirements?</p>
+</div>
+<div class="admonition-todo admonition" id="id5">
+<p class="admonition-title">Todo</p>
+<p>We should have a wiki page explaining the FMEA</p>
+</div>
+<div class="admonition-todo admonition" id="id6">
+<p class="admonition-title">Todo</p>
+<p>Validation logs - when we have a formal validation effort spun up, we will need to be able to trace every requirement to logs of tests showing that the requirement is met in a specific version of the product.</p>
+</div>
+</section>
+<section id="where-did-the-requirements-come-from">
+<h2>Where did the requirements come from?<a class="headerlink" href="#where-did-the-requirements-come-from" title="Link to this heading"></a></h2>
+<p>The <strong>system requirements</strong> come from a variety of sources: ISO standards (<strong>TODO:</strong> which ones?), ventilator manuals
+(<strong>TODO:</strong> which ones?).</p>
+<p>The <strong>software requirements</strong> are a result of people from the Software team analyzing the system requirements from their
+perspective and mapping them onto the software architecture
+(<strong>TODO:</strong> we should have a page about software architecture).</p>
+<div class="admonition-todo admonition" id="id7">
+<p class="admonition-title">Todo</p>
+<p>Where did the other ones come from?</p>
+</div>
+<div class="admonition-todo admonition" id="id8">
+<p class="admonition-title">Todo</p>
+<p>How will we know that they are correct and complete?</p>
+</div>
+<div class="admonition-todo admonition" id="id9">
+<p class="admonition-title">Todo</p>
+<p>How will I know when a requirement changes?</p>
+</div>
+</section>
+<section id="i-have-a-general-question-about-managing-requirements">
+<h2>I have a general question about managing requirements<a class="headerlink" href="#i-have-a-general-question-about-managing-requirements" title="Link to this heading"></a></h2>
+<p>Ask it on <cite>#requirements</cite>.</p>
+<div class="admonition-todo admonition" id="id10">
+<p class="admonition-title">Todo</p>
+<p>Are there more detailed places where one should go with more specific questions? Eg. hardware requirements, legal requirements, what to do if you need to talk to a doctor to clarify something?)</p>
+</div>
+</section>
+<section id="i-need-to-clarify-an-existing-requirement">
+<h2>I need to clarify an existing requirement<a class="headerlink" href="#i-need-to-clarify-an-existing-requirement" title="Link to this heading"></a></h2>
+<p>Create a Github issue and a PR with the changes you are suggesting.</p>
+<div class="admonition-todo admonition" id="id11">
+<p class="admonition-title">Todo</p>
+<p>Describe the feature in more detail, e.g. will I get a notification if somebody responds? Will I get a notification if somebody asks a question about a requirement I added?</p>
+</div>
+</section>
+<section id="i-need-to-add-a-new-requirement">
+<h2>I need to add a new requirement<a class="headerlink" href="#i-need-to-add-a-new-requirement" title="Link to this heading"></a></h2>
+<p>If you found out that the system needs to have some important requirement that is currently not tracked, please open a Github issue and submit a PR with the new requirement for consideration.
+Link it with other related requirements.</p>
+<p>For example, if you looked at the requirement “must have a</p>
+<p>BATTERY LOW alarm” and found that there is no requirement to have a battery sensor, go ahead and add a requirement to
+have a battery sensor.</p>
+</section>
+<section id="which-requirements-are-higher-priority">
+<h2>Which requirements are higher-priority?<a class="headerlink" href="#which-requirements-are-higher-priority" title="Link to this heading"></a></h2>
+<div class="admonition-todo admonition" id="id12">
+<p class="admonition-title">Todo</p>
+<p>This ideally should link to a well-prioritized “milestones” page</p>
+</div>
+</section>
+<section id="cross-cutting-todos">
+<h2>Cross-cutting TODOs<a class="headerlink" href="#cross-cutting-todos" title="Link to this heading"></a></h2>
+<p>In addition to the explicitly listed questions on each requirement, a few recurring themes implicitly apply to almost
+every requirement. We need to conduct several large-scale requirement cleanups.</p>
+<ul class="simple">
+<li><p>For all requirements we need to know which modes are they relevant to
+* How will we represent this?
+* Classify all requirements by modes where appropriate - <strong>should file a Github issue to track this</strong></p></li>
+<li><p>Many requirements talk about displaying a value, or a value being within certain bounds. It is often unclear whether the value is an instant sensor reading, a computation from the most recent breath, a time series thereof, or an average over some window (time-delimited or breath-delimited)</p></li>
+<li><p>Audit all such requirements and clarify them -  <strong>should file a Github issue to track this</strong></p></li>
+<li><p>Many values can be “commanded” (i.e. the device is trying to achieve a specific value) and “measured” (i.e. we can measure what value has actually been achieved). In some requirements it is unclear which modality it is talking about. Apply either “commanded” or “measured” to all magnitudes in all requirements - <strong>should file a Github issue to
+track this</strong></p></li>
+<li><p>Requirements for device performance (how quickly and how precisely the device should achieve commanded values of</p></li>
+</ul>
+<p>different parameters) are incomplete. There is a catch-all of 10%</p>
+<ul class="simple">
+<li><p>Identify such requirements for all necessary parameters - <strong>should file a Github issue to track this</strong></p></li>
+</ul>
+</section>
+</section>
+<section id="legacy-requirements-management">
+<h1>Legacy Requirements Management<a class="headerlink" href="#legacy-requirements-management" title="Link to this heading"></a></h1>
+<section id="using-valispace">
+<h2>Using Valispace<a class="headerlink" href="#using-valispace" title="Link to this heading"></a></h2>
+<p>This page should be a collection of best practices and tips on using Valispace in the context of our project.</p>
+<section id="how-to-get-access">
+<h3>How to get access<a class="headerlink" href="#how-to-get-access" title="Link to this heading"></a></h3>
+<p>Go to <cite>#requirements</cite> slack channel and look at the pinned messages.</p>
+<p><a class="reference external" href="https://covent-19.valispace.com/specifications/requirements">RespiraWorks Valispace account</a></p>
+<p><cite>username: RespiraWorks_public</cite></p>
+<p><cite>password: (*************)</cite></p>
+<div class="admonition-todo admonition" id="id13">
+<p class="admonition-title">Todo</p>
+<p>Pull comments from Valispace - <a class="reference external" href="https://github.com/RespiraWorks/Ventilator/issues/1088">Github issue</a></p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Process Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contributing/contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, RespiraWorks.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

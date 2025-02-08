@@ -1,0 +1,7 @@
+<map id="FrameDetector&lt; FrameBufferLength &gt;" name="FrameDetector&lt; FrameBufferLength &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,220,133"/>
+<area shape="rect" id="Node000002" href="$classRxListener.html" title=" " alt="" coords="13,5,103,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,41,104,92,99,95,69,44"/>
+<area shape="rect" id="Node000003" href="$classRxBuffer.html" title="Abstract class for serial receiver buffers." alt="" coords="128,5,207,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,44,126,95,121,92,151,41"/>
+</map>

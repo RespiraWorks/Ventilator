@@ -1,0 +1,7 @@
+<map id="SPI::Channel" name="SPI::Channel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="106,5,209,31"/>
+<area shape="rect" id="Node000002" href="$classSPI_1_1MockChannel.html" title=" " alt="" coords="5,79,144,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,42,90,80,86,76,132,38"/>
+<area shape="rect" id="Node000003" href="$classSPI_1_1STM32Channel.html" title=" " alt="" coords="168,79,315,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,38,229,76,226,80,180,42"/>
+</map>

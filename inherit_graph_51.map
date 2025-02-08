@@ -1,0 +1,45 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,400,80,425"/>
+<area shape="rect" id="Node000001" href="$classAlarmManager.html" title=" " alt="" coords="174,5,293,31"/>
+<area shape="poly" id="edge36_Node000000_Node000001" title=" " alt="" coords="44,386,53,307,69,204,93,105,108,67,126,40,148,25,173,17,175,22,150,30,130,44,113,69,98,107,74,205,58,308,49,387"/>
+<area shape="rect" id="Node000002" href="$classAlarmManagerTest.html" title=" " alt="" coords="161,55,305,80"/>
+<area shape="poly" id="edge37_Node000000_Node000002" title=" " alt="" coords="45,386,55,316,73,228,96,144,110,112,126,89,142,78,160,70,162,75,145,82,130,93,115,114,101,146,78,229,61,317,50,387"/>
+<area shape="rect" id="Node000003" href="$classBreathSignalsTest.html" title=" " alt="" coords="164,104,303,129"/>
+<area shape="poly" id="edge38_Node000000_Node000003" title=" " alt="" coords="41,386,45,334,57,267,68,232,83,198,102,166,126,139,143,127,163,119,165,124,146,132,130,143,106,170,87,200,73,234,62,268,50,334,47,386"/>
+<area shape="rect" id="Node000004" href="$classControllerHistoryTest.html" title=" " alt="" coords="154,153,313,179"/>
+<area shape="poly" id="edge39_Node000000_Node000004" title=" " alt="" coords="43,385,50,342,64,289,89,234,106,210,126,188,152,173,155,177,130,192,110,213,93,237,69,291,55,343,49,386"/>
+<area shape="rect" id="Node000005" href="$classGuiStateContainer.html" title=" " alt="" coords="163,203,304,228"/>
+<area shape="poly" id="edge40_Node000000_Node000005" title=" " alt="" coords="47,386,56,352,72,312,95,271,126,237,143,227,162,220,164,225,146,232,130,241,99,274,77,314,61,353,52,387"/>
+<area shape="rect" id="Node000006" href="$classGuiStateContainerTest.html" title=" " alt="" coords="150,252,317,277"/>
+<area shape="poly" id="edge41_Node000000_Node000006" title=" " alt="" coords="52,386,80,335,101,309,126,286,149,275,151,280,130,291,105,312,85,338,57,389"/>
+<area shape="rect" id="Node000007" href="$classLatchingAlarm.html" title=" " alt="" coords="175,301,291,327"/>
+<area shape="poly" id="edge42_Node000000_Node000007" title=" " alt="" coords="62,388,91,360,127,336,174,319,176,324,129,340,94,365,66,392"/>
+<area shape="rect" id="Node000012" href="$classLatchingAlarmTest.html" title=" " alt="" coords="162,351,305,376"/>
+<area shape="poly" id="edge47_Node000000_Node000012" title=" " alt="" coords="92,395,127,385,173,374,174,379,129,390,94,400"/>
+<area shape="rect" id="Node000013" href="$classLoggerTest.html" title=" " alt="" coords="187,400,279,425"/>
+<area shape="poly" id="edge48_Node000000_Node000013" title=" " alt="" coords="94,410,187,410,187,415,94,415"/>
+<area shape="rect" id="Node000014" href="$classPatientDetachedAlarmTest.html" title=" " alt="" coords="136,449,331,475"/>
+<area shape="poly" id="edge49_Node000000_Node000014" title=" " alt="" coords="94,425,129,434,179,447,177,452,127,439,93,430"/>
+<area shape="rect" id="Node000015" href="$classPeriodicClosureTest.html" title=" " alt="" coords="159,499,308,524"/>
+<area shape="poly" id="edge50_Node000000_Node000015" title=" " alt="" coords="66,434,95,460,129,484,161,496,159,501,127,488,91,464,63,438"/>
+<area shape="rect" id="Node000016" href="$classPipExceededAlarmTest.html" title=" " alt="" coords="148,548,319,573"/>
+<area shape="poly" id="edge51_Node000000_Node000016" title=" " alt="" coords="57,436,85,486,105,512,129,533,154,546,151,550,127,538,101,515,81,489,52,439"/>
+<area shape="rect" id="Node000017" href="$classPipNotReachedAlarmTest.html" title=" " alt="" coords="140,597,327,623"/>
+<area shape="poly" id="edge52_Node000000_Node000017" title=" " alt="" coords="52,438,61,471,77,511,99,550,130,583,151,595,148,599,126,587,95,553,72,513,56,473,47,439"/>
+<area shape="rect" id="Node000018" href="$classRespiraConnectedDeviceTest.html" title=" " alt="" coords="128,647,339,672"/>
+<area shape="poly" id="edge53_Node000000_Node000018" title=" " alt="" coords="49,439,56,482,70,534,94,587,110,611,130,632,149,644,146,649,126,636,106,614,89,590,65,536,50,483,44,440"/>
+<area shape="rect" id="Node000019" href="$classSimpleClock.html" title="Clock class that emit current datetime in a given interval." alt="" coords="182,696,285,721"/>
+<area shape="poly" id="edge54_Node000000_Node000019" title=" " alt="" coords="47,439,51,491,63,556,74,590,88,624,106,655,130,681,154,696,182,704,181,709,152,701,126,685,102,658,83,626,69,592,58,558,45,491,41,440"/>
+<area shape="rect" id="Node000020" href="$classSimpleClockTest.html" title=" " alt="" coords="169,745,298,771"/>
+<area shape="poly" id="edge55_Node000000_Node000020" title=" " alt="" coords="50,439,61,508,78,595,101,678,115,710,130,731,148,743,169,751,167,756,145,748,126,735,110,712,96,680,73,597,55,508,45,439"/>
+<area shape="rect" id="Node000021" href="$classTimeSeriesGraphTest.html" title=" " alt="" coords="153,795,313,820"/>
+<area shape="poly" id="edge56_Node000000_Node000021" title=" " alt="" coords="49,439,58,518,74,621,98,719,113,756,130,781,155,797,152,802,126,785,108,759,93,720,69,622,53,518,44,439"/>
+<area shape="rect" id="Node000008" href="$classMaxPressureAlarm.html" title=" " alt="" coords="398,228,543,253"/>
+<area shape="poly" id="edge43_Node000007_Node000008" title=" " alt="" coords="304,297,338,286,362,274,386,262,419,251,421,256,388,267,364,279,340,291,305,302"/>
+<area shape="rect" id="Node000009" href="$classPatientDetachedAlarm.html" title=" " alt="" coords="387,277,555,303"/>
+<area shape="poly" id="edge44_Node000007_Node000009" title=" " alt="" coords="305,304,386,296,387,301,305,309"/>
+<area shape="rect" id="Node000010" href="$classPipExceededAlarm.html" title=" " alt="" coords="399,327,543,352"/>
+<area shape="poly" id="edge45_Node000007_Node000010" title=" " alt="" coords="305,319,399,329,398,334,305,324"/>
+<area shape="rect" id="Node000011" href="$classPipNotReachedAlarm.html" title=" " alt="" coords="391,376,551,401"/>
+<area shape="poly" id="edge46_Node000007_Node000011" title=" " alt="" coords="306,325,340,336,364,348,388,361,423,373,422,378,386,366,362,353,338,340,304,330"/>
+</map>

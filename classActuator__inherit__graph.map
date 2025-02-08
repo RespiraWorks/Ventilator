@@ -1,0 +1,7 @@
+<map id="Actuator" name="Actuator">
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,5,153,31"/>
+<area shape="rect" id="Node000002" href="$classPinchValve.html" title=" " alt="" coords="5,79,99,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,43,64,80,60,77,93,39"/>
+<area shape="rect" id="Node000003" href="$classPwmActuator.html" title=" " alt="" coords="123,79,232,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,39,169,77,165,80,132,43"/>
+</map>

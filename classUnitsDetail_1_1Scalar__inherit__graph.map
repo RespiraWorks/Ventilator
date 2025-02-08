@@ -1,0 +1,33 @@
+<map id="UnitsDetail::Scalar&lt; Q, ValTy &gt;" name="UnitsDetail::Scalar&lt; Q, ValTy &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,148,269"/>
+<area shape="rect" id="Node000002" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,5,379,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,215,104,178,127,135,157,92,194,55,213,43,216,48,198,59,161,96,132,138,109,180,93,217"/>
+<area shape="rect" id="Node000004" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,69,379,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,216,139,167,166,141,195,119,217,107,220,112,197,124,169,145,143,170,102,220"/>
+<area shape="rect" id="Node000006" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,133,379,173"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="122,220,195,183,225,171,227,176,197,188,125,225"/>
+<area shape="rect" id="Node000008" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,197,379,237"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="161,234,203,228,204,233,162,239"/>
+<area shape="rect" id="Node000010" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,261,379,301"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="162,259,204,266,203,271,161,265"/>
+<area shape="rect" id="Node000012" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,325,379,365"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="125,274,197,311,227,323,225,328,195,316,122,279"/>
+<area shape="rect" id="Node000014" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="196,389,387,429"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="102,279,143,328,169,353,197,375,220,387,217,392,195,380,166,357,139,332,98,282"/>
+<area shape="rect" id="Node000016" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="204,453,379,493"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="93,282,109,318,132,361,161,403,198,439,216,451,213,455,194,443,157,406,127,363,104,321,88,284"/>
+<area shape="rect" id="Node000003" href="$classDuration.html" title=" " alt="" coords="457,13,535,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,23,456,23,456,28,392,28"/>
+<area shape="rect" id="Node000005" href="$classFrequency.html" title=" " alt="" coords="451,77,541,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="392,87,451,87,451,92,392,92"/>
+<area shape="rect" id="Node000007" href="$classLength.html" title=" " alt="" coords="463,141,529,166"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="393,151,462,151,462,156,393,156"/>
+<area shape="rect" id="Node000009" href="$classPressure.html" title=" " alt="" coords="457,205,535,230"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="392,215,456,215,456,220,392,220"/>
+<area shape="rect" id="Node000011" href="$classVoltage.html" title=" " alt="" coords="461,269,531,294"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="392,279,460,279,460,284,392,284"/>
+<area shape="rect" id="Node000013" href="$classVolume.html" title=" " alt="" coords="461,333,531,358"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="392,343,460,343,460,348,392,348"/>
+<area shape="rect" id="Node000015" href="$classVolumetricFlow.html" title=" " alt="" coords="435,397,557,422"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="401,407,434,407,434,412,401,412"/>
+</map>

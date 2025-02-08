@@ -1,0 +1,22 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classStream.html" title=" " alt="" coords="5,80,75,105"/>
+<area shape="rect" id="Node000001" href="$classCounterStream.html" title=" " alt="" coords="123,203,243,228"/>
+<area shape="poly" id="edge69_Node000000_Node000001" title=" " alt="" coords="59,116,87,152,124,188,146,200,143,205,121,192,83,156,55,119"/>
+<area shape="rect" id="Node000002" href="$classCrcStream.html" title=" " alt="" coords="137,5,228,31"/>
+<area shape="poly" id="edge70_Node000000_Node000002" title=" " alt="" coords="70,70,121,40,146,28,148,33,124,44,73,75"/>
+<area shape="rect" id="Node000003" href="$classEscapeStream.html" title=" " alt="" coords="125,55,240,80"/>
+<area shape="poly" id="edge71_Node000000_Node000003" title=" " alt="" coords="88,82,125,75,126,80,89,87"/>
+<area shape="rect" id="Node000004" href="$classOutputStream.html" title=" " alt="" coords="126,104,239,129"/>
+<area shape="poly" id="edge72_Node000000_Node000004" title=" " alt="" coords="89,98,126,104,125,110,88,103"/>
+<area shape="rect" id="Node000005" href="$classUartStream.html" title=" " alt="" coords="305,115,487,169"/>
+<area shape="poly" id="edge73_Node000004_Node000005" title=" " alt="" coords="253,122,305,129,305,134,253,128"/>
+<area shape="rect" id="Node000008" href="$classObserverStream.html" title=" " alt="" coords="332,16,460,41"/>
+<area shape="poly" id="edge74_Node000004_Node000008" title=" " alt="" coords="229,96,241,89,265,69,289,50,331,36,332,41,292,55,268,73,244,94,231,101"/>
+<area shape="rect" id="Node000009" href="$classQSerialOutputStream.html" title=" " alt="" coords="316,65,476,91"/>
+<area shape="poly" id="edge75_Node000004_Node000009" title=" " alt="" coords="252,101,325,88,326,93,253,107"/>
+<area shape="rect" id="Node000007" href="$classUartStream.html" title=" " alt="" coords="291,193,501,219"/>
+<area shape="poly" id="edge76_Node000004_Node000007" title=" " alt="" coords="234,133,244,138,268,159,278,169,292,178,324,191,322,196,289,183,274,173,264,163,241,143,231,137"/>
+<area shape="rect" id="Node000006" href="$classTxListener.html" title=" " alt="" coords="137,153,228,179"/>
+<area shape="poly" id="edge77_Node000006_Node000005" title=" " alt="" coords="242,157,305,150,305,155,242,162"/>
+<area shape="poly" id="edge78_Node000006_Node000007" title=" " alt="" coords="242,174,328,191,327,196,241,180"/>
+</map>

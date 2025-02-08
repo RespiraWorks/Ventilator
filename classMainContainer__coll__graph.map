@@ -1,0 +1,35 @@
+<map id="MainContainer" name="MainContainer">
+<area shape="rect" id="Node000001" title="\TODO make this a template class that expects some implementation of AbstractSystem" alt="" coords="1195,225,1312,250"/>
+<area shape="rect" id="Node000002" href="$classV03System.html" title=" " alt="" coords="855,13,951,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="965,15,1013,14,1068,19,1122,33,1148,44,1172,59,1192,77,1208,98,1232,145,1246,190,1253,224,1248,225,1241,192,1227,147,1204,101,1188,81,1169,63,1146,49,1121,38,1067,24,1013,20,965,21"/>
+<area shape="rect" id="Node000003" href="$classAbstractSystem.html" title=" " alt="" coords="317,13,442,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="455,23,855,23,855,28,455,28"/>
+<area shape="rect" id="Node000004" href="$classController.html" title=" " alt="" coords="860,62,947,87"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="961,73,1079,80,1134,89,1172,103,1203,130,1225,164,1241,197,1251,224,1246,225,1236,199,1221,167,1199,134,1169,108,1132,94,1078,86,960,78"/>
+<area shape="rect" id="Node000005" href="$classDebug_1_1Trace.html" title=" " alt="" coords="850,111,957,137"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="971,118,1017,119,1068,125,1121,136,1172,155,1195,170,1216,188,1245,223,1241,226,1212,192,1192,174,1169,160,1120,141,1068,130,1016,125,971,123"/>
+<area shape="rect" id="Node000006" href="$classDebug_1_1Command_1_1ModeHandler.html" title=" " alt="" coords="529,173,764,198"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="778,184,964,193,1068,202,1171,215,1207,222,1206,227,1170,220,1068,207,964,198,778,189"/>
+<area shape="rect" id="Node000007" href="$classDebug_1_1Command_1_1Handler.html" title=" " alt="" coords="5,253,204,278"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="190,248,253,237,548,195,549,201,254,243,191,253"/>
+<area shape="rect" id="Node000009" href="$classDebug_1_1Command_1_1MemoryHandler.html" title=" " alt="" coords="253,253,505,278"/>
+<area shape="poly" id="edge9_Node000009_Node000007" title=" " alt="" coords="218,263,253,263,253,268,218,268"/>
+<area shape="rect" id="Node000011" href="$classDebug_1_1Command_1_1VarHandler.html" title=" " alt="" coords="537,321,756,346"/>
+<area shape="poly" id="edge13_Node000011_Node000007" title=" " alt="" coords="193,278,254,287,537,320,537,325,253,292,192,283"/>
+<area shape="rect" id="Node000008" href="$classDebug_1_1Command_1_1PeekHandler.html" title=" " alt="" coords="788,225,1019,250"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1032,235,1194,235,1194,240,1032,240"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="519,255,788,241,788,246,519,261"/>
+<area shape="rect" id="Node000010" href="$classDebug_1_1Command_1_1PokeHandler.html" title=" " alt="" coords="789,274,1018,299"/>
+<area shape="poly" id="edge11_Node000010_Node000009" title=" " alt="" coords="519,268,788,279,788,285,519,274"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="1032,273,1170,255,1204,247,1205,253,1171,260,1032,279"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="770,336,891,335,1018,323,1096,306,1170,278,1229,248,1232,252,1172,282,1097,311,1019,328,891,340,770,342"/>
+<area shape="rect" id="Node000012" href="$classDebug_1_1Variable_1_1UInt32.html" title=" " alt="" coords="815,410,991,435"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="1005,428,1102,429,1142,424,1169,414,1189,397,1205,377,1229,330,1242,284,1248,250,1253,251,1247,286,1234,332,1210,380,1193,401,1172,418,1143,429,1102,434,1005,434"/>
+<area shape="rect" id="Node000013" href="$classDebug_1_1Variable_1_1Primitive32.html" title=" " alt="" coords="275,437,483,462"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="497,441,815,424,815,430,497,446"/>
+<area shape="rect" id="Node000015" href="$classDebug_1_1Variable_1_1Float.html" title=" " alt="" coords="820,462,987,487"/>
+<area shape="poly" id="edge18_Node000015_Node000013" title=" " alt="" coords="497,452,820,468,820,473,497,458"/>
+<area shape="rect" id="Node000014" href="$classDebug_1_1Variable_1_1Base.html" title="Abstract base class for debug variables." alt="" coords="22,437,187,462"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="201,447,275,447,275,452,201,452"/>
+<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="963,488,1011,495,1066,497,1120,488,1146,478,1169,465,1193,442,1212,415,1226,384,1236,353,1247,293,1249,250,1255,250,1252,294,1241,354,1231,386,1216,417,1197,446,1172,469,1148,483,1122,493,1066,502,1011,501,962,493"/>
+</map>

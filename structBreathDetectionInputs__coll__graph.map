@@ -1,0 +1,15 @@
+<map id="BreathDetectionInputs" name="BreathDetectionInputs">
+<area shape="rect" id="Node000001" title=" " alt="" coords="715,42,883,67"/>
+<area shape="rect" id="Node000002" href="$classVolume.html" title=" " alt="" coords="463,15,534,41"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="548,30,714,45,714,50,548,35"/>
+<area shape="rect" id="Node000003" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="205,5,380,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="394,24,463,25,463,30,394,29"/>
+<area shape="rect" id="Node000004" href="$classUnitsDetail_1_1Scalar.html" title=" " alt="" coords="5,5,148,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="162,23,205,23,205,28,162,28"/>
+<area shape="rect" id="Node000005" href="$classVolumetricFlow.html" title=" " alt="" coords="437,66,560,91"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="574,77,690,72,739,65,739,70,691,77,574,83"/>
+<area shape="rect" id="Node000006" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="197,69,388,109"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="402,81,437,79,437,84,402,86"/>
+<area shape="rect" id="Node000007" href="$classUnitsDetail_1_1Scalar.html" title=" " alt="" coords="5,69,148,109"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="162,87,197,87,197,92,162,92"/>
+</map>

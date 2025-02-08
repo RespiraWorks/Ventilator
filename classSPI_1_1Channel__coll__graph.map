@@ -1,0 +1,7 @@
+<map id="SPI::Channel" name="SPI::Channel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="57,93,159,119"/>
+<area shape="rect" id="Node000002" href="$classRxListener.html" title=" " alt="" coords="5,5,96,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,44,57,68,68,81,83,91,80,95,65,85,52,71,46,45"/>
+<area shape="rect" id="Node000003" href="$classTxListener.html" title=" " alt="" coords="120,5,211,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,44,138,71,120,95,116,92,134,68,150,41"/>
+</map>

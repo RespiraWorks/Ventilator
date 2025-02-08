@@ -1,0 +1,7 @@
+<map id="TestEeprom" name="TestEeprom">
+<area shape="rect" id="Node000001" title=" " alt="" coords="8,168,107,193"/>
+<area shape="rect" id="Node000002" href="$classI2Ceeprom.html" title=" " alt="" coords="11,93,104,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,133,60,168,55,168,55,133"/>
+<area shape="rect" id="Node000003" href="$classI2C_1_1Channel.html" title=" " alt="" coords="5,5,109,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,45,60,93,55,93,55,45"/>
+</map>

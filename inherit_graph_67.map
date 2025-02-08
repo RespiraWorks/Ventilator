@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classUART_1_1Channel.html" title=" " alt="" coords="5,31,123,56"/>
+<area shape="rect" id="Node000001" href="$classUART_1_1DMAChannel.html" title=" " alt="" coords="171,5,319,31"/>
+<area shape="poly" id="edge79_Node000000_Node000001" title=" " alt="" coords="136,31,170,26,171,31,137,36"/>
+<area shape="rect" id="Node000002" href="$classUART_1_1SoftChannel.html" title=" " alt="" coords="173,55,316,80"/>
+<area shape="poly" id="edge80_Node000000_Node000002" title=" " alt="" coords="137,50,173,55,172,60,136,56"/>
+<area shape="rect" id="Node000003" href="$classUART_1_1MockChannel.html" title=" " alt="" coords="367,55,519,80"/>
+<area shape="poly" id="edge81_Node000002_Node000003" title=" " alt="" coords="330,65,366,65,366,70,330,70"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classSPI_1_1Channel.html" title=" " alt="" coords="5,31,108,56"/>
+<area shape="rect" id="Node000001" href="$classSPI_1_1MockChannel.html" title=" " alt="" coords="160,5,299,31"/>
+<area shape="poly" id="edge67_Node000000_Node000001" title=" " alt="" coords="121,31,159,26,160,31,122,36"/>
+<area shape="rect" id="Node000002" href="$classSPI_1_1STM32Channel.html" title=" " alt="" coords="156,55,303,80"/>
+<area shape="poly" id="edge68_Node000000_Node000002" title=" " alt="" coords="122,50,156,54,155,60,121,55"/>
+</map>

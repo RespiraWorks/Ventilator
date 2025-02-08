@@ -1,0 +1,15 @@
+<map id="SPI::DaisyChain&lt; MaxSlaves, QueueLength &gt;" name="SPI::DaisyChain&lt; MaxSlaves, QueueLength &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="689,47,904,87"/>
+<area shape="rect" id="Node000002" href="$classRxListener.html" title=" " alt="" coords="421,5,512,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="526,24,666,45,690,48,689,54,665,50,525,29"/>
+<area shape="rect" id="Node000003" href="$classDuration.html" title=" " alt="" coords="427,55,506,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="520,65,689,65,689,70,520,70"/>
+<area shape="rect" id="Node000004" href="$classUnitsDetail_1_1ArithScalar.html" title=" " alt="" coords="197,43,372,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="386,63,427,64,427,69,386,68"/>
+<area shape="rect" id="Node000005" href="$classUnitsDetail_1_1Scalar.html" title=" " alt="" coords="5,43,148,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="162,61,197,61,197,66,162,66"/>
+<area shape="rect" id="Node000006" href="$classTime.html" title=" " alt="" coords="439,108,494,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="507,112,689,82,690,87,508,117"/>
+<area shape="rect" id="Node000007" href="$classUnitsDetail_1_1Scalar.html" title=" " alt="" coords="211,107,358,147"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="372,121,439,119,439,124,372,127"/>
+</map>

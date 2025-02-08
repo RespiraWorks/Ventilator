@@ -1,0 +1,13 @@
+<map id="OutputStream" name="OutputStream">
+<area shape="rect" id="Node000001" title=" " alt="" coords="123,109,236,135"/>
+<area shape="rect" id="Node000003" href="$classUartStream.html" title=" " alt="" coords="299,5,480,60"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,101,283,69,311,58,313,63,285,74,218,105"/>
+<area shape="rect" id="Node000004" href="$classObserverStream.html" title=" " alt="" coords="325,84,453,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="249,111,325,102,326,107,250,116"/>
+<area shape="rect" id="Node000005" href="$classQSerialOutputStream.html" title=" " alt="" coords="309,133,469,159"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="250,127,310,134,309,140,249,133"/>
+<area shape="rect" id="Node000006" href="$classUartStream.html" title=" " alt="" coords="284,183,495,208"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="217,139,285,169,324,180,322,185,283,174,215,144"/>
+<area shape="rect" id="Node000002" href="$classStream.html" title=" " alt="" coords="5,109,75,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,119,123,119,123,125,88,125"/>
+</map>

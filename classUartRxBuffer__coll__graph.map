@@ -1,0 +1,11 @@
+<map id="UartRxBuffer&lt; RxBytesMax &gt;" name="UartRxBuffer&lt; RxBytesMax &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,181,224,207"/>
+<area shape="rect" id="Node000002" href="$classRxBuffer.html" title="Abstract class for serial receiver buffers." alt="" coords="54,93,133,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,131,114,180,109,181,97,133"/>
+<area shape="rect" id="Node000003" href="$classUART_1_1Channel.html" title=" " alt="" coords="157,93,275,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,130,130,183,127,179,190,126"/>
+<area shape="rect" id="Node000004" href="$classRxListener.html" title=" " alt="" coords="113,5,204,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="159,44,165,68,176,81,191,91,188,95,173,85,160,71,154,45"/>
+<area shape="rect" id="Node000005" href="$classTxListener.html" title=" " alt="" coords="228,5,319,31"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="263,44,246,71,228,95,224,92,242,68,258,41"/>
+</map>

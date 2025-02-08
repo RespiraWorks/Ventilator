@@ -1,0 +1,21 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classDebug_1_1Variable_1_1Base.html" title="Abstract base class for debug variables." alt="" coords="5,84,171,109"/>
+<area shape="rect" id="Node000001" href="$classDebug_1_1Variable_1_1FloatArray.html" title=" " alt="" coords="219,55,460,80"/>
+<area shape="poly" id="edge21_Node000000_Node000001" title=" " alt="" coords="184,83,230,77,231,83,185,88"/>
+<area shape="rect" id="Node000004" href="$classDebug_1_1Variable_1_1FnVar32.html" title=" " alt="" coords="246,105,433,145"/>
+<area shape="poly" id="edge23_Node000000_Node000004" title=" " alt="" coords="185,105,246,112,245,117,184,110"/>
+<area shape="rect" id="Node000005" href="$classDebug_1_1Variable_1_1Primitive32.html" title=" " alt="" coords="235,219,443,244"/>
+<area shape="poly" id="edge24_Node000000_Node000005" title=" " alt="" coords="111,118,158,163,188,186,220,205,249,216,247,221,218,210,185,190,154,167,107,122"/>
+<area shape="rect" id="Node000009" href="$classDebug_1_1Variable_1_1String.html" title=" " alt="" coords="234,5,445,31"/>
+<area shape="poly" id="edge28_Node000000_Node000009" title=" " alt="" coords="126,76,218,39,262,28,264,33,219,45,128,81"/>
+<area shape="rect" id="Node000002" href="$classDebug_1_1Variable_1_1NVFloatArray.html" title=" " alt="" coords="508,77,693,117"/>
+<area shape="poly" id="edge22_Node000001_Node000002" title=" " alt="" coords="466,79,508,84,508,89,466,84"/>
+<area shape="rect" id="Node000006" href="$classDebug_1_1Variable_1_1Float.html" title=" " alt="" coords="517,219,684,244"/>
+<area shape="poly" id="edge25_Node000005_Node000006" title=" " alt="" coords="457,229,517,229,517,234,457,234"/>
+<area shape="rect" id="Node000007" href="$classDebug_1_1Variable_1_1Int32.html" title=" " alt="" coords="517,268,684,293"/>
+<area shape="poly" id="edge26_Node000005_Node000007" title=" " alt="" coords="421,244,533,265,532,271,420,249"/>
+<area shape="rect" id="Node000008" href="$classDebug_1_1Variable_1_1UInt32.html" title=" " alt="" coords="513,169,689,195"/>
+<area shape="poly" id="edge27_Node000005_Node000008" title=" " alt="" coords="420,213,532,192,533,197,421,219"/>
+<area shape="rect" id="Node000003" href="$classDebug_1_1Variable_1_1NonVolatile.html" title=" " alt="" coords="235,169,443,195"/>
+<area shape="poly" id="edge29_Node000003_Node000002" title=" " alt="" coords="424,164,459,154,511,135,558,114,560,119,513,140,461,159,426,169"/>
+</map>

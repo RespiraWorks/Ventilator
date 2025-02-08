@@ -1,0 +1,15 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classAnalogSensor.html" title=" " alt="" coords="5,69,220,95"/>
+<area shape="rect" id="Node000001" href="$classAnalogPressureSensor.html" title=" " alt="" coords="289,23,456,63"/>
+<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="212,65,289,53,290,58,213,70"/>
+<area shape="rect" id="Node000005" href="$classTeledyneR24.html" title=" " alt="" coords="268,99,477,124"/>
+<area shape="poly" id="edge9_Node000000_Node000005" title=" " alt="" coords="234,93,268,97,268,102,233,98"/>
+<area shape="rect" id="Node000002" href="$classMPXV5004DP.html" title=" " alt="" coords="525,5,740,31"/>
+<area shape="poly" id="edge7_Node000001_Node000002" title=" " alt="" coords="469,31,525,26,525,31,470,37"/>
+<area shape="rect" id="Node000003" href="$classMPXV5010DP.html" title=" " alt="" coords="525,55,740,80"/>
+<area shape="poly" id="edge8_Node000001_Node000003" title=" " alt="" coords="470,50,525,55,525,60,469,55"/>
+<area shape="rect" id="Node000006" href="$classOxygenSensor.html" title=" " alt="" coords="55,119,171,144"/>
+<area shape="poly" id="edge10_Node000006_Node000005" title=" " alt="" coords="184,123,268,117,268,122,185,129"/>
+<area shape="rect" id="Node000004" href="$classPressureSensor.html" title=" " alt="" coords="51,20,174,45"/>
+<area shape="poly" id="edge11_Node000004_Node000001" title=" " alt="" coords="188,33,289,37,289,43,188,38"/>
+</map>

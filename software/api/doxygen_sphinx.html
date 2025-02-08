@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Controller &mdash; RespiraWorks Ventilator  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/aexmachina/jquery-bonsai/master/jquery.bonsai.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/my_theme.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.rawgit.com/aexmachina/jquery-bonsai/master/jquery.bonsai.js"></script>
+      <script src="../../_static/traceability-11.6.0.min.js?v=8c8bbf8b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Process Documentation" href="../../process/index.html" />
+    <link rel="prev" title="API" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            RespiraWorks Ventilator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../system/index.html">System Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wiring/index.html">Wiring Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../purchasing/index.html">Purchasing documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Software Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../level_of_concern.html">Level of Concern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../SDP.html">Software Development Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../SRS.html">Software Requirements Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../SRS.html#traceability-matrix">Traceability Matrix</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Controller</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415ControllerState"><code class="docutils literal notranslate"><span class="pre">ControllerState</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv410Controller"><code class="docutils literal notranslate"><span class="pre">Controller</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/index.html">Process Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">RespiraWorks Ventilator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Software Documentation</a></li>
+          <li class="breadcrumb-item"><a href="index.html">API</a></li>
+      <li class="breadcrumb-item active">Controller</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/software/api/doxygen_sphinx.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <blockquote>
+<div></div></blockquote>
+<section id="controller">
+<span id="api-ventilator"></span><h1>Controller<a class="headerlink" href="#controller" title="Link to this heading"></a></h1>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415ControllerState">
+<span id="_CPPv315ControllerState"></span><span id="_CPPv215ControllerState"></span><span id="ControllerState"></span><span class="target" id="structControllerState"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ControllerState</span></span></span><a class="headerlink" href="#_CPPv415ControllerState" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ControllerState17pressure_setpointE">
+<span id="_CPPv3N15ControllerState17pressure_setpointE"></span><span id="_CPPv2N15ControllerState17pressure_setpointE"></span><span id="ControllerState::pressure_setpoint__Pressure"></span><span class="target" id="structControllerState_1a494cf145a4fdf024f0cba79ee3d2322e"></span><span class="n"><span class="pre">Pressure</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pressure_setpoint</span></span></span><a class="headerlink" href="#_CPPv4N15ControllerState17pressure_setpointE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ControllerState14patient_volumeE">
+<span id="_CPPv3N15ControllerState14patient_volumeE"></span><span id="_CPPv2N15ControllerState14patient_volumeE"></span><span id="ControllerState::patient_volume__Volume"></span><span class="target" id="structControllerState_1aa23aa62afce16f77ca172efdb9a811f9"></span><span class="n"><span class="pre">Volume</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">patient_volume</span></span></span><a class="headerlink" href="#_CPPv4N15ControllerState14patient_volumeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ControllerState8net_flowE">
+<span id="_CPPv3N15ControllerState8net_flowE"></span><span id="_CPPv2N15ControllerState8net_flowE"></span><span id="ControllerState::net_flow__VolumetricFlow"></span><span class="target" id="structControllerState_1aca6946de158fec60261cc8805c7676f1"></span><span class="n"><span class="pre">VolumetricFlow</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">net_flow</span></span></span><a class="headerlink" href="#_CPPv4N15ControllerState8net_flowE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ControllerState15flow_correctionE">
+<span id="_CPPv3N15ControllerState15flow_correctionE"></span><span id="_CPPv2N15ControllerState15flow_correctionE"></span><span id="ControllerState::flow_correction__VolumetricFlow"></span><span class="target" id="structControllerState_1a372d902dffa14bf96c06db1f0b15bd94"></span><span class="n"><span class="pre">VolumetricFlow</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flow_correction</span></span></span><a class="headerlink" href="#_CPPv4N15ControllerState15flow_correctionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ControllerState9breath_idE">
+<span id="_CPPv3N15ControllerState9breath_idE"></span><span id="_CPPv2N15ControllerState9breath_idE"></span><span id="ControllerState::breath_id__uint64_t"></span><span class="target" id="structControllerState_1a88e2fd75f746c069c7efe8becd52238d"></span><span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">breath_id</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N15ControllerState9breath_idE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv410Controller">
+<span id="_CPPv310Controller"></span><span id="_CPPv210Controller"></span><span id="Controller"></span><span class="target" id="classController"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Controller</span></span></span><a class="headerlink" href="#_CPPv410Controller" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller10ControllerEv">
+<span id="_CPPv3N10Controller10ControllerEv"></span><span id="_CPPv2N10Controller10ControllerEv"></span><span id="Controller::Controller"></span><span class="target" id="classController_1ae1d7f1814db7ab462eaf42f8b84f3670"></span><span class="sig-name descname"><span class="n"><span class="pre">Controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10Controller10ControllerEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller3RunE4TimeRK10VentParamsRK14SensorReadings">
+<span id="_CPPv3N10Controller3RunE4TimeRK10VentParamsRK14SensorReadings"></span><span id="_CPPv2N10Controller3RunE4TimeRK10VentParamsRK14SensorReadings"></span><span id="Controller::Run__Time.VentParamsCR.SensorReadingsCR"></span><span class="target" id="classController_1a27e7b438d198aac3106272e682182baf"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">ActuatorsState</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415ControllerState" title="ControllerState"><span class="n"><span class="pre">ControllerState</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Run</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">now</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">VentParams</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">params</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SensorReadings</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">sensor_readings</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Controller3RunE4TimeRK10VentParamsRK14SensorReadings" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller13GetLoopPeriodEv">
+<span id="_CPPv3N10Controller13GetLoopPeriodEv"></span><span id="_CPPv2N10Controller13GetLoopPeriodEv"></span><span id="Controller::GetLoopPeriod"></span><span class="target" id="classController_1ac9425454d6204c1cf166c2da08961066"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">Duration</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetLoopPeriod</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Controller13GetLoopPeriodEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-types">Private Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller8DbgFloatE">
+<span id="_CPPv3N10Controller8DbgFloatE"></span><span id="_CPPv2N10Controller8DbgFloatE"></span><span class="target" id="classController_1a6462a45bd9de023258246e02d51bff50"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DbgFloat</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">Debug</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Variable</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Float</span></span><a class="headerlink" href="#_CPPv4N10Controller8DbgFloatE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller9DbgUint32E">
+<span id="_CPPv3N10Controller9DbgUint32E"></span><span id="_CPPv2N10Controller9DbgUint32E"></span><span class="target" id="classController_1a4b6c12fb81e0d89503495d4fcd93cb9a"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DbgUint32</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">Debug</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Variable</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">UInt32</span></span><a class="headerlink" href="#_CPPv4N10Controller9DbgUint32E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller9DbgAccessE">
+<span id="_CPPv3N10Controller9DbgAccessE"></span><span id="_CPPv2N10Controller9DbgAccessE"></span><span class="target" id="classController_1a05ee504a44bdb6f1d7716c538aa17ba4"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DbgAccess</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">Debug</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Variable</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Access</span></span><a class="headerlink" href="#_CPPv4N10Controller9DbgAccessE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller10breath_id_E">
+<span id="_CPPv3N10Controller10breath_id_E"></span><span id="_CPPv2N10Controller10breath_id_E"></span><span id="Controller::breath_id___uint32_t"></span><span class="target" id="classController_1aeb534b4d32033ee97c6e8f66b395d6fe"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">breath_id_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller10breath_id_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller4fsm_E">
+<span id="_CPPv3N10Controller4fsm_E"></span><span id="_CPPv2N10Controller4fsm_E"></span><span id="Controller::fsm___VentilationFsm"></span><span class="target" id="classController_1a33c9c87d896f327471b1db863becc304"></span><span class="n"><span class="pre">VentilationFsm</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsm_</span></span></span><a class="headerlink" href="#_CPPv4N10Controller4fsm_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller17blower_valve_pid_E">
+<span id="_CPPv3N10Controller17blower_valve_pid_E"></span><span id="_CPPv2N10Controller17blower_valve_pid_E"></span><span id="Controller::blower_valve_pid___PID"></span><span class="target" id="classController_1a89f07eb4ee15d9f353d1f89e7af0cfb2"></span><span class="n"><span class="pre">PID</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">blower_valve_pid_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;blower_valve_&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;</span> <span class="pre">for</span> <span class="pre">blower</span> <span class="pre">valve</span> <span class="pre">PID&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.04f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">10.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">PID</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TermApplication</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OnError</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">PID</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TermApplication</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OnMeasurement</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller17blower_valve_pid_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller9psol_pid_E">
+<span id="_CPPv3N10Controller9psol_pid_E"></span><span id="_CPPv2N10Controller9psol_pid_E"></span><span id="Controller::psol_pid___PID"></span><span class="target" id="classController_1a4c682af456f8d14a2ce2ee7fc28d5f52"></span><span class="n"><span class="pre">PID</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">psol_pid_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;psol&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;</span> <span class="pre">for</span> <span class="pre">O2</span> <span class="pre">psol</span> <span class="pre">PID&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.04f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">20.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">PID</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TermApplication</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OnError</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">PID</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TermApplication</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OnMeasurement</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller9psol_pid_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller9fio2_pid_E">
+<span id="_CPPv3N10Controller9fio2_pid_E"></span><span id="_CPPv2N10Controller9fio2_pid_E"></span><span id="Controller::fio2_pid___PID"></span><span class="target" id="classController_1a9c4ff7efbee9022a59e450aa1c851a6c"></span><span class="n"><span class="pre">PID</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fio2_pid_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;fio2_&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;</span> <span class="pre">for</span> <span class="pre">FIO2</span> <span class="pre">PID&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.001f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.1f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">PID</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TermApplication</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OnError</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">PID</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TermApplication</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OnMeasurement</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller9fio2_pid_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller16flow_integrator_E">
+<span id="_CPPv3N10Controller16flow_integrator_E"></span><span id="_CPPv2N10Controller16flow_integrator_E"></span><span id="Controller::flow_integrator___std::optional:FlowIntegrator:"></span><span class="target" id="classController_1a19e809add9b051e7962ca56f9b9f2b1a"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">FlowIntegrator</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flow_integrator_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">FlowIntegrator</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N10Controller16flow_integrator_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller28uncorrected_flow_integrator_E">
+<span id="_CPPv3N10Controller28uncorrected_flow_integrator_E"></span><span id="_CPPv2N10Controller28uncorrected_flow_integrator_E"></span><span id="Controller::uncorrected_flow_integrator___std::optional:FlowIntegrator:"></span><span class="target" id="classController_1a64b4a64c9a613782ead9fa1032442a8b"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">FlowIntegrator</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">uncorrected_flow_integrator_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">FlowIntegrator</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N10Controller28uncorrected_flow_integrator_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller18ventilator_was_on_E">
+<span id="_CPPv3N10Controller18ventilator_was_on_E"></span><span id="_CPPv2N10Controller18ventilator_was_on_E"></span><span id="Controller::ventilator_was_on___b"></span><span class="target" id="classController_1a16bd123ce6f5212cbf56f390ee1c0bee"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ventilator_was_on_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller18ventilator_was_on_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller16dbg_loop_period_E">
+<span id="_CPPv3N10Controller16dbg_loop_period_E"></span><span id="_CPPv2N10Controller16dbg_loop_period_E"></span><span id="Controller::dbg_loop_period___DbgUint32"></span><span class="target" id="classController_1a552eb52b2b688e43ab67480e2cad5b8a"></span><a class="reference internal" href="#_CPPv4N10Controller9DbgUint32E" title="Controller::DbgUint32"><span class="n"><span class="pre">DbgUint32</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_loop_period_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;loop_period&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">static_cast</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N10Controller13GetLoopPeriodEv" title="Controller::GetLoopPeriod"><span class="n"><span class="pre">GetLoopPeriod</span></span></a><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">microseconds</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;\xB5s&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Loop</span> <span class="pre">period&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller16dbg_loop_period_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller16dbg_pc_setpoint_E">
+<span id="_CPPv3N10Controller16dbg_pc_setpoint_E"></span><span id="_CPPv2N10Controller16dbg_pc_setpoint_E"></span><span id="Controller::dbg_pc_setpoint___DbgFloat"></span><span class="target" id="classController_1a9ddad18afeb2335bb4fb5c1e820d3748"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_pc_setpoint_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;pc_setpoint&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;cmH2O&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Pressure</span> <span class="pre">control</span> <span class="pre">set-point&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller16dbg_pc_setpoint_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller18dbg_fio2_setpoint_E">
+<span id="_CPPv3N10Controller18dbg_fio2_setpoint_E"></span><span id="_CPPv2N10Controller18dbg_fio2_setpoint_E"></span><span id="Controller::dbg_fio2_setpoint___DbgFloat"></span><span class="target" id="classController_1a4446ea632d4a19ed5c069d1d2b0522ed"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_fio2_setpoint_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;fio2_setpoint&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.21f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;ratio&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;FiO2</span> <span class="pre">setpoint</span> <span class="pre">[0.0,</span> <span class="pre">1.0]</span> <span class="pre">as</span> <span class="pre">commanded</span> <span class="pre">by</span> <span class="pre">GUI&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller18dbg_fio2_setpoint_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller13dbg_net_flow_E">
+<span id="_CPPv3N10Controller13dbg_net_flow_E"></span><span id="_CPPv2N10Controller13dbg_net_flow_E"></span><span id="Controller::dbg_net_flow___DbgFloat"></span><span class="target" id="classController_1a8e3d26d7023e44a335476e8988d0b217"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_net_flow_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;net_flow&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;mL/s&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Net</span> <span class="pre">flow</span> <span class="pre">rate&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller13dbg_net_flow_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller25dbg_net_flow_uncorrected_E">
+<span id="_CPPv3N10Controller25dbg_net_flow_uncorrected_E"></span><span id="_CPPv2N10Controller25dbg_net_flow_uncorrected_E"></span><span id="Controller::dbg_net_flow_uncorrected___DbgFloat"></span><span class="target" id="classController_1a1b0a540b3984c28a7cd0e21d91625dcf"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_net_flow_uncorrected_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;net_flow_uncorrected&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;mL/s&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Net</span> <span class="pre">flow</span> <span class="pre">rate</span> <span class="pre">w/o</span> <span class="pre">correction&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller25dbg_net_flow_uncorrected_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller20dbg_flow_correction_E">
+<span id="_CPPv3N10Controller20dbg_flow_correction_E"></span><span id="_CPPv2N10Controller20dbg_flow_correction_E"></span><span id="Controller::dbg_flow_correction___DbgFloat"></span><span class="target" id="classController_1a08539a9e47c12810899c5a525bc0939b"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_flow_correction_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;flow_correction&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;mL/s&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Correction</span> <span class="pre">to</span> <span class="pre">flow&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller20dbg_flow_correction_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller11dbg_volume_E">
+<span id="_CPPv3N10Controller11dbg_volume_E"></span><span id="_CPPv2N10Controller11dbg_volume_E"></span><span id="Controller::dbg_volume___DbgFloat"></span><span class="target" id="classController_1af1a8831e18da948a7b32f4486171a5fb"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_volume_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;volume&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;mL&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Patient</span> <span class="pre">volume&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller11dbg_volume_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller23dbg_volume_uncorrected_E">
+<span id="_CPPv3N10Controller23dbg_volume_uncorrected_E"></span><span id="_CPPv2N10Controller23dbg_volume_uncorrected_E"></span><span id="Controller::dbg_volume_uncorrected___DbgFloat"></span><span class="target" id="classController_1ae3dde2774e1b8d6b826c0089bfe6d998"></span><a class="reference internal" href="#_CPPv4N10Controller8DbgFloatE" title="Controller::DbgFloat"><span class="n"><span class="pre">DbgFloat</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_volume_uncorrected_</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;uncorrected_volume&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;mL&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;Patient</span> <span class="pre">volume</span> <span class="pre">w/o</span> <span class="pre">correction&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller23dbg_volume_uncorrected_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Controller14dbg_breath_id_E">
+<span id="_CPPv3N10Controller14dbg_breath_id_E"></span><span id="_CPPv2N10Controller14dbg_breath_id_E"></span><span id="Controller::dbg_breath_id___DbgUint32"></span><span class="target" id="classController_1adeb2111b6dd978acda6cf0f79b489dbc"></span><a class="reference internal" href="#_CPPv4N10Controller9DbgUint32E" title="Controller::DbgUint32"><span class="n"><span class="pre">DbgUint32</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dbg_breath_id_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;breath_id&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10Controller9DbgAccessE" title="Controller::DbgAccess"><span class="n"><span class="pre">DbgAccess</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReadOnly</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;ID</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">current</span> <span class="pre">breath&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N10Controller14dbg_breath_id_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../process/index.html" class="btn btn-neutral float-right" title="Process Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, RespiraWorks.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

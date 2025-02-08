@@ -1,0 +1,11 @@
+<map id="Debug::Variable::Primitive32" name="Debug::Variable::Primitive32">
+<area shape="rect" id="Node000001" title=" " alt="" coords="175,79,383,104"/>
+<area shape="rect" id="Node000003" href="$classDebug_1_1Variable_1_1Float.html" title=" " alt="" coords="5,152,172,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,111,121,154,119,149,235,106"/>
+<area shape="rect" id="Node000004" href="$classDebug_1_1Variable_1_1Int32.html" title=" " alt="" coords="196,152,363,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="282,118,282,152,277,152,277,118"/>
+<area shape="rect" id="Node000005" href="$classDebug_1_1Variable_1_1UInt32.html" title=" " alt="" coords="387,152,563,177"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="324,106,444,149,442,154,323,111"/>
+<area shape="rect" id="Node000002" href="$classDebug_1_1Variable_1_1Base.html" title="Abstract base class for debug variables." alt="" coords="197,5,362,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="282,44,282,79,277,79,277,44"/>
+</map>

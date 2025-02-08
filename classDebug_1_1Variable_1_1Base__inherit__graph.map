@@ -1,0 +1,19 @@
+<map id="Debug::Variable::Base" name="Debug::Variable::Base">
+<area shape="rect" id="Node000001" title="Abstract base class for debug variables." alt="" coords="5,99,171,125"/>
+<area shape="rect" id="Node000002" href="$classDebug_1_1Variable_1_1FloatArray.html" title=" " alt="" coords="219,13,460,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,90,167,68,218,48,264,35,265,41,220,53,170,73,125,95"/>
+<area shape="rect" id="Node000004" href="$classDebug_1_1Variable_1_1FnVar32.html" title=" " alt="" coords="246,63,433,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="184,98,245,91,246,96,185,103"/>
+<area shape="rect" id="Node000005" href="$classDebug_1_1Variable_1_1Primitive32.html" title=" " alt="" coords="235,127,443,153"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="185,120,235,126,235,131,184,125"/>
+<area shape="rect" id="Node000009" href="$classDebug_1_1Variable_1_1String.html" title=" " alt="" coords="234,177,445,202"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="130,128,219,161,269,174,267,179,218,167,129,133"/>
+<area shape="rect" id="Node000003" href="$classDebug_1_1Variable_1_1NVFloatArray.html" title=" " alt="" coords="508,5,693,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="474,23,508,23,508,28,474,28"/>
+<area shape="rect" id="Node000006" href="$classDebug_1_1Variable_1_1Float.html" title=" " alt="" coords="517,78,684,103"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="420,122,532,101,533,106,421,127"/>
+<area shape="rect" id="Node000007" href="$classDebug_1_1Variable_1_1Int32.html" title=" " alt="" coords="517,127,684,153"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="457,137,517,137,517,143,457,143"/>
+<area shape="rect" id="Node000008" href="$classDebug_1_1Variable_1_1UInt32.html" title=" " alt="" coords="513,177,689,202"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="421,153,533,174,532,179,420,158"/>
+</map>

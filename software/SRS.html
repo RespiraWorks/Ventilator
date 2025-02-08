@@ -1,0 +1,2790 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Requirements Specification &mdash; RespiraWorks Ventilator  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/aexmachina/jquery-bonsai/master/jquery.bonsai.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.rawgit.com/aexmachina/jquery-bonsai/master/jquery.bonsai.js"></script>
+      <script src="../_static/traceability-11.6.0.min.js?v=8c8bbf8b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API" href="api/index.html" />
+    <link rel="prev" title="Software Development Plan" href="SDP.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RespiraWorks Ventilator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../system/index.html">System Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wiring/index.html">Wiring Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../purchasing/index.html">Purchasing documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Software Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="level_of_concern.html">Level of Concern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SDP.html">Software Development Plan</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Software Requirements Specification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alarms">Alarms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#self-test">Self-Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui">GUI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#embedded">Embedded</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#traceability-matrix">Traceability Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../process/index.html">Process Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RespiraWorks Ventilator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Software Documentation</a></li>
+      <li class="breadcrumb-item active">Software Requirements Specification</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/software/SRS.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <blockquote>
+<div></div></blockquote>
+<section id="software-requirements-specification">
+<h1>Software Requirements Specification<a class="headerlink" href="#software-requirements-specification" title="Link to this heading"></a></h1>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h2>
+<p>This document describe <em>what</em> RespiraWorks Ventilator software must do.</p>
+<p>This document is meant to be read and agreed-upon by the project owners and by software developers during design and construction.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Specify the functional requirements, performance requirements, interface requirements, safety requirements, hazard mitigations</p>
+</div>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
+<div class="collapsible_links collapse docutils container" id="RW-SW-8">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-8"><em>RW-SW-8</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-16"><em>RW-SYS-16</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-8">
+</div>
+<p>All software clocks must have high enough range to not overflow within 2 weeks</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-9">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-9"><em>RW-SW-9</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-16"><em>RW-SYS-16</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-9">
+</div>
+<p>Numeric algorithms within the software must not lose stability over 2 weeks</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-10">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-10"><em>RW-SW-10</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-16"><em>RW-SYS-16</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-10">
+</div>
+<p>Software algorithms must be runnable in faster than real time to allow stress testing of long-term continuous operation</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-41">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-41"><em>RW-SW-41</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-50"><em>RW-SYS-50</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-41">
+</div>
+<p>Software (both controller and Pi) should be power-efficient enough to continuously work from battery for 1 hour</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-154">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-154"><em>RW-SW-154</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-132"><em>RW-SYS-132</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-154">
+</div>
+<p>Controller must be able to detect patient inspiration</p>
+</section>
+<section id="alarms">
+<h3>Alarms<a class="headerlink" href="#alarms" title="Link to this heading"></a></h3>
+<div class="collapsible_links collapse docutils container" id="RW-SW-45">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-45"><em>RW-SW-45</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-45">
+</div>
+<p>GUI must have an alarm that triggers when the input air line is blocked (leading to low pressure), with severity HIGH</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-58">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-58"><em>RW-SW-58</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-58">
+</div>
+<p>GUI must have an alarm that triggers when the input O2 line is blocked (leading to low pressure), with severity HIGH</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-60">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-60"><em>RW-SW-60</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-9"><em>RW-SYS-9</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-60">
+</div>
+<p>Device and GUI must have an alarm for inspiratory pressure dropping below -4cm H2O</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-21">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-21"><em>RW-SW-21</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-21">
+</div>
+<p>GUI must have an alarm that triggers when the input O2 line pressure is too high, with severity HIGH</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-61">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-61"><em>RW-SW-61</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-61">
+</div>
+<p>Controller shall trigger an alarm in case GUI is unresponsive for 1/2 of the apnea time</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-5">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-5"><em>RW-SW-5</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-10"><em>RW-SYS-10</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-5">
+</div>
+<p>GUI displays an overpressure alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-36">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-36"><em>RW-SW-36</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-36">
+</div>
+<p>GUI shall trigger an alarm in case controller is unresponsive for 1/2 of the apnea time</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-6">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-6"><em>RW-SW-6</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-10"><em>RW-SYS-10</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-6">
+</div>
+<p>Controller must implement an overpressure alarm firing above 60 cmH2O</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-37">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-37"><em>RW-SW-37</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-37">
+</div>
+<p>GUI can compute a “LOW VTI” alarm that becomes active if the VTI for the current breath is above threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-79">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-79"><em>RW-SW-79</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-79">
+</div>
+<p>The LOW VTI alarm is of medium priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-38">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-38"><em>RW-SW-38</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-38">
+</div>
+<p>GUI has a control for setting the threshold for the LOW VTI alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-40">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-40"><em>RW-SW-40</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-40">
+</div>
+<p>The control for setting the threshold for LOW VTI alarm allows setting values between X and Y (TODO what values)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-163">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-163"><em>RW-SW-163</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-163">
+</div>
+<p>GUI can compute a “HIGH VTI” alarm that becomes active if the VTI for the current breath is above threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-164">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-164"><em>RW-SW-164</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-164">
+</div>
+<p>The HIGH VTI alarm is of medium priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-165">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-165"><em>RW-SW-165</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-165">
+</div>
+<p>GUI can compute VTI for each breath</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-14">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-14"><em>RW-SW-14</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-14">
+</div>
+<p>GUI can compute a “LOW VTE” alarm that becomes active if the VTE for the current breath is above threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-15">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-15"><em>RW-SW-15</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-15">
+</div>
+<p>GUI can compute a “HIGH VTE” alarm that becomes active if the VTE for the current breath is above threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-16">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-16"><em>RW-SW-16</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-16">
+</div>
+<p>The LOW VTE alarm is of medium priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-17">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-17"><em>RW-SW-17</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-17">
+</div>
+<p>The HIGH VTE alarm is of medium priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-18">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-18"><em>RW-SW-18</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-18">
+</div>
+<p>GUI can compute VTE for each breath</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-19">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-19"><em>RW-SW-19</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-19">
+</div>
+<p>When cancelled, the “pressure high” alarm does not re-trigger for 2 minutes</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-20">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-20"><em>RW-SW-20</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-139"><em>RW-SYS-139</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-20">
+</div>
+<p>GUI shall be able to compute a high-priority alarm that triggers when the O2 input line is disconnected</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-22">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-22"><em>RW-SW-22</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-22">
+</div>
+<p>GUI must be able to display all currently active alarms if there are several of them</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-26">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-26"><em>RW-SW-26</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-26">
+</div>
+<p>The event log must include all confirmed alarm settings</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-27">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-27"><em>RW-SW-27</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-27">
+</div>
+<p>The event log must include all alarm occurrences</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-28">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-28"><em>RW-SW-28</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-28">
+</div>
+<p>The event log must include all alarm inhibitions, cancellations, resets, acknowledgements</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-31">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-31"><em>RW-SW-31</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-31">
+</div>
+<p>GUI must allow inhibiting alarms</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-32">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-32"><em>RW-SW-32</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-32">
+</div>
+<p>GUI must allow acknowledging alarms</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-33">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-33"><em>RW-SW-33</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-33">
+</div>
+<p>GUI must allow cancelling alarms</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-39">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-39"><em>RW-SW-39</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-79 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-39">
+</div>
+<p>GUI must allow setting an alarm on inspiration tidal volume above threshold between the bounds of 80 to 3000 ml in increments of 10ml</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-42">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-42"><em>RW-SW-42</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-80 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-42">
+</div>
+<p>GUI must have an alarm that fires if for 3 consecutive breaths PIP &gt;user-specified threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-44">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-44"><em>RW-SW-44</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-81 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-44">
+</div>
+<p>GUI must have an alarm that fires if amount of leakage is &gt;user-specified threshold between 5 to 150lpm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-66">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-66"><em>RW-SW-66</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-97 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-66">
+</div>
+<p>Controller must be able to detect and/or receive alarms from GUI</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-67">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-67"><em>RW-SW-67</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-97 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-67">
+</div>
+<p>Controller must be able to command the hardware PCB buzzer.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-68">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-68"><em>RW-SW-68</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-98"><em>RW-SYS-98</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-68">
+</div>
+<p>GUI/Controller enumerates alarm codes and assigns them priorities</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-69">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-69"><em>RW-SW-69</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-99 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-69">
+</div>
+<p>GUI displays highest priority alarm on main screen</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-70">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-70"><em>RW-SW-70</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-99 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-70">
+</div>
+<p>GUI displays list of active alarms on button press</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-71">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-71"><em>RW-SW-71</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-97 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-100 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-71">
+</div>
+<p>GUI displays alarm on main screen legible at distance of 1 meter.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-73">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-73"><em>RW-SW-73</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-101"><em>RW-SYS-101</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-73">
+</div>
+<p>High severity alarms shall be indicated with a red color and a flashing frequency of 2Hz with a 50% duty cycle</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-74">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-74"><em>RW-SW-74</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-102"><em>RW-SYS-102</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-74">
+</div>
+<p>Low severity alarms shall be indicated with a yellow color which shall be constantly on.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-75">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-75"><em>RW-SW-75</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-103"><em>RW-SYS-103</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-75">
+</div>
+<p>Medium severity alarms shall be indicated with a yellow color, and a flashing frequency of 0.5Hz with a 50% duty cycle</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-76">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-76"><em>RW-SW-76</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-101"><em>RW-SYS-101</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-104 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-76">
+</div>
+<p>High severity alarms shall have an auditory signal consisting of 10 pulses with each pulse lasting 200ms with a pulse frequency of 500Hz (A4 note).</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-77">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-77"><em>RW-SW-77</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-101"><em>RW-SYS-101</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-104 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-77">
+</div>
+<p>High severity alarms shall have an auditory signal consisting of 4 pulses with each pulse lasting 200ms with a pulse frequency of 500Hz. (how is this different from 77?)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-78">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-78"><em>RW-SW-78</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-106"><em>RW-SYS-106</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-78">
+</div>
+<p>A press on the AUDIO PAUSE / ALARM PAUSE key shall initiate an auditory alarm signal pause of all active alarms during 60 seconds (Assuming that all the active alarms can be inhibited). The alarm activation symbol shall be displayed during the inactivation state with the symbol IEC 60417-5576</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-80">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-80"><em>RW-SW-80</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-108 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-80">
+</div>
+<p>Alarm: apnea. If no breath is triggered within the specified apnea time interval, the ventilator shall respond with a medium priority alarm with the display text “APNEA ALARM”</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-82">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-82"><em>RW-SW-82</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-109 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-82">
+</div>
+<p>Alarm: breath rate. When the breath rate has exceeded the breath rate setting, the device shall trigger a medium level alarm with the display text “HIGH BREATH RATE”</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-83">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-83"><em>RW-SW-83</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-109 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-83">
+</div>
+<p>There must be a maximum breath rate setting which acts as alarm threshold.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-84">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-84"><em>RW-SW-84</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-110"><em>RW-SYS-110</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-84">
+</div>
+<p>Alarm: pressure low. Upon a low pressure alarm, the gui will sound and display a high severity alarm and a text shall be displayed as “LOW INSP P”.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-85">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-85"><em>RW-SW-85</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-110"><em>RW-SYS-110</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-85">
+</div>
+<p>GUI will log onset and reset of low pressure alarm.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-86">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-86"><em>RW-SW-86</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-110"><em>RW-SYS-110</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-86">
+</div>
+<p>Alarm: pressure low. The system shall trigger a low pressure alarm with a high priority in the event of a low inspiratory pressure.This alarm shall be automatically reset upon the first breath with inspiration pressure above the threshold.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-88">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-88"><em>RW-SW-88</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-88">
+</div>
+<p>GUI can compute a “pressure high” alarm that becomes active when pressure goes above a specified threshold for 3+ consecutive breaths AND becomes inactive on the first breath where it doesn’t go above the threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-89">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-89"><em>RW-SW-89</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-89">
+</div>
+<p>While the “pressure high” alarm is active, GUI emits a sound</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-90">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-90"><em>RW-SW-90</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-90">
+</div>
+<p>The “pressure high” alarm is displayed until cancelled even if inactive</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-91">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-91"><em>RW-SW-91</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-91">
+</div>
+<p>Alarm management subsystem should support an alarm state where the alarm is visible but not audible</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-93">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-93"><em>RW-SW-93</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-80 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-93">
+</div>
+<p>The PIP too high alarm shall have high priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-94">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-94"><em>RW-SW-94</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-80 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-94">
+</div>
+<p>The default value for the “PIP too high” alarm shall be the commanded PIP value + 5cm H2O</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-103">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-103"><em>RW-SW-103</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-114"><em>RW-SYS-114</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-103">
+</div>
+<p>Controller should report whether the proximal tube is connected</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-104">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-104"><em>RW-SW-104</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-114"><em>RW-SYS-114</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-104">
+</div>
+<p>GUI should compute a “proximal tube disconnect” alarm that becomes active when the proximal tube is disconnected</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-105">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-105"><em>RW-SW-105</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-114"><em>RW-SYS-114</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-105">
+</div>
+<p>The “proximal tube disconnected” alarm is of medium priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-106">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-106"><em>RW-SW-106</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-106">
+</div>
+<p>GUI can detect obstruction, based on the condition that VTI &lt; 100ml</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-107">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-107"><em>RW-SW-107</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-107">
+</div>
+<p>When obstruction is detected, GUI activates an “obstruction” alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-108">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-108"><em>RW-SW-108</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-108">
+</div>
+<p>The obstruction alarm is inactivated when obstruction is not detected</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-109">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-109"><em>RW-SW-109</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-109">
+</div>
+<p>The obstruction alarm has high priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-110">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-110"><em>RW-SW-110</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-110">
+</div>
+<p>GUI can compute amount of leakage (L/min) based on sensor readings</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-111">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-111"><em>RW-SW-111</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-111">
+</div>
+<p>GUI can compute a “high leakage” alarm that becomes active when average leakage over X seconds is &gt; 3 L/min</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-112">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-112"><em>RW-SW-112</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-112">
+</div>
+<p>The “high leakage” alarm is high priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-114">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-114"><em>RW-SW-114</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-114">
+</div>
+<p>The “involuntary shutdown” alarm is a continuous-tone alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-115">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-115"><em>RW-SW-115</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-115">
+</div>
+<p>The “involuntary shutdown” alarm emits a sound tone for at least 2 min</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-116">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-116"><em>RW-SW-116</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-116">
+</div>
+<p>The alarm subsystem supports continuous-tone alarms</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-117">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-117"><em>RW-SW-117</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-118"><em>RW-SYS-118</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-117">
+</div>
+<p>GUI can detect loss of AC mains</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-118">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-118"><em>RW-SW-118</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-118"><em>RW-SYS-118</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-118">
+</div>
+<p>GUI is connected to the “AC mains power loss” sensor (and we have such a sensor)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-119">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-119"><em>RW-SW-119</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-118"><em>RW-SYS-118</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-119">
+</div>
+<p>The AC mains power loss alarm is medium priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-120">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-120"><em>RW-SW-120</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-120">
+</div>
+<p>GUI can compute battery ETA from a history of remaining battery amounts</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-121">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-121"><em>RW-SW-121</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-121">
+</div>
+<p>GUI is connected to a battery amount sensor</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-122">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-122"><em>RW-SW-122</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-122">
+</div>
+<p>GUI can compute a “low battery” alarm when battery ETA is &lt;30min</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-123">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-123"><em>RW-SW-123</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-123">
+</div>
+<p>The “low battery” alarm is low priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-124">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-124"><em>RW-SW-124</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-124">
+</div>
+<p>GUI can compute a “critically low battery” alarm when battery ETA is &lt;10min</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-125">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-125"><em>RW-SW-125</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-125">
+</div>
+<p>The “critically low battery” alarm is high priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-128">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-128"><em>RW-SW-128</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-121"><em>RW-SYS-121</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-128">
+</div>
+<p>GUI needs to be able to read hardware battery presense and chargeability sensors</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-129">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-129"><em>RW-SW-129</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-121"><em>RW-SYS-121</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-129">
+</div>
+<p>GUI needs to have a “battery failure” alarm that is activated when the battery is absent, unavailable, or unchargeable</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-130">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-130"><em>RW-SW-130</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-121"><em>RW-SYS-121</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-130">
+</div>
+<p>The “battery failure” alarm has high priority</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-131">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-131"><em>RW-SW-131</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-125 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-131">
+</div>
+<p>(System requirement 125) “System shall be capable of sensing the temperature of heating elements (blower motor, battery cell during operation)”</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-132">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-132"><em>RW-SW-132</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-132">
+</div>
+<p>GUI needs to be able to read temperature sensors for: blower motor, blower power mgmt system, battery cell</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-133">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-133"><em>RW-SW-133</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-133">
+</div>
+<p>GUI needs to have a “blower motor temperature too high” alarm triggered by a user-specified threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-134">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-134"><em>RW-SW-134</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-134">
+</div>
+<p>GUI needs to have a “blower power system temperature too high” alarm triggered by a user-specified threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-135">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-135"><em>RW-SW-135</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-135">
+</div>
+<p>GUI needs to have a “battery temperature too high” alarm triggered by a user-specified threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-137">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-137"><em>RW-SW-137</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-137">
+</div>
+<p>GUI needs to automatically invoke a safety action when blower power system temperature is above threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-138">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-138"><em>RW-SW-138</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-138">
+</div>
+<p>GUI needs to automatically invoke a safety action when battery temperature is above threshold</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-144">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-144"><em>RW-SW-144</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-144">
+</div>
+<p>GUI has a control for setting the threshold for HIGH RR alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-145">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-145"><em>RW-SW-145</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-145">
+</div>
+<p>The control for setting the threshold for HIGH RR alarm allows setting values between 5-30 in increments of 1</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-146">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-146"><em>RW-SW-146</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-129 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-146">
+</div>
+<p>GUI has a control for setting the threshold for LOW RR alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-147">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-147"><em>RW-SW-147</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-129 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-147">
+</div>
+<p>The control for setting the threshold for LOW RR alarm allows setting values between 5-30 in increments of 1</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-148">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-148"><em>RW-SW-148</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-130 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-148">
+</div>
+<p>GUI has a control for setting the threshold for the apnea alarm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-149">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-149"><em>RW-SW-149</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-130 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-149">
+</div>
+<p>The control for setting the threshold for the apnea alarm allows setting values between 1-30 seconds in increments of 1s</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-158">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-158"><em>RW-SW-158</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-158">
+</div>
+<p>Alarm when relief valve opens. Need to detect this based on an unexpected increase in flow (not pressure). Might be folded into a leak alarm - but need to ensure we account for this case and test it.</p>
+</section>
+<section id="self-test">
+<h3>Self-Test<a class="headerlink" href="#self-test" title="Link to this heading"></a></h3>
+<div class="collapsible_links collapse docutils container" id="RW-SW-1">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-1"><em>RW-SW-1</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-1">
+</div>
+<p>Self-test shall include a test for accuracy of the O2 sensor</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-2">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-2"><em>RW-SW-2</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-2">
+</div>
+<p>Self-test shall include validation of blower response: commanded speed vs. pressure achieved at that speed</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-3">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-3"><em>RW-SW-3</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-3">
+</div>
+<p>Self-test shall include validation of the pinch valves pressure response at a fixed blower speed</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-159">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-159"><em>RW-SW-159</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-159">
+</div>
+<p>Self-test shall include validation that all the audible alarm devices work. Eg could test that, given voltage there’s current, or could ask the user to confirm that it’s audible</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-160">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-160"><em>RW-SW-160</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-160">
+</div>
+<p>Self-test shall include validation that all visual alarms work (asking user to confirm that the alarm works)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-161">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-161"><em>RW-SW-161</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-161">
+</div>
+<p>Self-test shall include validation of flow sensor accuracy (set blower to certain speed, air lines open, nothing connected to the output etc. -&gt; gives expected flow)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-166">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-166"><em>RW-SW-166</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-166">
+</div>
+<p>Self-test shall include validation of pressure sensor accuracy</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-150">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-150"><em>RW-SW-150</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-150">
+</div>
+<p>Controller must support a pre-test mode</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-151">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-151"><em>RW-SW-151</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-151">
+</div>
+<p>GUI must support the controller’s pre-test mode</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-152">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-152"><em>RW-SW-152</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-152">
+</div>
+<p>Controller’s pre-test mode must include the following checks: …</p>
+</section>
+<section id="gui">
+<h3>GUI<a class="headerlink" href="#gui" title="Link to this heading"></a></h3>
+<div class="collapsible_links collapse docutils container" id="RW-SW-162">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-162"><em>RW-SW-162</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-5"><em>RW-SYS-5</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-162">
+</div>
+<p>GUI allows user to adjust PEEP from 0-20 cmH2O with increments of 1</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-11">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-11"><em>RW-SW-11</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-11">
+</div>
+<p>GUI shall render parameters and alarms readable at a distance of 1m</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-12">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-12"><em>RW-SW-12</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-20"><em>RW-SYS-20</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-12">
+</div>
+<p>GUI must allow adjusting RR from 5-30 bpm with increments of 1</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-13">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-13"><em>RW-SW-13</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-21"><em>RW-SYS-21</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-13">
+</div>
+<p>GUI must allow adjusting IER from 1:1 to 1:4 (Inhale to exhale)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-24">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-24"><em>RW-SW-24</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-24">
+</div>
+<p>GUI must require all ventilation and alarm setting changes to be confirmed</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-34">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-34"><em>RW-SW-34</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-34">
+</div>
+<p>GUI must allow adjusting O2 infusion (FiO2) in supplied air from 0.21 to as close to 1 as possible with a minimum of 0.96, adjustable in increments of 0.1.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-35">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-35"><em>RW-SW-35</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-77"><em>RW-SYS-77</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-35">
+</div>
+<p>GUI must allow adjusting HFNC flow rate from 0 to 60 L/min in increments of 5(TBD) L/min</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-43">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-43"><em>RW-SW-43</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-81 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-43">
+</div>
+<p>GUI must be able to compute amount of leakage based on controller actuation and sensor readings</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-46">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-46"><em>RW-SW-46</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-83 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-46">
+</div>
+<p>GUI must display patient pressure measured at the gas outlet port, based on data from controller</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-47">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-47"><em>RW-SW-47</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-83 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-47">
+</div>
+<p>GUI graph refresh rate must be &gt;= 20 Hz</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-48">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-48"><em>RW-SW-48</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-83 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-48">
+</div>
+<p>GUI graph duration must be 30 seconds</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-49">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-49"><em>RW-SW-49</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-32"><em>RW-SYS-32</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-84 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-49">
+</div>
+<p>GUI must display a reading of inspiratory tidal volume in the range 0..1000mL with resolution of 1mL</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-50">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-50"><em>RW-SW-50</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-21"><em>RW-SYS-21</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-85 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-50">
+</div>
+<p>GUI must display the ratio of inspiration time to expiration time of the most recent breath in the range  10:1 to 1:200 with display resolution of 0.1 for values under 10 and 1 for values over 10. Transition from inspire to expire is defined as being after the plateau</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-53">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-53"><em>RW-SW-53</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-5"><em>RW-SYS-5</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-86 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-53">
+</div>
+<p>GUI must display a reading of PEEP for the most recent breath in increments of 1 cmH2O</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-54">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-54"><em>RW-SW-54</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-32"><em>RW-SYS-32</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-87"><em>RW-SYS-87</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-54">
+</div>
+<p>GUI must display a graph of volume provided to the patient</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-92">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-92"><em>RW-SW-92</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-87"><em>RW-SYS-87</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-92">
+</div>
+<p>The GUI shall display the flow rate provided to the patient as a graph with duration of 30 seconds updated at a rate &gt;=20Hz and units of liters / minute.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-96">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-96"><em>RW-SW-96</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-138 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-96">
+</div>
+<p>GUI shall display FiO2 as measured prior to the patient inhale limb</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-99">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-99"><em>RW-SW-99</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-99">
+</div>
+<p>GUI shall allow the user to set PIP from 5-55 cmH2O with increments of 1 cm H2O.</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-113">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-113"><em>RW-SW-113</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-113">
+</div>
+<p>GUI can detect controller shutdown</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-139">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-139"><em>RW-SW-139</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-139">
+</div>
+<p>In [what modes?] , GUI should have a “rise time” parameter controlling how long it takes from PEEP to PIP</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-141">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-141"><em>RW-SW-141</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-141">
+</div>
+<p>In  GUI should allow setting the “rise parameter” in the range of 0..20% of breath cycle time</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-155">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-155"><em>RW-SW-155</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-132"><em>RW-SYS-132</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-155">
+</div>
+<p>GUI must allow specifying the assist/control with pressure controlled ventilation mode</p>
+</section>
+<section id="embedded">
+<h3>Embedded<a class="headerlink" href="#embedded" title="Link to this heading"></a></h3>
+<div class="collapsible_links collapse docutils container" id="RW-SW-4">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-4"><em>RW-SW-4</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-9"><em>RW-SYS-9</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-4">
+</div>
+<p>Controller should respond fast enough to prevent pressure dropping below -4cm under ? (under what conditions)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-7">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-7"><em>RW-SW-7</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-10"><em>RW-SYS-10</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-7">
+</div>
+<p>Controller should never command pressure to go above 60</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-52">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-52"><em>RW-SW-52</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-5"><em>RW-SYS-5</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-86 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-52">
+</div>
+<p>SW must measure PEEP over each breath (pressure at the end of the breath)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-55">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-55"><em>RW-SW-55</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-88 not defined, broken link</p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-142"><em>RW-SYS-142</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-55">
+</div>
+<p>For parameters that do not have a different performance target specified, controller shall be able to hit commanded values within 10%</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-56">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-56"><em>RW-SW-56</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-89"><em>RW-SYS-89</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-56">
+</div>
+<p>Controller should trigger an inspiration cycle when (NEED TO CLARIFY)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-57">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-57"><em>RW-SW-57</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-57">
+</div>
+<p>Controller should trigger an expiration cycle when</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-59">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-59"><em>RW-SW-59</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-59">
+</div>
+<p>Controller should be able to meet PIP targets in the range 5-55cmH2O +/- 5cm</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-62">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-62"><em>RW-SW-62</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link">RW-SYS-93 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-62">
+</div>
+<p>Controller should be able to meet commanded breath rate within +- 1 breath</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-63">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-63"><em>RW-SW-63</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-94"><em>RW-SYS-94</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-63">
+</div>
+<p>Controller should be able to meet commanded pressure during the pressure fall phase within an overshoot of 0.8*PEEP-1 cmH2O</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-64">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-64"><em>RW-SW-64</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-95"><em>RW-SYS-95</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-142"><em>RW-SYS-142</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-64">
+</div>
+<p>Controller should be able to meet commanded PEEP within +-1 H2O + 10% (of what?)</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-95">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-95"><em>RW-SW-95</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-95">
+</div>
+<p>Controller shall be able to achieve target FiO2 value within 0.05</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-97">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-97"><em>RW-SW-97</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link">RW-SYS-138 not defined, broken link</p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-97">
+</div>
+<p>Controller shall report FiO2 as measured prior to patient inhale limb</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-98">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-98"><em>RW-SW-98</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-63"><em>RW-SYS-63</em></a></p>
+</p>
+</dd>
+<dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-137"><em>RW-SYS-137</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-98">
+</div>
+<p>Controller shall be able to achieve commanded values under different air conditions affecting air density, such as temperature, altitude and humidity</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-153">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-153"><em>RW-SW-153</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-132"><em>RW-SYS-132</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-153">
+</div>
+<p>Controller must implement assist/control with pressure controlled ventilation mode, where inspiration is triggered by detecting patient inspiration</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-156">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-156"><em>RW-SW-156</em></a></p>
+</div>
+</div>
+<div class="docutils container" id="content-RW-SW-156">
+</div>
+<p>Controller must have safety measures to avoid acting on absurd commands even in case of data corruption between GUI and controller communication</p>
+</section>
+<section id="logging">
+<h3>Logging<a class="headerlink" href="#logging" title="Link to this heading"></a></h3>
+<div class="collapsible_links collapse docutils container" id="RW-SW-23">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-23"><em>RW-SW-23</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-23">
+</div>
+<p>GUI must store an event log in non-volatile memory</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-25">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-25"><em>RW-SW-25</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-25">
+</div>
+<p>The event log must include all confirmed ventilation settings</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-29">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-29"><em>RW-SW-29</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-29">
+</div>
+<p>The event log must include a date and timestamp</p>
+<div class="collapsible_links collapse docutils container" id="RW-SW-30">
+<div class="item admonition">
+<p class="admonition-title"><a class="reference external" href="SRS.html#RW-SW-30"><em>RW-SW-30</em></a></p>
+</div>
+<dl class="simple">
+<dt>Fulfills</dt><dd><p><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</p>
+</dd>
+</dl>
+</div>
+<div class="docutils container" id="content-RW-SW-30">
+</div>
+<p>The event log must include changes to the system’s real time clock by logging the Current Date/Time followed by the new Date/Time</p>
+</section>
+</section>
+</section>
+<section id="traceability-matrix">
+<h1>Traceability Matrix<a class="headerlink" href="#traceability-matrix" title="Link to this heading"></a></h1>
+<div class="docutils container">
+<div class="item admonition">
+<p class="admonition-title">System Requirements to SRS</p>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Software Requirements</p></th>
+<th class="head"><p>System Requirements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="item-group-0 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-1"><em>RW-SW-1</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-1 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-2"><em>RW-SW-2</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-2 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-3"><em>RW-SW-3</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-3 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-4"><em>RW-SW-4</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-9"><em>RW-SYS-9</em></a></p>
+</td>
+</tr>
+<tr class="item-group-4 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-5"><em>RW-SW-5</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-10"><em>RW-SYS-10</em></a></p>
+</td>
+</tr>
+<tr class="item-group-5 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-6"><em>RW-SW-6</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-10"><em>RW-SYS-10</em></a></p>
+</td>
+</tr>
+<tr class="item-group-6 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-7"><em>RW-SW-7</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-10"><em>RW-SYS-10</em></a></p>
+</td>
+</tr>
+<tr class="item-group-7 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-8"><em>RW-SW-8</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-16"><em>RW-SYS-16</em></a></p>
+</td>
+</tr>
+<tr class="item-group-8 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-9"><em>RW-SW-9</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-16"><em>RW-SYS-16</em></a></p>
+</td>
+</tr>
+<tr class="item-group-9 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-10"><em>RW-SW-10</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-16"><em>RW-SYS-16</em></a></p>
+</td>
+</tr>
+<tr class="item-group-10 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-11"><em>RW-SW-11</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</td>
+</tr>
+<tr class="item-group-11 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-12"><em>RW-SW-12</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-20"><em>RW-SYS-20</em></a></p>
+</td>
+</tr>
+<tr class="item-group-12 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-13"><em>RW-SW-13</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-21"><em>RW-SYS-21</em></a></p>
+</td>
+</tr>
+<tr class="item-group-13 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-14"><em>RW-SW-14</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</td>
+</tr>
+<tr class="item-group-14 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-15"><em>RW-SW-15</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</td>
+</tr>
+<tr class="item-group-15 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-16"><em>RW-SW-16</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</td>
+</tr>
+<tr class="item-group-16 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-17"><em>RW-SW-17</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</td>
+</tr>
+<tr class="item-group-17 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-18"><em>RW-SW-18</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-112"><em>RW-SYS-112</em></a></p>
+</td>
+</tr>
+<tr class="item-group-18 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-19"><em>RW-SW-19</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-19 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-20"><em>RW-SW-20</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-139"><em>RW-SYS-139</em></a></p>
+</td>
+</tr>
+<tr class="item-group-20 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-21"><em>RW-SW-21</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-21 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-22"><em>RW-SW-22</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</td>
+</tr>
+<tr class="item-group-22 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-23"><em>RW-SW-23</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</td>
+</tr>
+<tr class="item-group-23 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-24"><em>RW-SW-24</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-24 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-25"><em>RW-SW-25</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-25 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-26"><em>RW-SW-26</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-26 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-27"><em>RW-SW-27</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-27 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-28"><em>RW-SW-28</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-28 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-29"><em>RW-SW-29</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-29 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-30"><em>RW-SW-30</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-30 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-31"><em>RW-SW-31</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-31 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-32"><em>RW-SW-32</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+</td>
+</tr>
+<tr class="item-group-32 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-33"><em>RW-SW-33</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-69"><em>RW-SYS-69</em></a></p>
+<p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-33 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-34"><em>RW-SW-34</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</td>
+</tr>
+<tr class="item-group-34 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-35"><em>RW-SW-35</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-77"><em>RW-SYS-77</em></a></p>
+</td>
+</tr>
+<tr class="item-group-35 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-36"><em>RW-SW-36</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-36 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-37"><em>RW-SW-37</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</td>
+</tr>
+<tr class="item-group-37 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-38"><em>RW-SW-38</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-38 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-39"><em>RW-SW-39</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</td>
+</tr>
+<tr class="item-group-39 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-40"><em>RW-SW-40</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-40 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-41"><em>RW-SW-41</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-50"><em>RW-SYS-50</em></a></p>
+</td>
+</tr>
+<tr class="item-group-41 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-42"><em>RW-SW-42</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-42 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-43"><em>RW-SW-43</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</td>
+</tr>
+<tr class="item-group-43 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-44"><em>RW-SW-44</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</td>
+</tr>
+<tr class="item-group-44 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-45"><em>RW-SW-45</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-45 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-46"><em>RW-SW-46</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</td>
+</tr>
+<tr class="item-group-46 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-47"><em>RW-SW-47</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</td>
+</tr>
+<tr class="item-group-47 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-48"><em>RW-SW-48</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</td>
+</tr>
+<tr class="item-group-48 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-49"><em>RW-SW-49</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-32"><em>RW-SYS-32</em></a></p>
+</td>
+</tr>
+<tr class="item-group-49 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-50"><em>RW-SW-50</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-21"><em>RW-SYS-21</em></a></p>
+</td>
+</tr>
+<tr class="item-group-50 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-52"><em>RW-SW-52</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-5"><em>RW-SYS-5</em></a></p>
+</td>
+</tr>
+<tr class="item-group-51 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-53"><em>RW-SW-53</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-5"><em>RW-SYS-5</em></a></p>
+</td>
+</tr>
+<tr class="item-group-52 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-54"><em>RW-SW-54</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-32"><em>RW-SYS-32</em></a></p>
+<p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-87"><em>RW-SYS-87</em></a></p>
+</td>
+</tr>
+<tr class="item-group-53 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-55"><em>RW-SW-55</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-142"><em>RW-SYS-142</em></a></p>
+</td>
+</tr>
+<tr class="item-group-54 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-56"><em>RW-SW-56</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-89"><em>RW-SYS-89</em></a></p>
+</td>
+</tr>
+<tr class="item-group-55 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-57"><em>RW-SW-57</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-56 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-58"><em>RW-SW-58</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-57 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-59"><em>RW-SW-59</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</td>
+</tr>
+<tr class="item-group-58 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-60"><em>RW-SW-60</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-9"><em>RW-SYS-9</em></a></p>
+</td>
+</tr>
+<tr class="item-group-59 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-61"><em>RW-SW-61</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-60 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-62"><em>RW-SW-62</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-61 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-63"><em>RW-SW-63</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-94"><em>RW-SYS-94</em></a></p>
+</td>
+</tr>
+<tr class="item-group-62 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-64"><em>RW-SW-64</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-95"><em>RW-SYS-95</em></a></p>
+<p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-142"><em>RW-SYS-142</em></a></p>
+</td>
+</tr>
+<tr class="item-group-63 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-66"><em>RW-SW-66</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</td>
+</tr>
+<tr class="item-group-64 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-67"><em>RW-SW-67</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</td>
+</tr>
+<tr class="item-group-65 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-68"><em>RW-SW-68</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-98"><em>RW-SYS-98</em></a></p>
+</td>
+</tr>
+<tr class="item-group-66 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-69"><em>RW-SW-69</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</td>
+</tr>
+<tr class="item-group-67 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-70"><em>RW-SW-70</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-68"><em>RW-SYS-68</em></a></p>
+</td>
+</tr>
+<tr class="item-group-68 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-71"><em>RW-SW-71</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-17"><em>RW-SYS-17</em></a></p>
+</td>
+</tr>
+<tr class="item-group-69 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-73"><em>RW-SW-73</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-101"><em>RW-SYS-101</em></a></p>
+</td>
+</tr>
+<tr class="item-group-70 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-74"><em>RW-SW-74</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-102"><em>RW-SYS-102</em></a></p>
+</td>
+</tr>
+<tr class="item-group-71 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-75"><em>RW-SW-75</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-103"><em>RW-SYS-103</em></a></p>
+</td>
+</tr>
+<tr class="item-group-72 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-76"><em>RW-SW-76</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-101"><em>RW-SYS-101</em></a></p>
+</td>
+</tr>
+<tr class="item-group-73 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-77"><em>RW-SW-77</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-101"><em>RW-SYS-101</em></a></p>
+</td>
+</tr>
+<tr class="item-group-74 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-78"><em>RW-SW-78</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-106"><em>RW-SYS-106</em></a></p>
+</td>
+</tr>
+<tr class="item-group-75 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-79"><em>RW-SW-79</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-76 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-80"><em>RW-SW-80</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-77 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-82"><em>RW-SW-82</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-78 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-83"><em>RW-SW-83</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-79 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-84"><em>RW-SW-84</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-110"><em>RW-SYS-110</em></a></p>
+</td>
+</tr>
+<tr class="item-group-80 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-85"><em>RW-SW-85</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-110"><em>RW-SYS-110</em></a></p>
+</td>
+</tr>
+<tr class="item-group-81 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-86"><em>RW-SW-86</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-110"><em>RW-SYS-110</em></a></p>
+</td>
+</tr>
+<tr class="item-group-82 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-88"><em>RW-SW-88</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-83 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-89"><em>RW-SW-89</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-84 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-90"><em>RW-SW-90</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-85 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-91"><em>RW-SW-91</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-86 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-92"><em>RW-SW-92</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-87"><em>RW-SYS-87</em></a></p>
+</td>
+</tr>
+<tr class="item-group-87 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-93"><em>RW-SW-93</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-88 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-94"><em>RW-SW-94</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-111"><em>RW-SYS-111</em></a></p>
+</td>
+</tr>
+<tr class="item-group-89 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-95"><em>RW-SW-95</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</td>
+</tr>
+<tr class="item-group-90 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-96"><em>RW-SW-96</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</td>
+</tr>
+<tr class="item-group-91 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-97"><em>RW-SW-97</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-72"><em>RW-SYS-72</em></a></p>
+</td>
+</tr>
+<tr class="item-group-92 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-98"><em>RW-SW-98</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-63"><em>RW-SYS-63</em></a></p>
+<p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-137"><em>RW-SYS-137</em></a></p>
+</td>
+</tr>
+<tr class="item-group-93 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-99"><em>RW-SW-99</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-3"><em>RW-SYS-3</em></a></p>
+</td>
+</tr>
+<tr class="item-group-94 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-103"><em>RW-SW-103</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-114"><em>RW-SYS-114</em></a></p>
+</td>
+</tr>
+<tr class="item-group-95 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-104"><em>RW-SW-104</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-114"><em>RW-SYS-114</em></a></p>
+</td>
+</tr>
+<tr class="item-group-96 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-105"><em>RW-SW-105</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-114"><em>RW-SYS-114</em></a></p>
+</td>
+</tr>
+<tr class="item-group-97 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-106"><em>RW-SW-106</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</td>
+</tr>
+<tr class="item-group-98 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-107"><em>RW-SW-107</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</td>
+</tr>
+<tr class="item-group-99 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-108"><em>RW-SW-108</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</td>
+</tr>
+<tr class="item-group-100 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-109"><em>RW-SW-109</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-115"><em>RW-SYS-115</em></a></p>
+</td>
+</tr>
+<tr class="item-group-101 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-110"><em>RW-SW-110</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</td>
+</tr>
+<tr class="item-group-102 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-111"><em>RW-SW-111</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</td>
+</tr>
+<tr class="item-group-103 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-112"><em>RW-SW-112</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-116"><em>RW-SYS-116</em></a></p>
+</td>
+</tr>
+<tr class="item-group-104 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-113"><em>RW-SW-113</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</td>
+</tr>
+<tr class="item-group-105 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-114"><em>RW-SW-114</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</td>
+</tr>
+<tr class="item-group-106 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-115"><em>RW-SW-115</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</td>
+</tr>
+<tr class="item-group-107 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-116"><em>RW-SW-116</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-117"><em>RW-SYS-117</em></a></p>
+</td>
+</tr>
+<tr class="item-group-108 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-117"><em>RW-SW-117</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-118"><em>RW-SYS-118</em></a></p>
+</td>
+</tr>
+<tr class="item-group-109 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-118"><em>RW-SW-118</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-118"><em>RW-SYS-118</em></a></p>
+</td>
+</tr>
+<tr class="item-group-110 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-119"><em>RW-SW-119</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-118"><em>RW-SYS-118</em></a></p>
+</td>
+</tr>
+<tr class="item-group-111 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-120"><em>RW-SW-120</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+<p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</td>
+</tr>
+<tr class="item-group-112 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-121"><em>RW-SW-121</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+<p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</td>
+</tr>
+<tr class="item-group-113 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-122"><em>RW-SW-122</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+</td>
+</tr>
+<tr class="item-group-114 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-123"><em>RW-SW-123</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-119"><em>RW-SYS-119</em></a></p>
+</td>
+</tr>
+<tr class="item-group-115 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-124"><em>RW-SW-124</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</td>
+</tr>
+<tr class="item-group-116 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-125"><em>RW-SW-125</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-120"><em>RW-SYS-120</em></a></p>
+</td>
+</tr>
+<tr class="item-group-117 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-128"><em>RW-SW-128</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-121"><em>RW-SYS-121</em></a></p>
+</td>
+</tr>
+<tr class="item-group-118 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-129"><em>RW-SW-129</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-121"><em>RW-SYS-121</em></a></p>
+</td>
+</tr>
+<tr class="item-group-119 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-130"><em>RW-SW-130</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-121"><em>RW-SYS-121</em></a></p>
+</td>
+</tr>
+<tr class="item-group-120 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-131"><em>RW-SW-131</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-121 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-132"><em>RW-SW-132</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-122 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-133"><em>RW-SW-133</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-123 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-134"><em>RW-SW-134</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-124 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-135"><em>RW-SW-135</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-125 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-137"><em>RW-SW-137</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-126 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-138"><em>RW-SW-138</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-122"><em>RW-SYS-122</em></a></p>
+</td>
+</tr>
+<tr class="item-group-127 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-139"><em>RW-SW-139</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-128 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-141"><em>RW-SW-141</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-129 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-144"><em>RW-SW-144</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-130 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-145"><em>RW-SW-145</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-131 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-146"><em>RW-SW-146</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-132 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-147"><em>RW-SW-147</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-133 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-148"><em>RW-SW-148</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-134 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-149"><em>RW-SW-149</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-128"><em>RW-SYS-128</em></a></p>
+</td>
+</tr>
+<tr class="item-group-135 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-150"><em>RW-SW-150</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-136 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-151"><em>RW-SW-151</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-137 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-152"><em>RW-SW-152</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-138 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-153"><em>RW-SW-153</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-132"><em>RW-SYS-132</em></a></p>
+</td>
+</tr>
+<tr class="item-group-139 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-154"><em>RW-SW-154</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-132"><em>RW-SYS-132</em></a></p>
+</td>
+</tr>
+<tr class="item-group-140 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-155"><em>RW-SW-155</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-132"><em>RW-SYS-132</em></a></p>
+</td>
+</tr>
+<tr class="item-group-141 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-156"><em>RW-SW-156</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-142 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-158"><em>RW-SW-158</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-143 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-159"><em>RW-SW-159</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-144 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-160"><em>RW-SW-160</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-145 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-161"><em>RW-SW-161</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+<tr class="item-group-146 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-162"><em>RW-SW-162</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-5"><em>RW-SYS-5</em></a></p>
+</td>
+</tr>
+<tr class="item-group-147 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-163"><em>RW-SW-163</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</td>
+</tr>
+<tr class="item-group-148 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-164"><em>RW-SW-164</em></a></p></td>
+<td rowspan="1"><p></p></td>
+</tr>
+<tr class="item-group-149 row-odd"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-165"><em>RW-SW-165</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-113"><em>RW-SYS-113</em></a></p>
+</td>
+</tr>
+<tr class="item-group-150 row-even"><td rowspan="1"><p class="item-link"><a class="reference external" href="SRS.html#RW-SW-166"><em>RW-SW-166</em></a></p></td>
+<td rowspan="1"><p class="item-link"><a class="reference external" href="../system/system_requirements.html#RW-SYS-131"><em>RW-SYS-131</em></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SDP.html" class="btn btn-neutral float-left" title="Software Development Plan" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/index.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, RespiraWorks.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

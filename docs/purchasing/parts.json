@@ -287,5 +287,22 @@
         "url": "https://www.digikey.com/en/products/detail/molex/0638190000/1873800"
       }
     ]
+  },
+  {
+    "pn": "ee-stepper-motor-NEMA17",
+    "notes": "Stepper Motor, NEMA 17, Full Flat D Shaft",
+    "manufacturer": "STEPPERONLINE",
+    "mpn": "17hs19-2004s1",
+    "avg_price": 9.57,
+    "price_unit": "",
+    "sources": [
+      {
+        "supplier": "Stepper Online",
+        "spn": "17hs19-2004s1",
+        "price": 9.57,
+        "price_units": 1,
+        "url": "https://www.omc-stepperonline.com/nema-17-bipolar-59ncm-84oz-in-2a-42x48mm-4-wires-w-1m-cable-connector-17hs19-2004s1"
+      }
+    ]
   }
 ]

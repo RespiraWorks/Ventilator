@@ -25,9 +25,7 @@ Duration Controller::GetLoopPeriod() { return MainLoopPeriod; }
 std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentParams &params,
                                                            const SensorReadings &sensor_readings) {
   VolumetricFlow uncorrected_net_flow =
-      sensor_readings.air_inflow
-      // + sensor_readings.oxygen_inflow \todo add this once it is well tested
-      - sensor_readings.outflow;
+      sensor_readings.air_inflow + sensor_readings.oxygen_inflow - sensor_readings.outflow;
   flow_integrator_->AddFlow(now, uncorrected_net_flow);
   uncorrected_flow_integrator_->AddFlow(now, uncorrected_net_flow);
 
@@ -62,6 +60,7 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
     blower_valve_pid_.reset();
     psol_pid_.reset();
     fio2_pid_.reset();
+    air_flow_pid_.reset();
 
     actuators_state = {
         .fio2_valve = 0,
@@ -77,19 +76,22 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
       uncorrected_flow_integrator_.emplace();
     }
 
-    // At the moment we don't support oxygen mixing -- we deliver either pure
-    // air or pure oxygen.  For any fio2 < 1, deliver air.
-    if (params.fio2 < 1) {
-      // Delivering pure air.
+    if (params.fio2 < 0.6) {
+      // Delivering air + oxygen mixes from 21 to 59%.
       psol_pid_.reset();
 
-      // Calculate blower valve command using calculated gains
-      float blower_valve = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
-                                                     desired_state.pressure_setpoint->kPa());
-      float fio2_coupling_value = fio2_pid_.compute(now, sensor_readings.fio2, params.fio2);
+      float flow_cmd = blower_valve_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
+                                                 desired_state.pressure_setpoint->kPa());
+      float blower_valve =
+          air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(), flow_cmd);
+
+      float fio2_coupling_value =
+          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2), 0.0f,
+                     1.0f);  // just a little bit of feed-forward
 
       actuators_state = {
-          .fio2_valve = blower_valve * fio2_coupling_value,
+          .fio2_valve = std::clamp(
+              sensor_readings.air_inflow.liters_per_sec() * fio2_coupling_value, 0.0f, 1.0f),
           // In normal mode, blower is always full power; pid controls pressure
           // by actuating the blower pinch valve.
           .blower_power = 1,
@@ -98,19 +100,27 @@ std::pair<ActuatorsState, ControllerState> Controller::Run(Time now, const VentP
           .exhale_valve = 1.0f - 0.55f * blower_valve - 0.4f,
       };
     } else {
-      // Delivering pure oxygen.
+      // Delivering air + oxygen mixes from 60 to 100%
       blower_valve_pid_.reset();
 
       float psol_valve = psol_pid_.compute(now, sensor_readings.patient_pressure.kPa(),
                                            desired_state.pressure_setpoint->kPa());
+
+      float fio2_coupling_value =
+          std::clamp(params.fio2 + fio2_pid_.compute(now, sensor_readings.fio2, params.fio2), 0.0f,
+                     1.0f);  // just a little bit of feed-forward
+
+      float blower_valve = air_flow_pid_.compute(now, sensor_readings.air_inflow.liters_per_sec(),
+                                                 psol_valve * (1 - fio2_coupling_value));
+
       actuators_state = {
           // Force psol to stay very slightly open to avoid the discontinuity
           // caused by valve hysteresis at very low command.  The exhale valve
           // compensates for this intentional leakage by staying open when the
           // psol valve is closed.
           .fio2_valve = std::clamp(psol_valve + 0.05f, 0.0f, 1.0f),
-          .blower_power = 0,
-          .blower_valve = 0,
+          .blower_power = 1.0f,
+          .blower_valve = std::clamp(blower_valve, 0.0f, 1.0f),
           .exhale_valve = 1.0f - 0.6f * psol_valve - 0.4f,
       };
     }
